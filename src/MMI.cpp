@@ -4,7 +4,7 @@
 /*
 
   Command Format:   Command Command ID  Command Parameters      Return Event
-  MMI_Action        0x02                data_base_index, action
+  mmiAction        0x02                data_base_index, action
 
   Description:  MMI action
 
@@ -68,181 +68,180 @@
 
 */
 
-uint8_t IS2020::Add_remove_SCO_link(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_add_remove_SCO_link);
-  }
+uint8_t IS2020::addRemoveScoLink(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_add_remove_SCO_link);
+}
   
-uint8_t IS2020::Force_end_active_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_force_end_active_call);
-  }
+uint8_t IS2020::forceEndActiveCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_force_end_active_call);
+}
   
-uint8_t IS2020::Accept_incoming_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_accept_incoming_call);
-  }
+uint8_t IS2020::acceptIncomingCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_accept_incoming_call);
+}
   
-uint8_t IS2020::Reject_incoming_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_reject_incoming_call);
-  }
+uint8_t IS2020::rejectIncomingCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_reject_incoming_call);
+}
   
-uint8_t IS2020::End_call_transfer_to_headset(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_end_call_transfer_to_headset);
-  }
+uint8_t IS2020::endCallTransferToHeadset(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_end_call_transfer_to_headset);
+}
   
-uint8_t IS2020::Togle_mic_mute(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_togle_mic_mute);
-  }
+uint8_t IS2020::toggleMicMute(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_toggle_mic_mute);
+}
   
-uint8_t IS2020::Mute_mic(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_mute_mic);
-  }
+uint8_t IS2020::muteMic(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_mute_mic);
+}
   
-uint8_t IS2020::Unmute_mic(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_unmute_mic);
-  }
+uint8_t IS2020::unmuteMic(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_unmute_mic);
+}
   
-uint8_t IS2020::Voice_dial(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_voice_dial);
-  }
+uint8_t IS2020::voiceDial(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_voice_dial);
+}
   
-uint8_t IS2020::Cancel_voice_dial(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_cancel_voice_dial);
-  }
+uint8_t IS2020::cancelVoiceDial(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_cancel_voice_dial);
+}
   
-uint8_t IS2020::Last_number_redial(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_last_number_redial);
-  }
+uint8_t IS2020::lastNumberRedial(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_last_number_redial);
+}
   
-uint8_t IS2020::Togle_active_hold_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_togle_active_hold_call);
-  }
+uint8_t IS2020::toggleActiveHoldCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_toggle_active_hold_call);
+}
   
-uint8_t IS2020::Voice_transfer(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_voice_transfer);
-  }
+uint8_t IS2020::voiceTransfer(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_voice_transfer);
+}
   
-uint8_t IS2020::Query_call_list_info(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_query_call_list_info);
-  }
+uint8_t IS2020::queryCallListInfo(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_query_call_list_info);
+}
   
-uint8_t IS2020::Thee_way_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_thee_way_call);
-  }
+uint8_t IS2020::threeWayCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_three_way_call);
+}
   
-uint8_t IS2020::Release_waiting_or_hold_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_release_waiting_or_hold_call);
-  }
+uint8_t IS2020::releaseWaitingOrHoldCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_release_waiting_or_hold_call);
+}
   
-uint8_t IS2020::End_active_call_accept_waiting_or_held_call(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_end_active_call_accept_waiting_or_held_call);
-  }
+uint8_t IS2020::endActiveCallAcceptWaitingOrHeldCall(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_end_active_call_accept_waiting_or_held_call);
+}
   
-uint8_t IS2020::Initiate_HF_connection(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_initiate_HF_connection);
-  }
+uint8_t IS2020::initiateHfConnection(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_initiate_HF_connection);
+}
   
-uint8_t IS2020::Disconnect_HF_link(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_disconnect_HF_link);
-  }
+uint8_t IS2020::disconnectHfLink(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_disconnect_HF_link);
+}
   
-uint8_t IS2020::Increase_microphone_gain(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_increase_microphone_gain);
-  }
+uint8_t IS2020::increaseMicrophoneGain(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_increase_microphone_gain);
+}
   
-uint8_t IS2020::Decrease_microphone_gain(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_decrease_microphone_gain);
-  }
+uint8_t IS2020::decreaseMicrophoneGain(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_decrease_microphone_gain);
+}
   
-uint8_t IS2020::Switch_primary_seconday_HF(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_switch_primary_seconday_HF);
-  }
+uint8_t IS2020::switchPrimarySecondayHf(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_switch_primary_seconday_HF);
+}
   
-uint8_t IS2020::Increase_speaker_gain(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_increase_speaker_gain);
-  }
+uint8_t IS2020::increaseSpeakerGain(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_increase_speaker_gain);
+}
   
-uint8_t IS2020::Decrease_speaker_gain(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_decrease_speaker_gain);
-  }
+uint8_t IS2020::decreaseSpeakerGain(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_decrease_speaker_gain);
+}
   
-uint8_t IS2020::Next_song(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_next_song);
-  }
+uint8_t IS2020::nextSong(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_next_song);
+}
   
-uint8_t IS2020::Previous_song(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_previous_song);
-  }
+uint8_t IS2020::previousSong(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_previous_song);
+}
   
-uint8_t IS2020::Disconnect_A2DP_link(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_disconnect_A2DP_link);
-  }
+uint8_t IS2020::disconnectA2DPLink(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_disconnect_A2DP_link);
+}
   
-uint8_t IS2020::Next_audio_efect(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_next_audio_efect);
-  }
+uint8_t IS2020::nextAudioEfect(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_next_audio_efect);
+}
   
-uint8_t IS2020::Previous_audio_efect(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_previous_audio_efect);
-  }
+uint8_t IS2020::previousAudioEfect(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_previous_audio_efect);
+}
   
-uint8_t IS2020::Enter_pairing_mode(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_enter_pairing_mode);
-  }
+uint8_t IS2020::enterPairingMode(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_enter_pairing_mode);
+}
   
-uint8_t IS2020::Power_on_button_press(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_power_on_button_press);
-  }
+uint8_t IS2020::powerOnButtonPress(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_power_on_button_press);
+}
   
-uint8_t IS2020::Power_on_button_release(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_power_on_button_release);
-  }
+uint8_t IS2020::powerOnButtonRelease(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_power_on_button_release);
+}
   
-uint8_t IS2020::Eeprom_to_defaults(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_eeprom_to_defaults);
-  }
+uint8_t IS2020::eepromToDefaults(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_eeprom_to_defaults);
+}
   
-uint8_t IS2020::Enter_pairing_mode_fast(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_enter_pairing_mode_fast);
-  }
+uint8_t IS2020::enterPairingModeFast(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_enter_pairing_mode_fast);
+}
   
-uint8_t IS2020::Power_off(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_power_off);
-  }
+uint8_t IS2020::powerOff(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_power_off);
+}
   
-uint8_t IS2020::Toggle_buzzer(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_toggle_buzzer);
-  }
+uint8_t IS2020::toggleBuzzer(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_toggle_buzzer);
+}
   
-uint8_t IS2020::Disable_buzzer(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_disable_buzzer);
-  }
+uint8_t IS2020::disableBuzzer(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_disable_buzzer);
+}
   
-uint8_t IS2020::Toggle_buzzer2(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_toggle_buzzer2);
-  }
+uint8_t IS2020::toggleBuzzer2(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_toggle_buzzer2);
+}
   
-uint8_t IS2020::Change_tone(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_change_tone);
-  }
+uint8_t IS2020::changeTone(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_change_tone);
+}
   
-uint8_t IS2020::BatteryStatus(uint8_t deviceID){
+uint8_t IS2020::batteryStatus(uint8_t deviceID){
   //Serial3.println("Battery_status");
-      return IS2020::MMI_Action(deviceID,MMI_battery_status);
-  }
+      return IS2020::mmiAction(deviceID,MMI_battery_status);
+}
   
-uint8_t IS2020::Exit_pairing_mode(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_exit_pairing_mode);
-  }
+uint8_t IS2020::exitPairingMode(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_exit_pairing_mode);
+}
   
-uint8_t IS2020::Link_past_device(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_link_past_device);
-  }
+uint8_t IS2020::linkPastDevice(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_link_past_device);
+}
   
-uint8_t IS2020::Disconnect_all_link(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_disconnect_all_link);
-  }
+uint8_t IS2020::disconnectAllLink(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_disconnect_all_link);
+}
   
-uint8_t IS2020::Triger_to_query_call_list_info(uint8_t deviceID){
-      return IS2020::MMI_Action(deviceID,MMI_triger_to_query_call_list_info);
-  }
+uint8_t IS2020::trigerToQueryCallListInfo(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_triger_to_query_call_list_info);
+}
   
-

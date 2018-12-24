@@ -26,7 +26,7 @@ void IS2020::begin(uint32_t baudrate, uint8_t resetPin) {
    debug output
 */
 void IS2020::DBG(String text) {
-  if (DEBUG) /*return "DBG: ");*/ Serial3.print(text);;
+//  if (DEBUG) /*return "DBG: ");*/ Serial3.print(text);;
 }
 
 void IS2020::resetLow() {
@@ -45,10 +45,10 @@ void IS2020::resetModule() {
 }
 
 uint8_t IS2020::checkResponce(uint8_t eventId) {
-  IS2020::getNextEventFromBT();
+  IS2020::getNextEventFromBt();
   return true;
   //DBG(F("\nChecking responce : ")); decodeEvent(eventId);DBG(F("\n"));
-  //uint8_t responceId = IS2020::getNextEventFromBT();
+  //uint8_t responceId = IS2020::getNextEventFromBt();
   //DBG(F("Get responce: "));decodeEvent(responceId); DBG(F("\n"));
   
 //  if (responceId == eventId) {
@@ -67,7 +67,7 @@ uint8_t IS2020::checkResponce(uint8_t eventId) {
 
 /*
 */
-void  IS2020::SendPacketInt(uint8_t cmd, uint8_t data) {
+void  IS2020::sendPacketInt(uint8_t cmd, uint8_t data) {
   // DBG("sending int: ");
   decodeCommand(cmd); DBG("\n");
 
@@ -85,7 +85,7 @@ void  IS2020::SendPacketInt(uint8_t cmd, uint8_t data) {
 /*
 
 */
-void  IS2020::SendPacketString(uint8_t cmd, String str) {
+void  IS2020::sendPacketString(uint8_t cmd, String str) {
   //DBG("sending string: ");
   decodeCommand(cmd); DBG(" String: " + str + "\n");
 
@@ -106,7 +106,7 @@ void  IS2020::SendPacketString(uint8_t cmd, String str) {
 /*
 
 */
-void  IS2020::SendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t data[]) {
+void  IS2020::sendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t data[]) {
   //DBG("sending array int: ");
   decodeCommand(cmd); DBG(": ");
 
@@ -126,7 +126,7 @@ void  IS2020::SendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t devi
   btSerial -> write(0x100 - checkSum); DBG(F(" ")); DBG(String(0x100 - checkSum, HEX)+"\n");
 }
 
-void  IS2020::SendPacketArrayChar (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, char data[]) {
+void  IS2020::sendPacketArrayChar (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, char data[]) {
   // DBG("sending array char: ");
   decodeCommand(cmd);// DBG("\n");
 
@@ -146,11 +146,11 @@ void  IS2020::SendPacketArrayChar (uint16_t packetSize, uint8_t cmd, uint8_t dev
   btSerial -> write(0x100 - checkSum);//DBG(F(" ")); DBG(String((0x100 - checkSum), HEX));
 }
 
-int IS2020::SerialAvailable () {
+int IS2020::serialAvailable () {
   return btSerial -> available();
 }
 
-int IS2020::SerialRead() {
+int IS2020::serialRead() {
   return btSerial -> read();
 }
 
@@ -178,7 +178,7 @@ uint8_t IS2020::checkCkeckSum(int size, uint8_t data[]) {
   }
 }
 
-String IS2020::ConnectionStatus(uint8_t deviceId) {
+String IS2020::connectionStatus(uint8_t deviceId) {
   String ConnectionStatus = "";
   /*
             Value Parameter Description
@@ -189,16 +189,16 @@ String IS2020::ConnectionStatus(uint8_t deviceId) {
             0x08 Bit3 : HF profile connected
             0x10 Bit4 : SPP connected"
   */
-  if (LinkStatus[1 + deviceId] & (1 << A2DP_profile_signaling_channel_connected)) ConnectionStatus += "A2DP profile signaling channel connected\n";
-  if (LinkStatus[1 + deviceId] & (1 << A2DP_profile_stream_channel_connected)) ConnectionStatus += "A2DP profile stream channel connected\n";
-  if (LinkStatus[1 + deviceId] & (1 << AVRCP_profile_connected)) ConnectionStatus += "AVRCP profile connected\n";
-  if (LinkStatus[1 + deviceId] & (1 << HF_profile_connected)) ConnectionStatus += "HF profile connected\n";
-  if (LinkStatus[1 + deviceId] & (1 << SPP_connected)) ConnectionStatus += "SPP connected\n";
-  if (LinkStatus[1 + deviceId] == 0) ConnectionStatus = "Disconnected\n";
+  if (linkStatus[1 + deviceId] & (1 << A2DP_profile_signaling_channel_connected)) ConnectionStatus += "A2DP profile signaling channel connected\n";
+  if (linkStatus[1 + deviceId] & (1 << A2DP_profile_stream_channel_connected)) ConnectionStatus += "A2DP profile stream channel connected\n";
+  if (linkStatus[1 + deviceId] & (1 << AVRCP_profile_connected)) ConnectionStatus += "AVRCP profile connected\n";
+  if (linkStatus[1 + deviceId] & (1 << HF_profile_connected)) ConnectionStatus += "HF profile connected\n";
+  if (linkStatus[1 + deviceId] & (1 << SPP_connected)) ConnectionStatus += "SPP connected\n";
+  if (linkStatus[1 + deviceId] == 0) ConnectionStatus = "Disconnected\n";
   return ConnectionStatus;
 }
 
-String IS2020::MusicStatus(uint8_t deviceId) {
+String IS2020::musicStatus(uint8_t deviceId) {
   /*
             database1_play_status," SIZE: 1 BYTE
             Value Parameter Description
@@ -212,7 +212,7 @@ String IS2020::MusicStatus(uint8_t deviceId) {
             0x07:WAIT_TO_PLAY
             0x08:WAIT_TO_PAUSE"
   */
-  switch (LinkStatus[3 + deviceId]) {
+  switch (linkStatus[3 + deviceId]) {
     case 0x00:
       return ("STOP");
       break;
@@ -243,7 +243,7 @@ String IS2020::MusicStatus(uint8_t deviceId) {
   }
 }
 
-String IS2020::StreamStatus(uint8_t deviceId) {
+String IS2020::streamStatus(uint8_t deviceId) {
   /*
              database1_stream_status," SIZE: 1 BYTE
             Value Parameter Description
@@ -251,18 +251,18 @@ String IS2020::StreamStatus(uint8_t deviceId) {
             0x00: no stream
             0x01: stream on-going"
   */
-  if (LinkStatus[5 + deviceId] == 0x00) {
+  if (linkStatus[5 + deviceId] == 0x00) {
     return ("No stream");
   } else {
     return ("Streaming");
   }
 }
 
-uint8_t IS2020::BatteryLevel(uint8_t deviceId) {
+uint8_t IS2020::batteryLevel(uint8_t deviceId) {
   return (currentBatteryLevel[deviceId]*100)/maxBatteryLevel[deviceId];
 }
 
-String IS2020::ModuleState() {
+String IS2020::moduleState() {
   /*
             Event Parameters: device_state  SIZE: 1 BYTE
             Value Parameter Description
@@ -274,7 +274,7 @@ String IS2020::ModuleState() {
             0x05  Connected state with only SPP profile connected
             0x06  Connected state with multi-profile connected
   */
-  switch (LinkStatus[0]) {
+  switch (linkStatus[0]) {
     case 0x00:
       return ("Power OFF");
       break;
@@ -299,9 +299,9 @@ String IS2020::ModuleState() {
   }
 }
 
-String IS2020::BtStatus() {
+String IS2020::btStatus() {
 
-  switch (BTMState) {
+  switch (btmState) {
     case 0x00:
       return (F("Power OFF state"));
       break;
@@ -357,7 +357,7 @@ String IS2020::BtStatus() {
       return ("ACL disconnected");
       break;
     default:
-      return ("unknown state" + (char)BTMState);
+      return ("unknown state" + (char)btmState);
       break;
   }
 }
@@ -365,7 +365,7 @@ String IS2020::BtStatus() {
 
 void IS2020::setEventMask(uint32_t mask) {
   EventMask |= mask;
-  Serial3.println(EventMask,HEX);
+  //Serial3.println(EventMask,HEX);
 }
 
 void IS2020::enableAllSettingEvent() {
@@ -404,12 +404,12 @@ void IS2020::enableAllSettingEvent() {
 void IS2020::removeInfoAboutDevice(uint8_t deviceId) {
   deviceName[deviceId] = "";
   deviceInBandRingtone[deviceId] = 0;
-  deviceIsiAP[deviceId] = 0;
-  deviceSupportAVRCPA13[deviceId] = 0;
+  deviceIsIap[deviceId] = 0;
+  deviceSupportAvrcpV13[deviceId] = 0;
   deviceHfAndA2dpGain[deviceId] = 0;
   deviceLineInGain[deviceId] = 0;
   maxBatteryLevel[deviceId] = 0;
   currentBatteryLevel[deviceId] = 0;
 
-  BTMstatusChanged = 1;
+  btmStatusChanged = 1;
 }

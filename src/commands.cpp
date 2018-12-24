@@ -18,10 +18,10 @@
   0xXXXX  Phone number of ASCII code. The max length of phone number is 19 byte.
 
 */
-uint8_t IS2020::MakeCall(uint8_t deviceId, char phoneNumber[19]) { //return event from BT will be handled elseware??? event call status
-  IS2020::getNextEventFromBT();
+uint8_t IS2020::makeCall(uint8_t deviceId, char phoneNumber[19]) { //return event from BT will be handled elseware??? event call status
+  IS2020::getNextEventFromBt();
   IS2020::DBG("MakeCall\n");
-  IS2020::SendPacketArrayChar(21, CMD_Make_Call, deviceId, phoneNumber);
+  IS2020::sendPacketArrayChar(21, CMD_Make_Call, deviceId, phoneNumber);
   return checkResponce(EVT_Call_Status);
 }
 
@@ -43,10 +43,10 @@ uint8_t IS2020::MakeCall(uint8_t deviceId, char phoneNumber[19]) { //return even
 
 
 */
-uint8_t IS2020::Make_Extension_Call(uint8_t deviceId, char phoneNumber[10]) {
-  IS2020::getNextEventFromBT();
+uint8_t IS2020::makeExtensionCall(uint8_t deviceId, char phoneNumber[10]) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Make_Extension_Call\n");
-  IS2020::SendPacketArrayChar(12, CMD_Make_Extension_Call, deviceId, phoneNumber);
+  IS2020::sendPacketArrayChar(12, CMD_Make_Extension_Call, deviceId, phoneNumber);
   return checkResponce(EVT_Command_ACK);
 }
 
@@ -116,11 +116,11 @@ uint8_t IS2020::Make_Extension_Call(uint8_t deviceId, char phoneNumber[10]) {
 
 
 */
-uint8_t  IS2020::MMI_Action(uint8_t deviceId, uint8_t action) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::mmiAction(uint8_t deviceId, uint8_t action) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("MMI_Action\n");
   uint8_t data[1] = {action};
-  IS2020::SendPacketArrayInt(0x03, CMD_MMI_Action, deviceId, data);
+  IS2020::sendPacketArrayInt(0x03, CMD_MMI_Action, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -177,15 +177,15 @@ uint8_t  IS2020::MMI_Action(uint8_t deviceId, uint8_t action) {
   Bit 7 reserved
 
 */
-uint8_t  IS2020::Event_Mask_Setting() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::eventMaskSetting() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Event_Mask_Setting\n");
   uint8_t data[3]={
     ((IS2020::EventMask >> 16) & 0xFF),
     ((IS2020::EventMask >> 8) & 0xFF),
     (IS2020::EventMask & 0xFF) 
   };
-  IS2020::SendPacketArrayInt (5, CMD_Event_Mask_Setting, ((EventMask>>24) & 0xFF), data);
+  IS2020::sendPacketArrayInt (5, CMD_Event_Mask_Setting, ((EventMask>>24) & 0xFF), data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -215,8 +215,8 @@ uint8_t  IS2020::Event_Mask_Setting() {
 
 */
 
-uint8_t  IS2020::Music_Control(uint8_t deviceId, uint8_t action) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::musicControl(uint8_t deviceId, uint8_t action) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("MusicControl :");
   switch (action) {
     case 0x00:
@@ -249,42 +249,42 @@ uint8_t  IS2020::Music_Control(uint8_t deviceId, uint8_t action) {
   }
   DBG("\n");
   uint8_t data[1] = {action};
-  IS2020::SendPacketArrayInt(0x03, CMD_Music_Control, deviceId, data);
+  IS2020::sendPacketArrayInt(0x03, CMD_Music_Control, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
 
 */
-uint8_t  IS2020::Change_Device_Name(String name) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::changeDeviceName(String name) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Change Device Name\n");
-  IS2020::SendPacketString(CMD_Change_Device_Name, name);
+  IS2020::sendPacketString(CMD_Change_Device_Name, name);
   return checkResponce(EVT_Command_ACK);
 }
 /*
 
 */
-uint8_t  IS2020::Change_PIN_Code() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::changePinCode() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Change PIN Code\n");
   return checkResponce(EVT_Command_ACK);
 }
 /*
 
 */
-uint8_t  IS2020::BTM_Parameter_Setting() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::btmParameterSetting() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("BTM Parameter Setting\n");
   return checkResponce(EVT_Command_ACK);
 }
 /*
 
 */
-uint8_t  IS2020::Read_BTM_Version() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::readBtmVersion() {
+  IS2020::getNextEventFromBt();
   //IS2020::DBG("Read BTM Version\n");
-  IS2020::SendPacketInt(CMD_Read_BTM_Version, 0x00);
-  IS2020::SendPacketInt(CMD_Read_BTM_Version, 0x01);
+  IS2020::sendPacketInt(CMD_Read_BTM_Version, 0x00);
+  IS2020::sendPacketInt(CMD_Read_BTM_Version, 0x01);
   //if (checkResponce(EVT_Command_ACK))
   return checkResponce(EVT_Read_BTM_Version_Reply);
   //return false;
@@ -303,25 +303,25 @@ uint8_t  IS2020::Read_BTM_Version() {
   0x01  database 1 for a dedicate link
 
 */
-uint8_t  IS2020::Get_PB_By_AT_Cmd  (uint8_t deviceId)
+uint8_t  IS2020::getPbByAtCmd  (uint8_t deviceId)
 {
-  IS2020::getNextEventFromBT();
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Get PB By AT Cmd\n");
-  IS2020::SendPacketInt(CMD_Get_PB_By_AT_Cmd, deviceId);
+  IS2020::sendPacketInt(CMD_Get_PB_By_AT_Cmd, deviceId);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK))
 //    return checkResponce(EVT_Get_PB_By_AT_Cmd_Reply);
 //  return false;
 }
 
-uint8_t  IS2020::Vendor_AT_Command() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::vendorAtCommand() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Vendor_AT_Command\n");
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Specific_Cmd() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpSpecificCmd() {
+  IS2020::getNextEventFromBt();
   //IS2020::DBG("AVRCP_Specific_Cmd\n");
   uint8_t data[17] = {0x20, //6
                       0x00, //7
@@ -331,7 +331,7 @@ uint8_t  IS2020::AVRCP_Specific_Cmd() {
                       0x00, 0x00, 0x00, 0x01, //15,16,17,18,19,20,21,22
                       0x00, 0x00, 0x00, 0x07
                      }; //23,24,25,26
-  IS2020::SendPacketArrayInt(19, CMD_AVRCP_Specific_Cmd, 0, data);
+  IS2020::sendPacketArrayInt(19, CMD_AVRCP_Specific_Cmd, 0, data);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK))
 //    return checkResponce(EVT_AVRCP_Specific_Rsp);
@@ -340,8 +340,8 @@ uint8_t  IS2020::AVRCP_Specific_Cmd() {
 /*
 
 */
-uint8_t  IS2020::AVRCP_Group_Navigation() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGroupNavigation() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("AVRCP_Group_Navigation\n");
   return checkResponce(EVT_Command_ACK);
 }
@@ -357,10 +357,10 @@ uint8_t  IS2020::AVRCP_Group_Navigation() {
   0x00  reserved
 
 */
-uint8_t  IS2020::Read_Link_Status() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::readLinkStatus() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Read_Link_Status\n");
-  IS2020::SendPacketInt(CMD_Read_Link_Status, DUMMYBYTE);
+  IS2020::sendPacketInt(CMD_Read_Link_Status, DUMMYBYTE);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK)) {
 //    return checkResponce(EVT_Read_Link_Status_Reply);
@@ -400,10 +400,10 @@ uint8_t  IS2020::Read_Link_Status() {
   --------------------------------------------------------------------------------------------
 
 */
-uint8_t  IS2020::Read_Paired_Device_Record() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::readPairedDeviceRecord() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Read_Paired_Device_Record\n");
-  IS2020::SendPacketInt(CMD_Read_Paired_Device_Record, DUMMYBYTE);
+  IS2020::sendPacketInt(CMD_Read_Paired_Device_Record, DUMMYBYTE);
   return checkResponce(EVT_Command_ACK);
 //    if (checkResponce(EVT_Command_ACK))
 //    return checkResponce(EVT_Read_Paired_Device_Record_Reply);
@@ -419,10 +419,10 @@ uint8_t  IS2020::Read_Paired_Device_Record() {
   dummy_byte  RFD
 
 */
-uint8_t  IS2020::Read_Local_BD_Address() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::readLocalBtAddress() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Read_Local_BD_Address\n");
-  IS2020::SendPacketInt(CMD_Read_Local_BD_Address, DUMMYBYTE);
+  IS2020::sendPacketInt(CMD_Read_Local_BD_Address, DUMMYBYTE);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK))
 //    return checkResponce(EVT_Read_Local_BD_Address_Reply);
@@ -438,10 +438,10 @@ uint8_t  IS2020::Read_Local_BD_Address() {
   dummy_byte  RFD
 
 */
-uint8_t  IS2020::Read_Local_Device_Name() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::readLocalDeviceName() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("Read_Local_Device_Name\n"));
-  IS2020::SendPacketInt(CMD_Read_Local_Device_Name, DUMMYBYTE);
+  IS2020::sendPacketInt(CMD_Read_Local_Device_Name, DUMMYBYTE);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK))
 //    return checkResponce(EVT_Read_Local_Device_Name_Reply);
@@ -461,10 +461,10 @@ uint8_t  IS2020::Read_Local_Device_Name() {
   PS : if both AT and PBAP enabled, the SPK will try PBAP firstly."
 
 */
-uint8_t  IS2020::Set_Access_PB_Method() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::setAccessPbMethod() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Set_Access_PB_Method\n");
-  IS2020::SendPacketInt(CMD_Set_Access_PB_Method, 0x18);
+  IS2020::sendPacketInt(CMD_Set_Access_PB_Method, 0x18);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -498,8 +498,8 @@ uint8_t  IS2020::Set_Access_PB_Method() {
   0xXXXX  the payload in this packet
 
 */
-uint8_t  IS2020::Send_SPP_iAP_Data() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::sendSppIapData() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Send_SPP_iAP_Data\n");
   return checkResponce(EVT_Command_ACK);
 }
@@ -596,8 +596,8 @@ uint8_t  IS2020::Send_SPP_iAP_Data() {
   0x26
 
 */
-uint8_t  IS2020::BTM_Utility_Function() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::btmUtilityFunction() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("BTM_Utility_Function\n");
   return checkResponce(EVT_Command_ACK);
 }
@@ -613,10 +613,10 @@ uint8_t  IS2020::BTM_Utility_Function() {
   0xXX  the acked event_id.
 
 */
-uint8_t  IS2020::Event_ACK(uint8_t eventId) {
-  //IS2020::getNextEventFromBT();
+uint8_t  IS2020::eventAck(uint8_t eventId) {
+  //IS2020::getNextEventFromBt();
   //IS2020::DBG("Event ACK: ");decodeEvent(eventId);
-  IS2020::SendPacketInt(CMD_Event_ACK, eventId);
+  IS2020::sendPacketInt(CMD_Event_ACK, eventId);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -637,14 +637,14 @@ uint8_t  IS2020::Event_ACK(uint8_t eventId) {
   0x02  iAP/SPP profile
 
 */
-uint8_t  IS2020::Additional_Profiles_Link_Setup() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::additionalProfilesLinkSetup() {
+  IS2020::getNextEventFromBt();
   IS2020::DBG("Additional Profiles Link Setup\n");
   return checkResponce(EVT_Command_ACK);
 }
 /*
   Command Format:  Command Command ID  Command Parameters  Return Event
-  Read_Linked_Device_Information  0x16  database_index, type  Read_Linked_Device_Information_Reply
+  readLinkedDeviceInformation  0x16  database_index, type  readLinkedDeviceInformation_Reply
 
   Description:  MCU can use this to retrieve linked device bluetooth info, such as device name and in-band ringtone status.
 
@@ -664,14 +664,14 @@ uint8_t  IS2020::Additional_Profiles_Link_Setup() {
   others  reserved
 
 */
-uint8_t  IS2020::Read_Linked_Device_Information(uint8_t deviceId, uint8_t query) {
-  IS2020::getNextEventFromBT();
-  //IS2020::DBG("Read_Linked_Device_Information " + deviceId);
+uint8_t  IS2020::readLinkedDeviceInformation(uint8_t deviceId, uint8_t query) {
+  IS2020::getNextEventFromBt();
+  //IS2020::DBG("readLinkedDeviceInformation " + deviceId);
   uint8_t data[1] = {query};
-  IS2020::SendPacketArrayInt(0x03, CMD_Read_Linked_Device_Information, deviceId, data);
+  IS2020::sendPacketArrayInt(0x03, CMD_Read_Linked_Device_Information, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK))
-//    return checkResponce(EVT_Read_Linked_Device_Information_Reply);
+//    return checkResponce(EVT_readLinkedDeviceInformation_Reply);
 //  return false;
 }
 /*
@@ -702,8 +702,8 @@ uint8_t  IS2020::Read_Linked_Device_Information(uint8_t deviceId, uint8_t query)
   bit2 is A2DP profile."
 
 */
-uint8_t  IS2020::Profiles_Link_Back() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::profilesLinkBack() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -720,8 +720,8 @@ uint8_t  IS2020::Profiles_Link_Back() {
   bit 3 Disconnect SPP.
 
 */
-uint8_t  IS2020::Disconnect() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::disconnect() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -743,8 +743,8 @@ uint8_t  IS2020::Disconnect() {
   others  reserved
 
 */
-uint8_t  IS2020::MCU_Status_Indication() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::mcuStatusIndication() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -765,8 +765,8 @@ uint8_t  IS2020::MCU_Status_Indication() {
   0x01  User selected "no"
 
 */
-uint8_t  IS2020::User_Confirm_SPP_Req_Reply() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::userConfirmSppReqReply() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -787,8 +787,8 @@ uint8_t  IS2020::User_Confirm_SPP_Req_Reply() {
   0x00 - 0x0F Set HF speaker gain level.
 
 */
-uint8_t  IS2020::Set_HF_Gain_Level() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::setHfGainLevel() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -814,8 +814,8 @@ uint8_t  IS2020::Set_HF_Gain_Level() {
   others  reserved
 
 */
-uint8_t  IS2020::EQ_Mode_Setting() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::eqModeSetting() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -834,8 +834,8 @@ uint8_t  IS2020::EQ_Mode_Setting() {
   others  reserved
 
 */
-uint8_t  IS2020::DSP_NR_CTRL() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::dspNrCtrl() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -924,8 +924,8 @@ uint8_t  IS2020::DSP_NR_CTRL() {
   0bXXXXXXXX  Output level of P3.x GPIOs setting. It is used for IO_Setting_P3.x as output only.
 
 */
-uint8_t  IS2020::GPIO_Control() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::gpioControl() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -941,8 +941,8 @@ uint8_t  IS2020::GPIO_Control() {
   "
 
 */
-uint8_t  IS2020::MCU_UART_Rx_Buffer_Size() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::mcuUartRxBufferSize() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -984,8 +984,8 @@ uint8_t  IS2020::MCU_UART_Rx_Buffer_Size() {
   0xXXXX  the data just for voice prompt
 
 */
-uint8_t  IS2020::Voice_Prompt_Cmd() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::voicePromptCmd() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1017,8 +1017,8 @@ uint8_t  IS2020::Voice_Prompt_Cmd() {
   SetNotification_Request SetNotification_Request structure
 
 */
-uint8_t  IS2020::MAP_REQUEST() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::mapRequest() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1049,8 +1049,8 @@ uint8_t  IS2020::MAP_REQUEST() {
   SetNotification_Request SetNotification_Request structure
 
 */
-uint8_t  IS2020::Security_Bonding_Req() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::securityBondingReq() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1091,8 +1091,8 @@ uint8_t  IS2020::Security_Bonding_Req() {
   0xXX  0x00~0x0F
 
 */
-uint8_t  IS2020::Set_Overall_Gain() {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::setOverallGain() {
+  IS2020::getNextEventFromBt();
   return checkResponce(EVT_Command_ACK);
 }
 
@@ -1212,38 +1212,38 @@ void IS2020::decodeCommand(uint8_t cmd){
     }
   }
 
-uint8_t IS2020::query_device_name(uint8_t deviceId){
-  IS2020::getNextEventFromBT();
-  IS2020::Read_Linked_Device_Information(deviceId,CRLDI_query_device_name);
+uint8_t IS2020::queryDeviceName(uint8_t deviceId){
+  IS2020::getNextEventFromBt();
+  IS2020::readLinkedDeviceInformation(deviceId,CRLDI_query_device_name);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t IS2020::query_in_band_ringtone_status(uint8_t deviceId){
-  IS2020::getNextEventFromBT();
-  IS2020::Read_Linked_Device_Information(deviceId,CRLDI_query_in_band_ringtone_status);
+uint8_t IS2020::queryInBandRingtoneStatus(uint8_t deviceId){
+  IS2020::getNextEventFromBt();
+  IS2020::readLinkedDeviceInformation(deviceId,CRLDI_query_in_band_ringtone_status);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t IS2020::query_if_remote_device_is_iAP_device(uint8_t deviceId){
-  IS2020::getNextEventFromBT();
-  IS2020::Read_Linked_Device_Information(deviceId,CRLDI_query_if_remote_device_is_iAP_device);
+uint8_t IS2020::queryIfRemoteDeviceIsIapDevice(uint8_t deviceId){
+  IS2020::getNextEventFromBt();
+  IS2020::readLinkedDeviceInformation(deviceId,CRLDI_query_if_remote_device_is_iAP_device);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t IS2020::query_if_remote_device_support_AVRCP_v13(uint8_t deviceId){
-  IS2020::getNextEventFromBT();
-  IS2020::Read_Linked_Device_Information(deviceId,CRLDI_query_if_remote_device_support_AVRCP_v13);
+uint8_t IS2020::queryIfRemoteDeviceSupportAvrcpV13(uint8_t deviceId){
+  IS2020::getNextEventFromBt();
+  IS2020::readLinkedDeviceInformation(deviceId,CRLDI_query_if_remote_device_support_AVRCP_v13);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t IS2020::query_HF_A2DP_gain(uint8_t deviceId){
-  IS2020::getNextEventFromBT();
-  IS2020::Read_Linked_Device_Information(deviceId,CRLDI_query_HF_A2DP_gain);
+uint8_t IS2020::queryHfA2dpGain(uint8_t deviceId){
+  IS2020::getNextEventFromBt();
+  IS2020::readLinkedDeviceInformation(deviceId,CRLDI_query_HF_A2DP_gain);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t IS2020::query_Line_In_gain(uint8_t deviceId){
-  IS2020::getNextEventFromBT();
-  IS2020::Read_Linked_Device_Information(deviceId,CRLDI_query_Line_In_gain);
+uint8_t IS2020::queryLineInGain(uint8_t deviceId){
+  IS2020::getNextEventFromBt();
+  IS2020::readLinkedDeviceInformation(deviceId,CRLDI_query_Line_In_gain);
   return checkResponce(EVT_Command_ACK);
 }

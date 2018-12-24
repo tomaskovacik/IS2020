@@ -6,16 +6,16 @@
 #define MMI_accept_incoming_call 0x04
 #define MMI_reject_incoming_call 0x05
 #define MMI_end_call_transfer_to_headset 0x06 //1. End call if SCO exist. OR 2. Voice transfer to headset if SCO not exist."
-#define MMI_togle_mic_mute 0x07 //1. Mute microphone if microphone is not mute OR 2. Active microphone if microphone is mute"
+#define MMI_toggle_mic_mute 0x07 //1. Mute microphone if microphone is not mute OR 2. Active microphone if microphone is mute"
 #define MMI_mute_mic 0x08	//Mute microphone
 #define MMI_unmute_mic 0x09	//Active microphone
 #define MMI_voice_dial 0x0A
 #define MMI_cancel_voice_dial 0x0Bl
 #define MMI_last_number_redial 0x0C
-#define MMI_togle_active_hold_call 0x0D //Set the active call on hold and active the hold call
+#define MMI_toggle_active_hold_call 0x0D //Set the active call on hold and active the hold call
 #define MMI_voice_transfer 0x0E	
 #define MMI_query_call_list_info 0x0F	//Query call list information(CLCC)
-#define MMI_thee_way_call 0x10
+#define MMI_three_way_call 0x10
 #define MMI_release_waiting_or_hold_call 0x11	//release the waiting call or on hold call
 #define MMI_end_active_call_accept_waiting_or_held_call 0x12	//accept the waiting call or active the on hold call and release the active call
 #define MMI_initiate_HF_connection 0x16
@@ -73,7 +73,7 @@ mode:
 7: Alternating voice/data, data mode
 8: Alternating voice/fax, fax mode
 9: Unknown
-mpty:
+empty:
 0:Call is not one of multiparty (conference) call parties
 1:Call is one of multiparty (conference) call parties
 */

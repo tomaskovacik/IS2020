@@ -11,7 +11,7 @@ uint8_t ff = 0;
 uint8_t rw = 0;
 uint8_t repeat_mode = 0x01;
 
-void device_info(uint8_t dMeviceId);
+void deviceInfo(uint8_t dMeviceId);
 void module_info();
 
 
@@ -25,11 +25,11 @@ void setup() {
   //    ; // wait for serial port to connect. Needed for native USB port only
   //  }
   BT.begin(115200, RESET);
-  BT.BTMstatusChanged = 1;
-  BT.Read_Local_Device_Name();
-  BT.Read_Local_BD_Address();
-  BT.Read_BTM_Version();
-  BT.Read_Link_Status();
+  BT.btmStatusChanged = 1;
+  BT.readLocalDeviceName();
+  BT.readLocalBtAddress();
+  BT.readBtmVersion();
+  BT.readLinkStatus();
 }
 
 void loop() { // run over and over
@@ -42,59 +42,59 @@ void loop() { // run over and over
     switch (c)
     {
       case 'a':
-        BT.AVRCP_Get_Play_Status(0);
+        BT.avrcpGetPlayStatus(0);
         break;
       case 'b':
-        if (BT.LinkStatus[1] > 0) {
-          BT.BatteryStatus(0x00);
-          BT.getNextEventFromBT();
+        if (BT.linkStatus[1] > 0) {
+          BT.batteryStatus(0x00);
+          BT.getNextEventFromBt();
           Serial3.println(BT.maxBatteryLevel[0]);
           Serial3.println(BT.currentBatteryLevel[0]);
         }
-        if (BT.LinkStatus[2] > 0) {
-          BT.BatteryStatus(0x00);
+        if (BT.linkStatus[2] > 0) {
+          BT.batteryStatus(0x00);
           Serial3.println(BT.maxBatteryLevel[1]);
           Serial3.println(BT.currentBatteryLevel[1]);
         }
         break;
       case 'e':
-        BT.Event_Mask_Setting();
+        BT.eventMaskSetting();
         break;
       case 'o':
         break;
       case 'd':
-        BT.Read_Local_Device_Name();
-        BT.Read_Local_BD_Address();
-        BT.Read_BTM_Version();
-        BT.Read_Link_Status();
-        BT.Read_Paired_Device_Record();
+        BT.readLocalDeviceName();
+        BT.readLocalBtAddress();
+        BT.readBtmVersion();
+        BT.readLinkStatus();
+        BT.readPairedDeviceRecord();
         break;
       case 'n':
-        BT.query_device_name(0x00);
+        BT.queryDeviceName(0x00);
         break;
       case '=':
         // NEXT SONG
-        BT.Next_song(0x00);
+        BT.nextSong(0x00);
         break;
       case '-':
         // PREVIOUS SONG
-        BT.Previous_song(0x00);
+        BT.previousSong(0x00);
         break;
       case 'D':
-        BT.Eeprom_to_defaults(0);
+        BT.eepromToDefaults(0);
         break;
       case 'E':
         BT.enableAllSettingEvent();
-        BT.Event_Mask_Setting();
+        BT.eventMaskSetting();
         break;
 
       case 'P':
         // seek rewind
-        BT.PLAY(0x00);
+        BT.play(0x00);
         break;
       case 'p':
         // PLAY/PAUSE
-        BT.TOGLE_PLAY_PAUSE(0x00);
+        BT.togglePlayPause(0x00);
 
         break;
       // seek forward            f
@@ -102,37 +102,37 @@ void loop() { // run over and over
       // scan mode               s
       // shuffle mode            h
       case 'f':
-        BT.FFW(0x00);
+        BT.ffw(0x00);
         break;
       case 'F':
         //  seek frward
         if (!ff) {
           ff = 1;
-          BT.REPFFW(0x00);
+          BT.repFfw(0x00);
         } else {
           ff = 0;
-          BT.STOP_FFW_RWD(0x00);
+          BT.stopFfwRwd(0x00);
         }
         break;
       case 'r':
         // seek rewind
-        BT.RWD(0x00);
+        BT.rwd(0x00);
         break;
       case 'A':
-        BT.AVRCP_Get_Element_Attributes_All(0x00);
+        BT.avrcpGetElementAttributesAll(0x00);
         break;
       case 'R':
         if (!rw) {
           rw = 1;
-          BT.REPRWD(0x00);
+          BT.repRwd(0x00);
         } else {
           rw = 0;
-          BT.STOP_FFW_RWD(0x00);
+          BT.stopFfwRwd(0x00);
         }
         break;
       case 'S':
         // seek rewind
-        BT.STOP(0x00);
+        BT.stop(0x00);
         break;
       case 'c':
         {
@@ -142,11 +142,11 @@ void loop() { // run over and over
           while (Serial3.available() > 0) {
             pn[i++] = Serial3.read();
           }
-          BT.MakeCall(0x00, pn);
+          BT.makeCall(0x00, pn);
         }
         break;
       case 'l':
-        if (BT.Read_Local_Device_Name()) Serial3.print("local device name: "); Serial3.println(BT.LocalDeviceName);
+        if (BT.readLocalDeviceName()) Serial3.print("local device name: "); Serial3.println(BT.localDeviceName);
         break;
       case 'L':
         {
@@ -157,8 +157,8 @@ void loop() { // run over and over
             c = Serial3.read();
             str += c;
           }
-          BT.Change_Device_Name(str);
-          if (BT.Read_Local_Device_Name()) Serial3.print("local device name: "); Serial3.println(BT.LocalDeviceName);
+          BT.changeDeviceName(str);
+          if (BT.readLocalDeviceName()) Serial3.print("local device name: "); Serial3.println(BT.localDeviceName);
         }
         break;
       case 'h': //help
@@ -184,19 +184,19 @@ void loop() { // run over and over
         break;
       case 'i': //info
         {
-          module_info();
-          device_info(0);
-          device_info(1);
+          moduleInfo();
+          deviceInfo(0);
+          deviceInfo(1);
         }
         break;
       case 'C':
         {
-          BT.Switch_primary_seconday_HF(1);
+          BT.switchPrimarySecondayHf(1);
         }
         break;
       case 'I':
         {
-          BT.Read_BTM_Version();
+          BT.readBtmVersion();
 
         }
         break;
@@ -206,18 +206,18 @@ void loop() { // run over and over
     }
   }
 
-  BT.getNextEventFromBT();
-  if (BT.BTMstatusChanged) {
-    //    module_info();
-    //    device_info(0);
-    //    device_info(1);
-    BT.BTMstatusChanged = 0;
+  BT.getNextEventFromBt();
+  if (BT.btmStatusChanged) {
+    //    moduleInfo();
+    //    deviceInfo(0);
+    //    deviceInfo(1);
+    BT.btmStatusChanged = 0;
   }
 }
 
-void module_info() {
+void moduleInfo() {
   Serial3.print(F("Module info:"));
-  Serial3.print(F("BT module name: ")); Serial3.println(BT.LocalDeviceName);
+  Serial3.print(F("BT module name: ")); Serial3.println(BT.localDeviceName);
   Serial3.print(F("BT module addr: "));
   for (uint8_t _byte = 0; _byte < 6; _byte++) {
     Serial3.print(BT.moduleBtAddress[_byte], HEX);
@@ -234,8 +234,8 @@ void module_info() {
     Serial3.println();
   }
   Serial3.println();
-  Serial3.println(BT.ModuleState());
-  Serial3.println(BT.BtStatus());
+  Serial3.println(BT.moduleState());
+  Serial3.println(BT.btStatus());
 
   /*
     Event Format: Event Event Code  Event Parameters
@@ -259,39 +259,39 @@ void module_info() {
 
   */
   Serial3.println();
-  Serial3.println(F("       UART version: ")); Serial3.println(BT.BTMUartVersion, HEX);
-  Serial3.print(F("        flash version: ")); Serial3.println((uint8_t)(BT.BTMUartVersion >> 13), HEX);
-  Serial3.print(F("          rom version: ")); Serial3.println((uint8_t)((BT.BTMUartVersion >> 8) & 0x1F), HEX);
-  Serial3.print(F("    flash sub version: ")); Serial3.println(((uint8_t)(BT.BTMUartVersion >> 4) & 0x0F), HEX);
-  Serial3.print(F("flash control version: ")); Serial3.println((uint8_t)(BT.BTMUartVersion & 0x0F), HEX);
+  Serial3.println(F("       UART version: ")); Serial3.println(BT.btmUartVersion, HEX);
+  Serial3.print(F("        flash version: ")); Serial3.println((uint8_t)(BT.btmUartVersion >> 13), HEX);
+  Serial3.print(F("          rom version: ")); Serial3.println((uint8_t)((BT.btmUartVersion >> 8) & 0x1F), HEX);
+  Serial3.print(F("    flash sub version: ")); Serial3.println(((uint8_t)(BT.btmUartVersion >> 4) & 0x0F), HEX);
+  Serial3.print(F("flash control version: ")); Serial3.println((uint8_t)(BT.btmUartVersion & 0x0F), HEX);
   Serial3.println();
-  Serial3.println(F("      BT FW version: ")); Serial3.println(BT.BTMFWVersion >> 13, HEX);
-  Serial3.print(F("        flash version: ")); Serial3.println((uint8_t)(BT.BTMFWVersion >> 13), HEX);
-  Serial3.print(F("          rom version: ")); Serial3.println((uint8_t)((BT.BTMFWVersion >> 8) & 0x1F), HEX);
-  Serial3.print(F("    flash sub version: ")); Serial3.println(((uint8_t)(BT.BTMFWVersion >> 4) & 0x0F), HEX);
-  Serial3.print(F("flash control version: ")); Serial3.println((uint8_t)(BT.BTMFWVersion & 0x0F), HEX);
+  Serial3.println(F("      BT FW version: ")); Serial3.println(BT.btmFwVersion >> 13, HEX);
+  Serial3.print(F("        flash version: ")); Serial3.println((uint8_t)(BT.btmFwVersion >> 13), HEX);
+  Serial3.print(F("          rom version: ")); Serial3.println((uint8_t)((BT.btmFwVersion >> 8) & 0x1F), HEX);
+  Serial3.print(F("    flash sub version: ")); Serial3.println(((uint8_t)(BT.btmFwVersion >> 4) & 0x0F), HEX);
+  Serial3.print(F("flash control version: ")); Serial3.println((uint8_t)(BT.btmFwVersion & 0x0F), HEX);
 
 }
 
-void device_info(uint8_t deviceId) {
+void deviceInfo(uint8_t deviceId) {
   Serial3.println(F("================================="));
   Serial3.print(F("Device ")); Serial.print(deviceId); Serial3.println(F("info:"));
-  Serial3.println(BT.ConnectionStatus(deviceId));
+  Serial3.println(BT.connectionStatus(deviceId));
   Serial3.print("Name: "); Serial3.println(BT.deviceName[deviceId]);
-  Serial3.print("Music Status: "); Serial3.println(BT.MusicStatus(deviceId));
-  Serial3.println(BT.StreamStatus(deviceId));
+  Serial3.print("Music Status: "); Serial3.println(BT.musicStatus(deviceId));
+  Serial3.println(BT.streamStatus(deviceId));
   Serial3.print("Battery level dev0: "); Serial3.print(BT.currentBatteryLevel[deviceId]); Serial3.print("/"); Serial3.println(BT.maxBatteryLevel[deviceId]);
   Serial3.print("current signal strength : "); Serial3.print(BT.currentSignalLevel[deviceId]); Serial3.print("/"); Serial3.println(BT.maxSignalLevel[deviceId]);
   //    Serial3.println(" info:");
   //    if (BT.deviceInBandRingtone[deviceId])
   //      Serial3.print("Has in Band Rington.");
-  //    if (BT.deviceIsiAP[deviceId]) {
+  //    if (BT.deviceIsIap[deviceId]) {
   //      Serial3.println("- iAP device");
   //    } else {
   //      Serial3.println("- SPP device");
   //    }
   //
-  //    if (BT.deviceSupportAVRCPA13[deviceId])
+  //    if (BT.deviceSupportAvrcpV13[deviceId])
   //      Serial3.println("- AVRCP 1.3 supported"); //reply if remote device support AVRCP v1.3
   //    if (BT.deviceHfAndA2dpGain[deviceId] != 0x00 ) {
   //      Serial3.print("A2DP Gain: ");

@@ -5,7 +5,7 @@
 /*
   was thinking using SErial event here, but based on comment in code serialEvent is called after loop() so calling function  in loop is the same
 */
-uint8_t IS2020::getNextEventFromBT() {
+uint8_t IS2020::getNextEventFromBt() {
   delay(100);
   //if (btSerial -> available()) {
   while (btSerial -> available() > 0) {
@@ -139,10 +139,10 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_BTM_Status:
             {
-              BTMState = event[1];
-              BTMlink_info = event[2];
-              IS2020::Read_Link_Status();
-              BTMstatusChanged = 1;
+              IS2020::btmState = event[1];
+              IS2020::btmLinkInfo = event[2];
+              IS2020::readLinkStatus();
+              IS2020::IS2020::btmStatusChanged = 1;
             }
             break;
           /*
@@ -169,8 +169,8 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Call_Status:
             {
-              BTMstatusChanged = 1;
-              callStatus[event[1]] = event[2];
+              IS2020::IS2020::btmStatusChanged = 1;
+              IS2020::callStatus[event[1]] = event[2];
             }
             break;
           /*
@@ -191,9 +191,9 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Caller_ID:
             {
-              BTMstatusChanged = 1;
+              IS2020::IS2020::btmStatusChanged = 1;
               for (uint8_t i = 0; i < packetSize; i++) {
-                callerId[event[1]][packetSize] = event[i + 2]; //no need to any sort of flag bit, cose we have callstatus change flag and in case of incoming call we just read this array
+                IS2020::callerId[event[1]][packetSize] = event[i + 2]; //no need to any sort of flag bit, cose we have callstatus change flag and in case of incoming call we just read this array
               }
             }
             break;
@@ -216,8 +216,8 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_SMS_Received_Indication:
             {
-              BTMstatusChanged = 1;
-              SMSstatus[event[1]] = event[2];
+              IS2020::btmStatusChanged = 1;
+              IS2020::smsStatus[event[1]] = event[2];
             }
             break;
           /*
@@ -238,8 +238,8 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Missed_Call_Indication:
             {
-              BTMstatusChanged = 1;
-              missedCallStatus[event[1]] = event[2];
+              IS2020::btmStatusChanged = 1;
+              IS2020::missedCallStatus[event[1]] = event[2];
             }
             break;
           /*
@@ -260,14 +260,14 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Phone_Max_Battery_Level:
             {
-              BTMstatusChanged = 1;
-              maxBatteryLevel[event[1]] = event[2];
-              Serial3.println(F("================================="));
+              IS2020::btmStatusChanged = 1;
+              IS2020::maxBatteryLevel[event[1]] = event[2];
+              /*Serial3.println(F("================================="));
               Serial3.println(F("EVT_Phone_Max_Battery_Leveld"));
               Serial3.println(F("================================="));
               Serial3.println(event[2], DEC);
               Serial3.println(F("================================="));
-              Serial3.println(F("================================="));
+              Serial3.println(F("================================="));*/
             }
             break;
           /*
@@ -288,15 +288,14 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Phone_Current_Battery_Level:
             {
-              BTMstatusChanged = 1;
-
-              currentBatteryLevel[event[1]] = event[2];
-              Serial3.println(F("================================="));
+              IS2020::btmStatusChanged = 1;
+              IS2020::currentBatteryLevel[event[1]] = event[2];
+/*              Serial3.println(F("================================="));
               Serial3.println(F("EVT_Phone_Current_Battery_Level: "));
               Serial3.println(F("================================="));
               Serial3.println(event[2], DEC);
               Serial3.println(F("================================="));
-              Serial3.println(F("================================="));
+              Serial3.println(F("================================="));*/
             }
             break;
           /*
@@ -318,8 +317,8 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Roaming_Status:
             {
-              BTMstatusChanged = 1;
-              roamingStatus[event[1]] = event[2];
+              IS2020::btmStatusChanged = 1;
+              IS2020::roamingStatus[event[1]] = event[2];
             }
             break;
           /*
@@ -340,14 +339,14 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Phone_Max_Signal_Strength_Level:
             {
-              BTMstatusChanged = 1;
-              maxSignalLevel[event[1]] = event[2];
-              Serial3.println(F("================================="));
+              IS2020::btmStatusChanged = 1;
+              IS2020::maxSignalLevel[event[1]] = event[2];
+              /*Serial3.println(F("================================="));
               Serial3.println(F("EVT_Phone_Max_Signal_Strength_Level"));
               Serial3.println(F("================================="));
               Serial3.println(event[2], DEC);
               Serial3.println(F("================================="));
-              Serial3.println(F("================================="));
+              Serial3.println(F("================================="));*/
             }
             break;
           /*
@@ -368,14 +367,14 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Phone_Current_Signal_Strength_Level:
             {
-              BTMstatusChanged = 1;
-              currentSignalLevel[event[1]] = event[2];
-              Serial3.println(F("================================="));
+              IS2020::btmStatusChanged = 1;
+              IS2020::currentSignalLevel[event[1]] = event[2];
+              /*Serial3.println(F("================================="));
               Serial3.println(F("EVT_Phone_Current_Signal_Strength_Level"));
               Serial3.println(F("================================="));
               Serial3.println(event[2], DEC);
               Serial3.println(F("================================="));
-              Serial3.println(F("================================="));
+              Serial3.println(F("================================="));*/
             }
             break;
           /*
@@ -397,8 +396,8 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Phone_Service_Status :
             {
-              BTMstatusChanged = 1;
-              serviceStatus[event[1]] = event[2];
+              IS2020::btmStatusChanged = 1;
+              IS2020::serviceStatus[event[1]] = event[2];
             }
             break;
           /*
@@ -436,9 +435,9 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_BTM_Battery_Status :
             {
-              BTMstatusChanged = 1;
-              BTMBatteryStatus[0] = event[1];
-              BTMBatteryStatus[1] = event[2];
+              IS2020::btmStatusChanged = 1;
+              IS2020::btmBatteryStatus[0] = event[1];
+              IS2020::btmBatteryStatus[1] = event[2];
             }
             break;
           /*
@@ -461,7 +460,7 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_BTM_Charging_Status:
             {
-              BTMChargingStatus = event[1];
+              IS2020::btmChargingStatus = event[1];
             }
             break;
           /*
@@ -502,7 +501,7 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Report_HF_Gain_Level:
             {
-              HFGainLevel[event[1]] = event[2];
+              IS2020::hfGainLevel[event[1]] = event[2];
             }
             break;
           /*
@@ -532,7 +531,7 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_EQ_Mode_Indication:
             {
-              EQMode = event[1];
+              IS2020::eqMode = event[1];
             }
             break;
           case EVT_PBAP_Missed_Call_History:
@@ -577,7 +576,7 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_PBAP_Access_Finish:
             {
-              PBAPAccessFinish = event[1];
+              IS2020::pbapAccessFinish = event[1];
             }
             break;
           /*
@@ -635,11 +634,11 @@ uint8_t IS2020::getNextEventFromBT() {
           case EVT_Read_Linked_Device_Information_Reply:
             {
               //DBG(F("Read_Linked_Device_Information_Reply\n"));
-              BTMstatusChanged = 1;
+              IS2020::btmStatusChanged = 1;
               switch (event[2]) { //event[1] is device id
                 case 0x00://reply device name
                   {
-                    deviceName[event[1]] = "";
+                    IS2020::deviceName[event[1]] = "";
                     //DBG("Reply device name\n");
                     //N bytes bluetooth name with NULL terminated. (N <= 249 with NULL terminated)
 
@@ -648,7 +647,7 @@ uint8_t IS2020::getNextEventFromBT() {
                       if (event[i] == 0x00) break;
                       //deviceName[event[1]][i - 3] = event[i];
                       //Serial3.write(event[i]);
-                      deviceName[event[1]] = deviceName[event[1]] + (char)event[i];
+                      IS2020::deviceName[event[1]] = IS2020::deviceName[event[1]] + (char)event[i];
 
                     }
                   }
@@ -660,7 +659,7 @@ uint8_t IS2020::getNextEventFromBT() {
                     0x00  disable
                     0x01  enable
                   */
-                  deviceInBandRingtone[event[1]] = event[3];
+                  IS2020::deviceInBandRingtone[event[1]] = event[3];
                   break;
                 case 0x02://reply if remote device is a iAP device
                   /*
@@ -669,10 +668,10 @@ uint8_t IS2020::getNextEventFromBT() {
                     0x00  Standard SPP device
                     0x01  iAP device
                   */
-                  deviceIsiAP[event[1]] = event[3];
+                  IS2020::deviceIsIap[event[1]] = event[3];
                   break;
                 case 0x03://reply if remote device support AVRCP v1.3
-                  deviceSupportAVRCPA13[event[1]] = event[3];
+                  IS2020::deviceSupportAvrcpV13[event[1]] = event[3];
                   break;
                 case 0x04://reply HF&A2DP gain
                   /*
@@ -681,7 +680,7 @@ uint8_t IS2020::getNextEventFromBT() {
                     0xXX  "bit[3:0]: A2DP gain
                     bit[7:4]: HF gain"
                   */
-                  deviceHfAndA2dpGain[event[1]] = event[3];
+                  IS2020::deviceHfAndA2dpGain[event[1]] = event[3];
                   break;
                 case 0x05: //reply Line_In gain
                   /*
@@ -689,12 +688,12 @@ uint8_t IS2020::getNextEventFromBT() {
                     Value Parameter Description
                     0xXX  Line_In gain
                   */
-                  deviceLineInGain[event[1]] = event[3];
+                  IS2020::deviceLineInGain[event[1]] = event[3];
                   break;
                 default:
                   if (DEBUG) {
-                    Serial3.print("Reserved response: ");
-                    Serial3.println(event[1], HEX);
+                    //Serial3.print("Reserved response: ");
+                    //Serial3.println(event[1], HEX);
                   }
               }
             }
@@ -722,8 +721,8 @@ uint8_t IS2020::getNextEventFromBT() {
           */
           case EVT_Read_BTM_Version_Reply:
             {
-              if (event[1] == 0x00) BTMUartVersion = (event[2] << 8) | (event[3] & 0xff);
-              if (event[1] == 0x01) BTMFWVersion = (event[2] << 8) | (event[3] & 0xff);
+              if (event[1] == 0x00) IS2020::btmUartVersion = (event[2] << 8) | (event[3] & 0xff);
+              if (event[1] == 0x01) IS2020::btmFwVersion = (event[2] << 8) | (event[3] & 0xff);
 
             }
             break;
@@ -738,13 +737,13 @@ uint8_t IS2020::getNextEventFromBT() {
               //                Serial3.print("EVT_AVRCP_Specific_Rsp ");
               //              }
               //              //Serial3.println("data dump: ");
-
+/*
               for (uint8_t i = 0; i < packetSize; i++) {
                 Serial3.print(event[0 + i], HEX);
                 Serial3.print(" ");
               }
               Serial3.println();
-
+*/
 
               //Serial3.print("device ID: "); Serial3.println(event[1]);
               /* event[2] - Response: 0xC
@@ -752,7 +751,7 @@ uint8_t IS2020::getNextEventFromBT() {
                  event [4] - Opcode: 0x0 (VENDOR DEPENDENT)
                  event [5,6,7] = 0x00 0x19 0x58 - Company ID: Bluetooth SIG registered CompanyID
               */
-              Serial3.print("PDU Id: "); Serial3.print(String(event[8], HEX) + " "); IS2020::decodeAVRCP_Pdu(event[8]);
+              //Serial3.print("PDU Id: "); Serial3.print(String(event[8], HEX) + " "); IS2020::decodeAvrcpPdu(event[8]);
               //              Serial3.print("packet type: ");
               //              switch (event[9])
               //              {
@@ -806,7 +805,7 @@ uint8_t IS2020::getNextEventFromBT() {
               {
                 case AVRCP_REGISTER_NOTIFICATION:
                   {
-                    IS2020::decodeAVRCP_Event(event[12]);
+                    IS2020::decodeAvrcpEvent(event[12]);
                     switch (event[12])
                     {
                       case AVRCP_EVENT_STATUS_CHANGED://AVRCP_EVENT_PLAYBACK_STATUS_CHANGED:
@@ -879,7 +878,7 @@ uint8_t IS2020::getNextEventFromBT() {
                             DBG(String(event[parameter_byte], HEX));
                           }
                           DBG(F("\n"));
-                          IS2020::AVRCP_Get_Element_Attributes(event[1]);
+                          IS2020::avrcpGetElementAttributes(event[1]);
                         }
                         break;
                       case AVRCP_EVENT_TRACK_REACHED_END:
@@ -894,7 +893,6 @@ uint8_t IS2020::getNextEventFromBT() {
                       case AVRCP_EVENT_PLAYBACK_POS_CHANGED:
                         {
                           DBG("PLAYBACK_POS_CHANGED current playback position: ");
-
                           DBG(String(event[13] << 24 | event[14] << 16 | event[15] << 8 | event[16], DEC));
                           DBG(F("s\n"));
                         }
@@ -966,11 +964,11 @@ uint8_t IS2020::getNextEventFromBT() {
                       }
                     } else if (event[12] == CAP_EVENTS_SUPPORTED) {
                       for (uint16_t parameter_byte = 14; parameter_byte < (14 + event[13]); parameter_byte++) { //event[13] = CapabilityCount
-                        IS2020::decodeAVRCP_Event(event[parameter_byte]);
+                        IS2020::decodeAvrcpEvent(event[parameter_byte]);
                         if (event[parameter_byte] == AVRCP_EVENT_PLAYBACK_POS_CHANGED) {
-                          IS2020::AVRCP_Registration_for_notification_of_Event(event[1], event[parameter_byte], 0x00, 0x00, 0x13, 0x88);
+                          IS2020::avrcpRegistrationForNotificationOfEvent(event[1], event[parameter_byte], 0x00, 0x00, 0x13, 0x88);
                         } else {
-                          IS2020::AVRCP_Registration_for_notification_of_Event(event[1], event[parameter_byte], 0x00, 0x00, 0x00, 0x00);
+                          IS2020::avrcpRegistrationForNotificationOfEvent(event[1], event[parameter_byte], 0x00, 0x00, 0x00, 0x00);
                         }
                       }
                     } else {
@@ -997,8 +995,8 @@ uint8_t IS2020::getNextEventFromBT() {
                       }
                     }
                     for (uint16_t parameter_byte = 13; parameter_byte < (13 + event[12]); parameter_byte++) {
-                      IS2020::AVRCP_Get_Player_Attribute_Text(event[1], event[parameter_byte]);
-                      IS2020::AVRCP_List_Player_Values(event[1], event[parameter_byte]);
+                      IS2020::avrcpGetPlayerAttributeText(event[1], event[parameter_byte]);
+                      IS2020::avrcpListPlayerValues(event[1], event[parameter_byte]);
                     }
                   }
                   break;
@@ -1019,13 +1017,13 @@ uint8_t IS2020::getNextEventFromBT() {
                               case AVRCP_EQUALIZER_OFF:
                                 {
                                   DBG(F("AVRCP_EQUALIZER_OFF\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_EQUALIZER, AVRCP_EQUALIZER_OFF);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_EQUALIZER, AVRCP_EQUALIZER_OFF);
                                 }
                                 break;
                               case AVRCP_EQUALIZER_ON:
                                 {
                                   DBG(F("AVRCP_EQUALIZER_ON\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_EQUALIZER, AVRCP_EQUALIZER_ON);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_EQUALIZER, AVRCP_EQUALIZER_ON);
                                 }
                                 break;
                             }
@@ -1039,25 +1037,25 @@ uint8_t IS2020::getNextEventFromBT() {
                               case AVRCP_REPEAT_MODE_OFF:
                                 {
                                   DBG(F("AVRCP_REPEAT_MODE_OFF\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_OFF);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_OFF);
                                 }
                                 break;
                               case AVRCP_REPEAT_MODE_SINGLE:
                                 {
                                   DBG(F("AVRCP_REPEAT_MODE_SINGLE\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_SINGLE);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_SINGLE);
                                 }
                                 break;
                               case AVRCP_REPEAT_MODE_ALL:
                                 {
                                   DBG(F("AVRCP_REPEAT_MODE_ALL\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_ALL);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_ALL);
                                 }
                                 break;
                               case AVRCP_REPEAT_MODE_GROUP:
                                 {
                                   DBG(F("AVRCP_REPEAT_MODE_GROUP\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_GROUP);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_GROUP);
                                 }
                                 break;
                             }
@@ -1071,19 +1069,19 @@ uint8_t IS2020::getNextEventFromBT() {
                               case AVRCP_SHUFFLE_OFF:
                                 {
                                   DBG(F("AVRCP_SHUFFLE_OFF\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_OFF);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_OFF);
                                 }
                                 break;
                               case AVRCP_SHUFFLE_ALL:
                                 {
                                   DBG(F("AVRCP_SHUFFLE_ALL\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_ALL);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_ALL);
                                 }
                                 break;
                               case AVRCP_SHUFFLE_GROUP:
                                 {
                                   DBG(F("AVRCP_SHUFFLE_GROUP\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_GROUP);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_GROUP);
                                 }
                                 break;
                             }
@@ -1097,19 +1095,19 @@ uint8_t IS2020::getNextEventFromBT() {
                               case AVRCP_SCAN_OFF:
                                 {
                                   DBG(F("AVRCP_SCAN_OFF\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_OFF);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_OFF);
                                 }
                                 break;
                               case AVRCP_SCAN_ALL:
                                 {
                                   DBG(F("AVRCP_SCAN_ALL\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_ALL);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_ALL);
                                 }
                                 break;
                               case AVRCP_SCAN_GROUP:
                                 {
                                   DBG(F("AVRCP_SCAN_GROUP\n"));
-                                  IS2020::AVRCP_Get_Player_Value_Text(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_GROUP);
+                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_GROUP);
                                 }
                                 break;
                             }
@@ -1231,37 +1229,37 @@ uint8_t IS2020::getNextEventFromBT() {
             {
 
               for (uint8_t i = 0; i < 8; i++) {
-                LinkStatus[i] = event[i + 1]; //link status is array of 7 bytes, like response is 7bytes.
+                linkStatus[i] = event[i + 1]; //link status is array of 7 bytes, like response is 7bytes.
               }
-              if (LinkStatus[1] > 0) {
-                IS2020::query_device_name(0x00);
-                //IS2020::query_in_band_ringtone_status(0x00);
-                //IS2020::query_if_remote_device_is_iAP_device(0x00);
-                //IS2020::query_if_remote_device_support_AVRCP_v13(0x00);
-                //IS2020::query_HF_A2DP_gain(0x00);
-                //IS2020::query_Line_In_gain(0x00);
-                IS2020::AVRCP_Displayable_Charset(0x00);
-                // IS2020::AVRCP_Get_Capabilities(0x00, 0x02);
-                IS2020::AVRCP_Get_Capabilities(0x00, 0x03);
-                IS2020::AVRCP_List_Player_Attributes(0x00);
-                //IS2020::RegisterAllEvents(0x00);
+              if (linkStatus[1] > 0) {
+                IS2020::queryDeviceName(0x00);
+                //IS2020::queryInBandRingtone_status(0x00);
+                //IS2020::queryIfRemoteDeviceIsIAPDevice(0x00);
+                //IS2020::queryIfRemoteDeviceSupportAavrcpV13(0x00);
+                //IS2020::queryHfA2DPGain(0x00);
+                //IS2020::queryLineInGain(0x00);
+                IS2020::avrcpDisplayableCharset(0x00);
+                // IS2020::avrcpGetCapabilities(0x00, 0x02);
+                IS2020::avrcpGetCapabilities(0x00, 0x03);
+                IS2020::avrcpListPlayerAttributes(0x00);
+                //IS2020::registerAllEvents(0x00);
               } else {
                 removeInfoAboutDevice(0);
               }
-              if (LinkStatus[2] > 0) {
-                IS2020::query_device_name(1);
-                //IS2020::query_in_band_ringtone_status(0x01);
-                //IS2020::query_if_remote_device_is_iAP_device(0x01);
-                //IS2020::query_if_remote_device_support_AVRCP_v13(0x01);
-                //IS2020::query_HF_A2DP_gain(0x01);
-                //IS2020::query_Line_In_gain(0x01);
-                IS2020::AVRCP_Displayable_Charset(0x01);
-                //IS2020::AVRCP_Get_Capabilities(0x01, 0x02);
-                IS2020::AVRCP_Get_Capabilities(0x01, 0x03);
-                IS2020::AVRCP_List_Player_Attributes(0x01);
-                // IS2020::RegisterAllEvents(0x01);
+              if (linkStatus[2] > 0) {
+                IS2020::queryDeviceName(1);
+                //IS2020::queryInBandRingtoneStatus(0x01);
+                //IS2020::queryIfRemoteDeviceIsIAPDevice(0x01);
+                //IS2020::queryIfRemoteDeviceSupportAvrcpV13(0x01);
+                //IS2020::queryHfA2DPGain(0x01);
+                //IS2020::queryLineInGain(0x01);
+                IS2020::avrcpDisplayableCharset(0x01);
+                //IS2020::avrcpGetCapabilities(0x01, 0x02);
+                IS2020::avrcpGetCapabilities(0x01, 0x03);
+                IS2020::avrcpListPlayerAttributes(0x01);
+                // IS2020::registerAllEvents(0x01);
               } else {
-                removeInfoAboutDevice(1);
+                IS2020::removeInfoAboutDevice(1);
               }
             }
             break;
@@ -1293,12 +1291,12 @@ uint8_t IS2020::getNextEventFromBT() {
                  bt_0 evetn[7]
               */
               //link priority
-              btAddress[event[1]][0] = event[2];
+              IS2020::btAddress[event[1]][0] = event[2];
               for (uint8_t i = 1; i < 7; i++) { // -- cose : byte1~byte6 linked device BD address (6 bytes with low byte first)
                 //evet[3] = byte6, evet[4]=byte5 ....
-                btAddress[event[1]][i] = event[7 - i]; // low byte first so 7,6,5,4,3,2,1 ? check in reality!
+                IS2020::btAddress[event[1]][i] = event[7 - i]; // low byte first so 7,6,5,4,3,2,1 ? check in reality!
               }
-              //BTMstatusChanged=1;
+              //IS2020::btmStatusChanged=1;
             }
             break;
           case EVT_Read_Local_BD_Address_Reply:
@@ -1306,19 +1304,19 @@ uint8_t IS2020::getNextEventFromBT() {
               DBG("Local BT adr: ");
               for (uint8_t _byte = 0; _byte < 6; _byte++) {
                 DBG(String(event[_byte], HEX));
-                moduleBtAddress[5 - _byte] = event[_byte + 1];
+                IS2020::moduleBtAddress[5 - _byte] = event[_byte + 1];
                 if (_byte > 1) DBG(":");
               }
             }
             break;
           case EVT_Read_Local_Device_Name_Reply:
             {
-              IS2020::LocalDeviceName = "";
+              IS2020::localDeviceName = "";
               //DBG("size: ");
               //DBG(String(event[1])+"\n");
               for (uint8_t _byte = 0; _byte < event[1]; _byte++) {
                 //Serial3.write(event[_byte+2]);
-                IS2020::LocalDeviceName += (char)event[_byte + 2];
+                IS2020::localDeviceName += (char)event[_byte + 2];
               }
               //DBG("BT name: ");
               //DBG(LocalDeviceName);
@@ -1374,14 +1372,12 @@ uint8_t IS2020::getNextEventFromBT() {
             break;
           default:
             {
-              Serial3.println();
+              /*Serial3.println();
               Serial3.print("Unknown  BYTE: ");
               for (uint8_t i = 0; i < packetSize; i++) {
-
-
                 Serial3.print(event[i], HEX);
               }
-              Serial3.println();
+              Serial3.println();*/
             }
         }
         return event[0];

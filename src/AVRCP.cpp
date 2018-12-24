@@ -2,70 +2,70 @@
 #include "AVRCP.h"
 #include <Arduino.h>
 
-uint8_t  IS2020::AVRCP_Get_Capabilities(uint8_t deviceId, uint8_t capId) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetCapabilities(uint8_t deviceId, uint8_t capId) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Get_Capability_command_for_Events\n"));
   uint8_t data[5] = {AVRCP_GET_CAPABILITIES, //6
                      0x00, //7 Reserved
                      0x00, 0x01, // 8-9 D => 13 bytes
                      capId //0x02 company ID, 0x03 EventsID
                     }; //23,24,25,26
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_List_Player_Attributes(uint8_t deviceId) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpListPlayerAttributes(uint8_t deviceId) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_List_Player_Attributes\n"));
   uint8_t data[5] = {AVRCP_LIST_PLAYER_ATTRIBUTES, //6
                      0x00, //7 Reserved
                      0x00, 0x01,
                      0x00
                     };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_List_Player_Values(uint8_t deviceId, uint8_t attribute) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpListPlayerValues(uint8_t deviceId, uint8_t attribute) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_List_Player_Values\n"));
   uint8_t data[5] = {AVRCP_LIST_PLAYER_VALUES, //6
                      0x00, //7 Reserved
                      0x00, 0x01,
                      attribute
                     };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
 
 */
-uint8_t  IS2020::AVRCP_Get_Current_Player_Value(uint8_t deviceId, uint8_t attribute) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetCurrentPlayerValue(uint8_t deviceId, uint8_t attribute) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Get_Current_Player_Value\n"));
   uint8_t data[5] = {AVRCP_GET_CURRENT_PLAYER_VALUE, //6
                      0x00, //7 Reserved
                      0x00, 0x01, //size
                      attribute
                     };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Set_Player_Value(uint8_t deviceId, uint8_t attribute, uint8_t value) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpSetPlayerValue(uint8_t deviceId, uint8_t attribute, uint8_t value) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Set_Player_Value\n"));
   uint8_t data[6] = {AVRCP_SET_PLAYER_VALUE, //6
                      0x00, //7 Reserved
                      0x00, 0x02, //size
                      attribute, value
                     };
-  IS2020::SendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Get_Player_Attribute_Text(uint8_t deviceId, uint8_t attribute) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetPlayerAttributeText(uint8_t deviceId, uint8_t attribute) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Get_Player_Attribute_Text\n"));
   uint8_t data[5] = {AVRCP_GET_PLAYER_ATTRIBUTE_TEXT, //6
                      0x00, //7 Reserved
@@ -73,12 +73,12 @@ uint8_t  IS2020::AVRCP_Get_Player_Attribute_Text(uint8_t deviceId, uint8_t attri
                      attribute
                      /*0x01,0x02,0x03,0x04*/
                     };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Get_Player_Value_Text(uint8_t deviceId, uint8_t attribute, uint8_t setting) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetPlayerValueText(uint8_t deviceId, uint8_t attribute, uint8_t setting) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Get_Player_Value_Text\n"));
   uint8_t data[7] = {AVRCP_GET_PLAYER_VALUE_TEXT, //6
                      0x00, //7 Reserved
@@ -87,24 +87,24 @@ uint8_t  IS2020::AVRCP_Get_Player_Value_Text(uint8_t deviceId, uint8_t attribute
                      0x01,
                      setting
                     };
-  IS2020::SendPacketArrayInt(9, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(9, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Displayable_Charset(uint8_t deviceId) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpDisplayableCharset(uint8_t deviceId) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Displayable_Charset\n"));
   uint8_t data[6] = {AVRCP_DISPLAYABLE_CHARSET, //6
                      0x00, //7 Reserved
                      0x00, 0x02, //size
                      0x00, 0x6A
                     };
-  IS2020::SendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Get_Element_Attributes(uint8_t deviceId) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetElementAttributes(uint8_t deviceId) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP Get element attributes command\n"));
   uint8_t data[45] = {AVRCP_GET_ELEMENT_ATTRIBUTES, //6
                       0x00, //7 Reserved
@@ -120,12 +120,12 @@ uint8_t  IS2020::AVRCP_Get_Element_Attributes(uint8_t deviceId) {
                       0x00, 0x00, 0x00, 0x07,
                       0x00, 0x00, 0x00, 0x08
                      }; //23,24,25,26
-  IS2020::SendPacketArrayInt(47, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(47, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Get_Element_Attributes_All(uint8_t deviceId) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetElementAttributesAll(uint8_t deviceId) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Get_Element_Attributes\n"));
   uint8_t data[5] = {AVRCP_GET_ELEMENT_ATTRIBUTES, //1
                       0x00, //2
@@ -133,23 +133,23 @@ uint8_t  IS2020::AVRCP_Get_Element_Attributes_All(uint8_t deviceId) {
                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //1,2,3,4 5,6,7,8
                       0x00*/
                      };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Get_Play_Status(uint8_t deviceId) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetPlayStatus(uint8_t deviceId) {
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Get_Element_Attributes\n"));
   uint8_t data[3] = {AVRCP_GET_PLAY_STATUS, //command
                       0x00, //reserved
                       0x00//, 0x00
                      };
-  IS2020::SendPacketArrayInt(5, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(5, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Registration_for_notification_of_Event(uint8_t deviceId, uint8_t event, uint8_t param1, uint8_t param2, uint8_t param3, uint8_t param4) {
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpRegistrationForNotificationOfEvent(uint8_t deviceId, uint8_t event, uint8_t param1, uint8_t param2, uint8_t param3, uint8_t param4) {
+  IS2020::getNextEventFromBt();
   //IS2020::DBG(F("Registration for notification of event:"));
   //decodeAVRCP_Event(event); DBG(F("\n"));
   uint8_t data[9] = {AVRCP_REGISTER_NOTIFICATION, //PDU ID (0x31 – Register Notification)
@@ -158,73 +158,73 @@ uint8_t  IS2020::AVRCP_Registration_for_notification_of_Event(uint8_t deviceId, 
                      event, //EventID
                      param1, param2, param3, param4
                     };
-  IS2020::SendPacketArrayInt(11, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(11, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
-  IS2020::getNextEventFromBT(); IS2020::getNextEventFromBT(); IS2020::getNextEventFromBT();
+  IS2020::getNextEventFromBt(); IS2020::getNextEventFromBt(); IS2020::getNextEventFromBt();
 }
 
-uint8_t  IS2020::AVRCP_Request_Continuing(uint8_t deviceId, uint8_t pdu){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpRequestContinuing(uint8_t deviceId, uint8_t pdu){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Request_Continuing\n"));
   uint8_t data[5] = {AVRCP_REQUEST_CONTINUING, //1
                       0x00, //2
                       0x00, 0x01,
                       pdu
                      };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Abort_Continuing(uint8_t deviceId, uint8_t pdu){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpAbortContinuing(uint8_t deviceId, uint8_t pdu){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Abort_Continuing\n"));
   uint8_t data[5] = {AVRCP_ABORT_CONTINUING, //1
                       0x00, //2
                       0x00, 0x01,
                       pdu
                      };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Set_Absolute_Volume(uint8_t deviceId, uint8_t volume){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpSetAbsoluteVolume(uint8_t deviceId, uint8_t volume){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Set_Absolute_Volume\n"));
   uint8_t data[5] = {AVRCP_SET_ABSOLUTE_VOLUME, //1
                       0x00, //2
                       0x00, 0x01,
                       volume
                      };
-  IS2020::SendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Set_Addressed_Player(uint8_t deviceId, uint16_t player){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpSetAddressedPlayer(uint8_t deviceId, uint16_t player){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Set_Addressed_Player\n"));
   uint8_t data[6] = {ACRCP_SET_ADDRESSED_PLAYER, //1
                       0x00, //2
                       0x00, 0x02,
                       ((player>>8) & 0xFF),(player & 0xFF)
                      };
-  IS2020::SendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Set_Browsed_Player(uint8_t deviceId, uint16_t player){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Set_Addressed_Player\n"));
   uint8_t data[6] = {AVRCP_SET_BROWSED_PLAYER, //1
                       0x00, //2
                       0x00, 0x02,
                       ((player>>8) & 0xFF),(player & 0xFF)
                      };
-  IS2020::SendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Get_Folder_Items(uint8_t deviceId, uint8_t scope, uint32_t start,uint8_t end){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpGetFolderItems(uint8_t deviceId, uint8_t scope, uint32_t start,uint8_t end){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Set_Addressed_Player\n"));
   uint8_t data[14] = {AVRCP_GET_FOLDER_ITEMS, //1
                       0x00, //2,
@@ -234,12 +234,12 @@ uint8_t  IS2020::AVRCP_Get_Folder_Items(uint8_t deviceId, uint8_t scope, uint32_
                       ((end>>14)&0xFF),((end>>16)&0xFF),((end>>8)&0xFF),(end&0xFF),//end
                       0x00
                      };
-  IS2020::SendPacketArrayInt(16, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(16, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-uint8_t  IS2020::AVRCP_Change_Path(uint8_t deviceId, uint8_t direction, uint64_t folderUID){
-  IS2020::getNextEventFromBT();
+uint8_t  IS2020::avrcpChangePath(uint8_t deviceId, uint8_t direction, uint64_t folderUID){
+  IS2020::getNextEventFromBt();
   IS2020::DBG(F("AVRCP_Set_Addressed_Player\n"));
   uint8_t data[15] = {AVRCP_GET_FOLDER_ITEMS, //1
                       0x00, //2,
@@ -250,27 +250,27 @@ uint8_t  IS2020::AVRCP_Change_Path(uint8_t deviceId, uint8_t direction, uint64_t
                       ((folderUID>>56)&0xFF),((folderUID>>48)&0xFF),((folderUID>>40)&0xFF),((folderUID>>32)&0xFF),
                       ((folderUID>>24)&0xFF),((folderUID>>16)&0xFF),((folderUID>>8)&0xFF),(folderUID&0xFF)
                      };
-  IS2020::SendPacketArrayInt(16, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(16, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
-void IS2020::RegisterAllEvents(uint8_t deviceId) {
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_TRACK_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_TRACK_REACHED_END, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_TRACK_REACHED_START, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_PLAYBACK_POS_CHANGED, 0x00, 0x00,0x13, 0x88);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_BATT_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_SYSTEM_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_PLAYER_APPLICATION_SETTING_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_ADDRESSED_PLAYER_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_UIDS_CHANGED, 0x00, 0x00, 0x00, 0x00);
-  IS2020::AVRCP_Registration_for_notification_of_Event(deviceId, AVRCP_EVENT_VOLUME_CHANGED, 0x00, 0x00, 0x00, 0x00);
+void IS2020::registerAllEvents(uint8_t deviceId) {
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_REACHED_END, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_REACHED_START, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYBACK_POS_CHANGED, 0x00, 0x00,0x13, 0x88);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_BATT_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_SYSTEM_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYER_APPLICATION_SETTING_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_ADDRESSED_PLAYER_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_UIDS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_VOLUME_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
-void IS2020::decodeAVRCP_Pdu(uint8_t pdu) {
+void IS2020::decodeAvrcpPdu(uint8_t pdu) {
   DBG(F("Decoded PDU: "));
   switch (pdu)
   {
@@ -354,7 +354,7 @@ void IS2020::decodeAVRCP_Pdu(uint8_t pdu) {
 }
 
 
-void IS2020::decodeAVRCP_Event(uint8_t Event) {
+void IS2020::decodeAvrcpEvent(uint8_t Event) {
   DBG(F("Decoded event: "));
   switch (Event)
   {
@@ -403,7 +403,7 @@ void IS2020::decodeAVRCP_Event(uint8_t Event) {
   DBG(F("\n"));
 }
 
-void IS2020::decodeAVRCP_PlayerAtributes(uint8_t attribute) {
+void IS2020::decodeAvrcpPlayerAtributes(uint8_t attribute) {
   /* player attributes */
   DBG(F("Decoded player attribute: "));
   switch (attribute)
