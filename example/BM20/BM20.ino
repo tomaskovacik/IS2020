@@ -24,7 +24,7 @@ void setup() {
   //  while (!Serial3) {
   //    ; // wait for serial port to connect. Needed for native USB port only
   //  }
-  BT.begin(115200, RESET);
+  BT.begin(RESET);
   BT.btmStatusChanged = 1;
   BT.readLocalDeviceName();
   BT.readLocalBtAddress();

@@ -15,7 +15,7 @@ IS2020::IS2020(HardwareSerial *ser) {
 IS2020::~IS2020() {
 }
 
-void IS2020::begin(uint32_t baudrate, uint8_t resetPin) {
+void IS2020::begin(uint8_t resetPin,uint32_t baudrate) {
   _reset = resetPin;
   btSerial -> begin(baudrate);
   pinMode(_reset, OUTPUT);

@@ -22,7 +22,7 @@ class IS2020
 {
   public:
     IS2020(HardwareSerial *ser);
-    void begin(uint32_t baudrate, uint8_t _reset);
+    void begin(uint8_t _reset,uint32_t baudrate=115200);
     ~IS2020();
 
 
