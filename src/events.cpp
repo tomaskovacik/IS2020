@@ -142,7 +142,7 @@ uint8_t IS2020::getNextEventFromBt() {
               IS2020::btmState = event[1];
               IS2020::btmLinkInfo = event[2];
               IS2020::readLinkStatus();
-              IS2020::IS2020::btmStatusChanged = 1;
+              IS2020::btmStatusChanged = 1;
             }
             break;
           /*
@@ -169,7 +169,7 @@ uint8_t IS2020::getNextEventFromBt() {
           */
           case EVT_Call_Status:
             {
-              IS2020::IS2020::btmStatusChanged = 1;
+              IS2020::btmStatusChanged = 1;
               IS2020::callStatus[event[1]] = event[2];
             }
             break;
@@ -191,7 +191,7 @@ uint8_t IS2020::getNextEventFromBt() {
           */
           case EVT_Caller_ID:
             {
-              IS2020::IS2020::btmStatusChanged = 1;
+              IS2020::btmStatusChanged = 1;
               for (uint8_t i = 0; i < packetSize; i++) {
                 IS2020::callerId[event[1]][packetSize] = event[i + 2]; //no need to any sort of flag bit, cose we have callstatus change flag and in case of incoming call we just read this array
               }
@@ -262,9 +262,9 @@ uint8_t IS2020::getNextEventFromBt() {
             {
               IS2020::btmStatusChanged = 1;
               IS2020::maxBatteryLevel[event[1]] = event[2];
-              /*Serial3.println(F("================================="));
-              Serial3.println(F("EVT_Phone_Max_Battery_Leveld"));
-              Serial3.println(F("================================="));
+              //Serial3.println(F("================================="));
+              Serial.println(F("EVT_Phone_Max_Battery_Level"));
+/*              Serial3.println(F("================================="));
               Serial3.println(event[2], DEC);
               Serial3.println(F("================================="));
               Serial3.println(F("================================="));*/
@@ -639,7 +639,7 @@ uint8_t IS2020::getNextEventFromBt() {
                 case 0x00://reply device name
                   {
                     IS2020::deviceName[event[1]] = "";
-                    //DBG("Reply device name\n");
+                    //DBG(F("Reply device name\n"));
                     //N bytes bluetooth name with NULL terminated. (N <= 249 with NULL terminated)
 
                     for (uint8_t i = 3; i < /*DEVICENAME_LENGHT_SUPPORT + 2*/packetSize - 1; i++) { //event[2] is information type definition, last is checksum
@@ -721,8 +721,8 @@ uint8_t IS2020::getNextEventFromBt() {
           */
           case EVT_Read_BTM_Version_Reply:
             {
-              if (event[1] == 0x00) IS2020::btmUartVersion = (event[2] << 8) | (event[3] & 0xff);
-              if (event[1] == 0x01) IS2020::btmFwVersion = (event[2] << 8) | (event[3] & 0xff);
+//              if (event[1] == 0x00) IS2020::btmUartVersion = (event[2] << 8) | (event[3] & 0xff);
+//              if (event[1] == 0x01) IS2020::btmFwVersion = (event[2] << 8) | (event[3] & 0xff);
 
             }
             break;
@@ -732,6 +732,7 @@ uint8_t IS2020::getNextEventFromBt() {
             break;
           case EVT_AVRCP_Specific_Rsp:
             {
+		uint8_t deviceID=event[1];
               //              if (DEBUG) {
               //                Serial3.println();
               //                Serial3.print("EVT_AVRCP_Specific_Rsp ");
@@ -801,6 +802,7 @@ uint8_t IS2020::getNextEventFromBt() {
                 }
                 return false;
               }
+	String tmp;
               switch (event[8]) //event[9] si always 0x00 10+11=size of sending responce
               {
                 case AVRCP_REGISTER_NOTIFICATION:
@@ -823,7 +825,10 @@ uint8_t IS2020::getNextEventFromBt() {
                             0x04: REV_SEEK
                             0xFF: ERROR
                           */
-                          switch (event[13]) {
+			IS2020::musicState[deviceID]=event[13];
+IS2020::btmStatusChanged=1;
+if (DEBUG){  
+			switch (event[13]) {
                             case 0x00:
                               DBG(F("STOPPED\n"));
                               break;
@@ -843,6 +848,7 @@ uint8_t IS2020::getNextEventFromBt() {
                               DBG(F("ERROR\n"));
                               break;
                           }
+}
                         }
                         break;
                       case AVRCP_EVENT_TRACK_CHANGED:
@@ -873,7 +879,7 @@ uint8_t IS2020::getNextEventFromBt() {
                             media element as listed in the
                             NowPlaying folder.
                           */
-                          DBG("AVRCP_EVENT_TRACK_CHANGED responce parameter: ");
+                          DBG(F("AVRCP_EVENT_TRACK_CHANGED responce parameter: "));
                           for (uint16_t parameter_byte = 14; parameter_byte < packetSize; parameter_byte++) {
                             DBG(String(event[parameter_byte], HEX));
                           }
@@ -892,7 +898,7 @@ uint8_t IS2020::getNextEventFromBt() {
                         break;
                       case AVRCP_EVENT_PLAYBACK_POS_CHANGED:
                         {
-                          DBG("PLAYBACK_POS_CHANGED current playback position: ");
+                          DBG(F("PLAYBACK_POS_CHANGED current playback position: "));
                           DBG(String(event[13] << 24 | event[14] << 16 | event[15] << 8 | event[16], DEC));
                           DBG(F("s\n"));
                         }
@@ -913,6 +919,7 @@ uint8_t IS2020::getNextEventFromBt() {
                                 0x4 - FULL_CHARGE – when the device is completely charged from the external power supply
                               */
                               DBG(F("Battery status: "));
+Serial.println("BAT status");
                             case 0x00:
                               {
                                 DBG(F("NORMAL\n"));
@@ -944,8 +951,10 @@ uint8_t IS2020::getNextEventFromBt() {
                         break;
                       case AVRCP_EVENT_ADDRESSED_PLAYER_CHANGED:
                         {
-                          DBG("PlayerId:" + String(event[13], HEX) + String(event[14], HEX) + "\n");
-                          DBG("UID:" + String(event[15], HEX) + String(event[16], HEX) + "\n");
+			  tmp = F("PlayerId:");
+                          DBG(tmp + String(event[13], HEX) + String(event[14], HEX) + F("\n"));
+			tmp = F("UID");
+                          DBG(tmp + String(event[15], HEX) + String(event[16], HEX) + F("\n"));
                         }
                         break;
                     }
@@ -972,7 +981,8 @@ uint8_t IS2020::getNextEventFromBt() {
                         }
                       }
                     } else {
-                      DBG("Unknown capabilities ID! " + String(event[12], HEX) + "\n");
+			tmp = F("Unknown capabilities ID! ");
+                      DBG(tmp + String(event[12], HEX) + "\n");
                     }
                   }
                   break;
@@ -1124,8 +1134,10 @@ uint8_t IS2020::getNextEventFromBt() {
                   break;
                 case AVRCP_GET_PLAY_STATUS:
                   {
-                    DBG("Song length: " + String((event[12]<<24||event[13]<<16||event[14]<<8||event[15])/1000, DEC));
-                    DBG("Song position: " + String((event[16]<<24||event[17]<<16||event[18]<<8||event[19])/1000, DEC));
+			tmp = F("Song length: ");
+                    DBG(tmp + String((event[12]<<24||event[13]<<16||event[14]<<8||event[15])/1000, DEC));
+			tmp = F("Song position: ");
+                    DBG(tmp + String((event[16]<<24||event[17]<<16||event[18]<<8||event[19])/1000, DEC));
                     DBG(F("Play status: "));
                     switch (event[20]) {
                     case 0x00:
@@ -1282,43 +1294,52 @@ uint8_t IS2020::getNextEventFromBt() {
                 …
                  notes:
                  cmd event[0]
-                 deviceid event[1]
-                 bt_5 evetn[2]
-                 bt_4 evetn[3]
-                 bt_3 evetn[4]
-                 bt_2 evetn[5]
-                 bt-1 evetn[6]
-                 bt_0 evetn[7]
+                 paired_device_id event[1]
+		 link_priority event[2]
+                 bt_5 event[3]
+                 bt_4 event[4]
+                 bt_3 event[5]
+                 bt_2 event[6]
+                 bt-1 event[7]
+                 bt_0 event[8]
+		 number of stored BT address=packetSize;
               */
               //link priority
-              IS2020::btAddress[event[1]][0] = event[2];
-              for (uint8_t i = 1; i < 7; i++) { // -- cose : byte1~byte6 linked device BD address (6 bytes with low byte first)
-                //evet[3] = byte6, evet[4]=byte5 ....
-                IS2020::btAddress[event[1]][i] = event[7 - i]; // low byte first so 7,6,5,4,3,2,1 ? check in reality!
-              }
-              //IS2020::btmStatusChanged=1;
+		pairedDevice=event[1]-1;
+		uint8_t numOfDevs=(packetSize-2)/7;
+		for (uint8_t i=0;i<numOfDevs;i++){
+			uint8_t offset=(i*7);
+	                IS2020::btAddress[i][0]=event[offset+2];
+        	        IS2020::btAddress[i][1]=event[offset+8];
+                	IS2020::btAddress[i][2]=event[offset+7];
+	                IS2020::btAddress[i][3]=event[offset+6];
+        	        IS2020::btAddress[i][4]=event[offset+5];
+                	IS2020::btAddress[i][5]=event[offset+4];
+	                IS2020::btAddress[i][6]=event[offset+3];
+		}
+
             }
             break;
           case EVT_Read_Local_BD_Address_Reply:
             {
-              DBG("Local BT adr: ");
+              DBG(F("Local BT adr: "));
               for (uint8_t _byte = 0; _byte < 6; _byte++) {
                 DBG(String(event[_byte], HEX));
                 IS2020::moduleBtAddress[5 - _byte] = event[_byte + 1];
-                if (_byte > 1) DBG(":");
+                if (_byte > 1) DBG(F(":"));
               }
             }
             break;
           case EVT_Read_Local_Device_Name_Reply:
             {
               IS2020::localDeviceName = "";
-              //DBG("size: ");
+              //DBG(F("size: "));
               //DBG(String(event[1])+"\n");
               for (uint8_t _byte = 0; _byte < event[1]; _byte++) {
                 //Serial3.write(event[_byte+2]);
                 IS2020::localDeviceName += (char)event[_byte + 2];
               }
-              //DBG("BT name: ");
+              //DBG(F("BT name: "));
               //DBG(LocalDeviceName);
             }
             break;

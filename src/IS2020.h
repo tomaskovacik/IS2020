@@ -12,7 +12,7 @@
 #define STARTBYTE 0xAA
 
 #define DUMMYBYTE 0x00
-#define DEBUG 0
+#define DEBUG 1
 
 #define DEVICENAME_LENGHT_SUPPORT 24
 
@@ -98,6 +98,8 @@ class IS2020
     uint8_t btAddress[7][7]; //byte0 = link priority, 1-6 BT addr
     uint8_t moduleBtAddress[6];
     void removeInfoAboutDevice(uint8_t deviceId);
+    uint8_t musicState[2]={0,0};
+    uint8_t pairedDevice=0;
 
     //MMI specific functions
     uint8_t addRemoveScoLink(uint8_t deviceID);

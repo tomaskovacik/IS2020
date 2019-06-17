@@ -26,7 +26,7 @@ void IS2020::begin(uint8_t resetPin,uint32_t baudrate) {
    debug output
 */
 void IS2020::DBG(String text) {
-//  if (DEBUG) /*return "DBG: ");*/ Serial3.print(text);;
+//  if (DEBUG) /*return "DBG: ");*/ Serial.print(text);
 }
 
 void IS2020::resetLow() {
@@ -87,7 +87,8 @@ void  IS2020::sendPacketInt(uint8_t cmd, uint8_t data) {
 */
 void  IS2020::sendPacketString(uint8_t cmd, String str) {
   //DBG("sending string: ");
-  decodeCommand(cmd); DBG(" String: " + str + "\n");
+  String tmp = F(" String: ");
+  decodeCommand(cmd); DBG(tmp + str + "\n");
 
   uint16_t packetSize = str.length() + 1; //length of string + cmd
   btSerial -> write(STARTBYTE); //DBG(String(STARTBYTE, HEX));
@@ -108,7 +109,7 @@ void  IS2020::sendPacketString(uint8_t cmd, String str) {
 */
 void  IS2020::sendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t data[]) {
   //DBG("sending array int: ");
-  decodeCommand(cmd); DBG(": ");
+  decodeCommand(cmd); DBG(F(": "));
 
   btSerial -> write(STARTBYTE); DBG(String(STARTBYTE, HEX));
   btSerial -> write(packetSize >> 8); DBG(F(" ")); DBG(String((packetSize >> 8), HEX));
@@ -189,12 +190,12 @@ String IS2020::connectionStatus(uint8_t deviceId) {
             0x08 Bit3 : HF profile connected
             0x10 Bit4 : SPP connected"
   */
-  if (linkStatus[1 + deviceId] & (1 << A2DP_profile_signaling_channel_connected)) ConnectionStatus += "A2DP profile signaling channel connected\n";
-  if (linkStatus[1 + deviceId] & (1 << A2DP_profile_stream_channel_connected)) ConnectionStatus += "A2DP profile stream channel connected\n";
-  if (linkStatus[1 + deviceId] & (1 << AVRCP_profile_connected)) ConnectionStatus += "AVRCP profile connected\n";
-  if (linkStatus[1 + deviceId] & (1 << HF_profile_connected)) ConnectionStatus += "HF profile connected\n";
-  if (linkStatus[1 + deviceId] & (1 << SPP_connected)) ConnectionStatus += "SPP connected\n";
-  if (linkStatus[1 + deviceId] == 0) ConnectionStatus = "Disconnected\n";
+  if (linkStatus[1 + deviceId] & (1 << A2DP_profile_signaling_channel_connected)) ConnectionStatus += F("A2DP profile signaling channel connected\n");
+  if (linkStatus[1 + deviceId] & (1 << A2DP_profile_stream_channel_connected)) ConnectionStatus += F("A2DP profile stream channel connected\n");
+  if (linkStatus[1 + deviceId] & (1 << AVRCP_profile_connected)) ConnectionStatus += F("AVRCP profile connected\n");
+  if (linkStatus[1 + deviceId] & (1 << HF_profile_connected)) ConnectionStatus += F("HF profile connected\n");
+  if (linkStatus[1 + deviceId] & (1 << SPP_connected)) ConnectionStatus += F("SPP connected\n");
+  if (linkStatus[1 + deviceId] == 0) ConnectionStatus = F("Disconnected\n");
   return ConnectionStatus;
 }
 
@@ -212,33 +213,34 @@ String IS2020::musicStatus(uint8_t deviceId) {
             0x07:WAIT_TO_PLAY
             0x08:WAIT_TO_PAUSE"
   */
-  switch (linkStatus[3 + deviceId]) {
+//  switch (linkStatus[3 + deviceId]) {
+  switch (musicState[deviceId]) {
     case 0x00:
-      return ("STOP");
+      return (F("STOP"));
       break;
     case 0x01:
-      return ("PLAYING");
+      return (F("PLAYING"));
       break;
     case 0x02:
-      return ("PAUSED");
+      return (F("PAUSED"));
       break;
     case 0x03:
-      return ("FWD SEEK");
+      return (F("FWD SEEK"));
       break;
     case 0x04:
-      return ("REV SEEK");
+      return (F("REV SEEK"));
       break;
     case 0x05:
-      return ("FAST FWD");
+      return (F("FAST FWD"));
       break;
     case 0x06:
-      return ("REWIND");
+      return (F("REWIND"));
       break;
     case 0x07:
-      return ("WAIT_TO_PLAY");
+      return (F("WAIT_TO_PLAY"));
       break;
     case 0x08:
-      return ("WAIT_TO_PAUSE");
+      return (F("WAIT_TO_PAUSE"));
       break;
   }
 }
@@ -251,11 +253,8 @@ String IS2020::streamStatus(uint8_t deviceId) {
             0x00: no stream
             0x01: stream on-going"
   */
-  if (linkStatus[5 + deviceId] == 0x00) {
-    return ("No stream");
-  } else {
-    return ("Streaming");
-  }
+  if (linkStatus[5 + deviceId]) return (F("Streaming"));
+  return (F("No stream"));
 }
 
 uint8_t IS2020::batteryLevel(uint8_t deviceId) {
@@ -276,25 +275,25 @@ String IS2020::moduleState() {
   */
   switch (linkStatus[0]) {
     case 0x00:
-      return ("Power OFF");
+      return (F("Power OFF"));
       break;
     case 0x01:
-      return ("pairing state (discoverable mode)");
+      return (F("pairing state (discoverable mode)"));
       break;
     case 0x02:
-      return ("standby state");
+      return (F("standby state"));
       break;
     case 0x03:
-      return ("Connected state with only HF profile connected");
+      return (F("Connected state with only HF profile connected"));
       break;
     case 0x04:
-      return ("Connected state with only A2DP profile connected");
+      return (F("Connected state with only A2DP profile connected"));
       break;
     case 0x05:
-      return ("Connected state with only SPP profile connected");
+      return (F("Connected state with only SPP profile connected"));
       break;
     case 0x06:
-      return ("Connected state with HP and A2DP profile connected");
+      return (F("Connected state with HP and A2DP profile connected"));
       break;
   }
 }
@@ -309,55 +308,57 @@ String IS2020::btStatus() {
       return (F("pairing state (discoverable mode)"));
       break;
     case 0x02:
-      return ("Power ON state");
+      return (F("Power ON state"));
       break;
     case 0x03:
-      return ("pairing successful");
+      return (F("pairing successful"));
       break;
     case 0x04:
-      return ("pairing fail");
+      return (F("pairing fail"));
       break;
     case 0x05:
-      return ("HF link established");
+      return (F("HF link established"));
       break;
     case 0x06:
-      return ("A2DP link established");
+      return (F("A2DP link established"));
       break;
     case 0x07:
-      return ("HF link disconnected");
+      return (F("HF link disconnected"));
       break;
     case 0x08:
-      return ("A2DP link disconnected");
+      return (F("A2DP link disconnected"));
       break;
     case 0x09:
-      return ("SCO link connected");
+      return (F("SCO link connected"));
       break;
     case 0x0A:
-      return ("SCO link disconnected");
+      return (F("SCO link disconnected"));
       break;
     case 0x0B:
-      return ("AVRCP link established");
+      return (F("AVRCP link established"));
       break;
     case 0x0C:
-      return ("AVRCP link disconnected");
+      return (F("AVRCP link disconnected"));
       break;
     case 0x0D:
-      return ("Standard SPP connected");
+      return (F("Standard SPP connected"));
       break;
     case 0x0E:
-      return ("Standard_SPP / iAP disconnected");
+      return (F("Standard_SPP / iAP disconnected"));
       break;
     case 0x0F:
-      return ("Standby state");
+      return (F("Standby state"));
       break;
     case 0x10:
-      return ("iAP connected");
+      return (F("iAP connected"));
       break;
     case 0x11:
-      return ("ACL disconnected");
+      return (F("ACL disconnected"));
       break;
     default:
-      return ("unknown state" + (char)btmState);
+     String tmp=F("unknown stat");
+      //return ("unknown state" + (char)btmState);
+      return (tmp + (char)btmState);
       break;
   }
 }
