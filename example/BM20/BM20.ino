@@ -162,25 +162,25 @@ void loop() { // run over and over
         }
         break;
       case 'h': //help
-        Serial.print(F("battery status          b"));
-        Serial.print(F("Enable defualt Events   e"));
-        Serial.print(F("Enable All Events       E"));
-        Serial.print(F("next track button       ="));
-        Serial.print(F("previous track button   -"));
-        Serial.print(F("play/pause               p"));
-        Serial.print(F("PLAY                     P"));
-        Serial.print(F("STOP               S"));
-        Serial.print(F("seek forward/repeat ff f/F"));
-        Serial.print(F("seek rewind/repeate rw r/R"));
-        Serial.print(F("reset module q"));
-        Serial.print(F("call c"));
-        Serial.print(F("                        l"));
-        Serial.print(F("help                    h"));
-        Serial.print(F("read dev info           d"));
-        Serial.print(F("Eeprom_to_defaults      D"));
-        Serial.print(F("read info about connected phone      n"));
-        Serial.print(F("link info I"));
-        Serial.print(F("Switch_primary_seconday_HF C"));
+        Serial.println(F("battery status          b"));
+        Serial.println(F("Enable defualt Events   e"));
+        Serial.println(F("Enable All Events       E"));
+        Serial.println(F("next track button       ="));
+        Serial.println(F("previous track button   -"));
+        Serial.println(F("play/pause               p"));
+        Serial.println(F("PLAY                     P"));
+        Serial.println(F("STOP               S"));
+        Serial.println(F("seek forward/repeat ff f/F"));
+        Serial.println(F("seek rewind/repeate rw r/R"));
+        Serial.println(F("reset module q"));
+        Serial.println(F("call c"));
+        Serial.println(F("                        l"));
+        Serial.println(F("help                    h"));
+        Serial.println(F("read dev info           d"));
+        Serial.println(F("Eeprom_to_defaults      D"));
+        Serial.println(F("read info about connected phone      n"));
+        Serial.println(F("link info I"));
+        Serial.println(F("Switch_primary_seconday_HF C"));
         break;
       case 'i': //info
         {
