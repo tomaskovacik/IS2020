@@ -26,7 +26,7 @@ void IS2020::begin(uint8_t resetPin,uint32_t baudrate) {
    debug output
 */
 void IS2020::DBG(String text) {
-//  if (DEBUG) /*return "DBG: ");*/ Serial.print(text);
+  if (DEBUG) /*return "DBG: ");*/ Serial.print(text);
 }
 
 void IS2020::resetLow() {

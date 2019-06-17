@@ -9,7 +9,7 @@ uint8_t IS2020::getNextEventFromBt() {
   delay(100);
   //if (btSerial -> available()) {
   while (btSerial -> available() > 0) {
-    //DBG(F("Get next Event from BT\n"));
+//    DBG(F("Get next Event from BT\n"));
     if (btSerial -> read() == 0xAA) { //start of event
 
       uint16_t packetSize = (btSerial -> read() << 8) | (btSerial -> read() & 0xff);
@@ -22,7 +22,7 @@ uint8_t IS2020::getNextEventFromBt() {
 
       if (checkCkeckSum(packetSize, event)) {
         //if (event[0] != EVT_Command_ACK) Event_ACK(event[0]);
-        // DBG(F("Event from module: "));
+//        DBG(F("Event from module: "));
         decodeEvent(event[0]); DBG(F("\n"));
         switch (event[0]) {
           /*
@@ -263,7 +263,7 @@ uint8_t IS2020::getNextEventFromBt() {
               IS2020::btmStatusChanged = 1;
               IS2020::maxBatteryLevel[event[1]] = event[2];
               //Serial3.println(F("================================="));
-              Serial.println(F("EVT_Phone_Max_Battery_Level"));
+              //Serial.println(F("EVT_Phone_Max_Battery_Level"));
 /*              Serial3.println(F("================================="));
               Serial3.println(event[2], DEC);
               Serial3.println(F("================================="));
@@ -1006,7 +1006,7 @@ Serial.println("BAT status");
                     }
                     for (uint16_t parameter_byte = 13; parameter_byte < (13 + event[12]); parameter_byte++) {
                       IS2020::avrcpGetPlayerAttributeText(event[1], event[parameter_byte]);
-                      IS2020::avrcpListPlayerValues(event[1], event[parameter_byte]);
+//                      IS2020::avrcpListPlayerValues(event[1], event[parameter_byte]); //this cose module to reset
                     }
                   }
                   break;
