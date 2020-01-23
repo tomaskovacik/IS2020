@@ -29,6 +29,10 @@ void IS2020::DBG(String text) {
   if (DEBUG) /*return "DBG: ");*/ Serial.print(text);
 }
 
+void IS2020::DBG_AVRCP(String text) {
+  if (DEBUG_AVRCP) /*return "DBG: ");*/ Serial.print(text);
+}
+
 void IS2020::resetLow() {
   digitalWrite(_reset, LOW);
 }
@@ -40,7 +44,7 @@ void IS2020::resetHigh() {
 void IS2020::resetModule() {
   DBG(F("reseting module\n"));
   resetLow();
-  delay(100);
+  delayMicroseconds(1000);
   resetHigh();
 }
 
@@ -50,7 +54,7 @@ uint8_t IS2020::checkResponce(uint8_t eventId) {
   //DBG(F("\nChecking responce : ")); decodeEvent(eventId);DBG(F("\n"));
   //uint8_t responceId = IS2020::getNextEventFromBt();
   //DBG(F("Get responce: "));decodeEvent(responceId); DBG(F("\n"));
-  
+
 //  if (responceId == eventId) {
 //    DBG("OK\n\n");
 //    return true;
@@ -68,9 +72,8 @@ uint8_t IS2020::checkResponce(uint8_t eventId) {
 /*
 */
 void  IS2020::sendPacketInt(uint8_t cmd, uint8_t data) {
-  // DBG("sending int: ");
+  DBG("sending int: ");
   decodeCommand(cmd); DBG("\n");
-
   btSerial -> write(STARTBYTE); //DBG(String(STARTBYTE, HEX));
   btSerial -> write((byte)0x00);// DBG(F(" 0x00"));
   btSerial -> write(0x02);//DBG(F(" 0x02"));
@@ -88,8 +91,8 @@ void  IS2020::sendPacketInt(uint8_t cmd, uint8_t data) {
 void  IS2020::sendPacketString(uint8_t cmd, String str) {
   //DBG("sending string: ");
   String tmp = F(" String: ");
-  decodeCommand(cmd); DBG(tmp + str + "\n");
-
+  decodeCommand(cmd);
+  DBG(tmp + str + "\n");
   uint16_t packetSize = str.length() + 1; //length of string + cmd
   btSerial -> write(STARTBYTE); //DBG(String(STARTBYTE, HEX));
   btSerial -> write(packetSize >> 8); //DBG(F(" ")); DBG(String((packetSize >> 8), HEX));
@@ -110,7 +113,7 @@ void  IS2020::sendPacketString(uint8_t cmd, String str) {
 void  IS2020::sendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t data[]) {
   //DBG("sending array int: ");
   decodeCommand(cmd); DBG(F(": "));
-
+  if(cmd == CMD_MMI_Action) IS2020::decodeMMI(data[3]);
   btSerial -> write(STARTBYTE); DBG(String(STARTBYTE, HEX));
   btSerial -> write(packetSize >> 8); DBG(F(" ")); DBG(String((packetSize >> 8), HEX));
   uint8_t checkSum = packetSize >> 8;
@@ -302,10 +305,11 @@ String IS2020::btStatus() {
 
   switch (btmState) {
     case 0x00:
-      return (F("Power OFF state"));
+      //return (F("Power OFF state"));
+      return (F("Disconected!"));
       break;
     case 0x01:
-      return (F("pairing state (discoverable mode)"));
+      return (F("Pairing state (discoverable mode)"));
       break;
     case 0x02:
       return (F("Power ON state"));
@@ -356,7 +360,7 @@ String IS2020::btStatus() {
       return (F("ACL disconnected"));
       break;
     default:
-     String tmp=F("unknown stat");
+     String tmp=F("Unknown stat");
       //return ("unknown state" + (char)btmState);
       return (tmp + (char)btmState);
       break;

@@ -68,180 +68,395 @@
 
 */
 
+void IS2020::decodeMMI(uint8_t mmiAction){
+  switch(mmiAction){
+    case MMI_add_remove_SCO_link:
+    {
+      DBG(F("Add remove SCO link."));
+    }
+    break;
+    case MMI_force_end_active_call:
+    {
+      DBG(F("Force and active call."));
+    }
+    break;
+    case MMI_accept_incoming_call:
+    {
+      DBG(F("Accept incoming call."));
+    }
+    break;
+    case MMI_reject_incoming_call:
+    {
+      DBG(F("Reject incoming call."));
+    }
+    break;
+    case MMI_end_call_transfer_to_headset:
+    {
+      DBG(F("End call transfer to headset."));
+    }
+    break;
+    case MMI_toggle_mic_mute:
+    {
+      DBG(F("Toggle mic mute."));
+    }
+    break;
+    case MMI_mute_mic:
+    {
+      DBG(F("Mute mic."));
+    }
+    break;
+    case MMI_unmute_mic:
+    {
+      DBG(F("Unmute mic."));
+    }
+    break;
+    case MMI_voice_dial:
+    {
+      DBG(F("Voice dial."));
+    }
+    break;
+    case MMI_cancel_voice_dial:
+    {
+      DBG(F("Cancel voice dial."));
+    }
+    break;
+    case MMI_last_number_redial:
+    {
+      DBG(F("Last number redial."));
+    }
+    break;
+    case MMI_toggle_active_hold_call:
+    {
+      DBG(F("Toggle active hold call."));
+    }
+    break;
+    case MMI_voice_transfer:
+    {
+      DBG(F("Voice transfer."));
+    }
+    break;
+    case MMI_query_call_list_info:
+    {
+      DBG(F("Query call list info."));
+    }
+    break;
+    case MMI_three_way_call:
+    {
+      DBG(F("Three way call."));
+    }
+    break;
+    case MMI_release_waiting_or_hold_call:
+    {
+      DBG(F("Release waiting or hold call."));
+    }
+    break;
+    case MMI_end_active_call_accept_waiting_or_held_call:
+    {
+      DBG(F("End active call accept waiting or held call."));
+    }
+    break;
+    case MMI_initiate_HF_connection:
+    {
+      DBG(F("Initiate HF connection."));
+    }
+    break;
+    case MMI_disconnect_HF_link:
+    {
+      DBG(F("Disconnect HF link."));
+    }
+    break;
+    case MMI_increase_microphone_gain:
+    {
+      DBG(F("Increase microphone gain."));
+    }
+    break;
+    case MMI_decrease_microphone_gain:
+    {
+      DBG(F("Decrease microphone gain."));
+    }
+    break;
+    case MMI_switch_primary_secondary_HF:
+    {
+      DBG(F("Switch primary secondary HF"));
+    }
+    break;
+    case MMI_increase_speaker_gain:
+    {
+      DBG(F("Increase speaker gain."));
+    }
+    break;
+    case MMI_decrease_speaker_gain:
+    {
+      DBG(F("Decrease speaker gain."));
+    }
+    break;
+    case MMI_next_song:
+    {
+      DBG(F("Next song."));
+    }
+    break;
+    case MMI_previous_song:
+    {
+      DBG(F("Previous song."));
+    }
+    break;
+    case MMI_disconnect_A2DP_link:
+    {
+      DBG(F("Disconnect A2DP link."));
+    }
+    break;
+    case MMI_next_audio_efect:
+    {
+      DBG(F("Next audio efect."));
+    }
+    break;
+    case MMI_previous_audio_efect:
+    {
+      DBG(F("Previous audio efect."));
+    }
+    break;
+    case MMI_enter_pairing_mode:
+    {
+      DBG(F("Enter pairing mode."));
+    }
+    break;
+    case MMI_power_on_button_press:
+    {
+      DBG(F("Power on button press."));
+    }
+    break;
+    case MMI_power_on_button_release:
+    {
+      DBG(F("Power on button release."));
+    }
+    break;
+    case MMI_eeprom_to_defaults:
+    {
+      DBG(F("Eeprom to defaults."));
+    }
+    break;
+    case MMI_enter_pairing_mode_fast:
+    {
+      DBG(F("Enter pairing mode fast."));
+    }
+    break;
+    case MMI_power_off:
+    {
+      DBG(F("Power off."));
+    }
+    break;
+    case MMI_toggle_buzzer:
+    {
+      DBG(F("Toggle buzzer."));
+    }
+    break;
+    case MMI_disable_buzzer:
+    {
+      DBG(F("Disable buzzer."));
+    }
+    break;
+    case MMI_toggle_buzzer2:
+    {
+      DBG(F("Toggle buzzer2."));
+    }
+    break;
+    case MMI_change_tone:
+    {
+      DBG(F("Change tone."));
+    }
+    break;
+    case MMI_battery_status:
+    {
+      DBG(F("Battery status."));
+    }
+    break;
+    case MMI_exit_pairing_mode:
+    {
+      DBG(F("Exit pairing mode."));
+    }
+    break;
+    case MMI_link_last_device:
+    {
+      DBG(F("Link last device."));
+    }
+    break;
+    case MMI_disconnect_all_link:
+    {
+      DBG(F("Disconnect all link."));
+    }
+    break;
+  }
+}
+
 uint8_t IS2020::addRemoveScoLink(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_add_remove_SCO_link);
 }
-  
+
 uint8_t IS2020::forceEndActiveCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_force_end_active_call);
 }
-  
+
 uint8_t IS2020::acceptIncomingCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_accept_incoming_call);
 }
-  
+
 uint8_t IS2020::rejectIncomingCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_reject_incoming_call);
 }
-  
+
 uint8_t IS2020::endCallTransferToHeadset(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_end_call_transfer_to_headset);
 }
-  
+
 uint8_t IS2020::toggleMicMute(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_toggle_mic_mute);
 }
-  
+
 uint8_t IS2020::muteMic(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_mute_mic);
 }
-  
+
 uint8_t IS2020::unmuteMic(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_unmute_mic);
 }
-  
+
 uint8_t IS2020::voiceDial(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_voice_dial);
 }
-  
+
 uint8_t IS2020::cancelVoiceDial(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_cancel_voice_dial);
 }
-  
+
 uint8_t IS2020::lastNumberRedial(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_last_number_redial);
 }
-  
+
 uint8_t IS2020::toggleActiveHoldCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_toggle_active_hold_call);
 }
-  
+
 uint8_t IS2020::voiceTransfer(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_voice_transfer);
 }
-  
+
 uint8_t IS2020::queryCallListInfo(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_query_call_list_info);
 }
-  
+
 uint8_t IS2020::threeWayCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_three_way_call);
 }
-  
+
 uint8_t IS2020::releaseWaitingOrHoldCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_release_waiting_or_hold_call);
 }
-  
+
 uint8_t IS2020::endActiveCallAcceptWaitingOrHeldCall(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_end_active_call_accept_waiting_or_held_call);
 }
-  
+
 uint8_t IS2020::initiateHfConnection(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_initiate_HF_connection);
 }
-  
+
 uint8_t IS2020::disconnectHfLink(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_disconnect_HF_link);
 }
-  
+
 uint8_t IS2020::increaseMicrophoneGain(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_increase_microphone_gain);
 }
-  
+
 uint8_t IS2020::decreaseMicrophoneGain(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_decrease_microphone_gain);
 }
-  
+
 uint8_t IS2020::switchPrimarySecondayHf(uint8_t deviceID){
-      return IS2020::mmiAction(deviceID,MMI_switch_primary_seconday_HF);
+      return IS2020::mmiAction(deviceID,MMI_switch_primary_secondary_HF);
 }
-  
+
 uint8_t IS2020::increaseSpeakerGain(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_increase_speaker_gain);
 }
-  
+
 uint8_t IS2020::decreaseSpeakerGain(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_decrease_speaker_gain);
 }
-  
+
 uint8_t IS2020::nextSong(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_next_song);
 }
-  
+
 uint8_t IS2020::previousSong(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_previous_song);
 }
-  
+
 uint8_t IS2020::disconnectA2DPLink(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_disconnect_A2DP_link);
 }
-  
+
 uint8_t IS2020::nextAudioEfect(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_next_audio_efect);
 }
-  
+
 uint8_t IS2020::previousAudioEfect(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_previous_audio_efect);
 }
-  
+
 uint8_t IS2020::enterPairingMode(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_enter_pairing_mode);
 }
-  
+
 uint8_t IS2020::powerOnButtonPress(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_power_on_button_press);
 }
-  
+
 uint8_t IS2020::powerOnButtonRelease(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_power_on_button_release);
 }
-  
+
 uint8_t IS2020::eepromToDefaults(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_eeprom_to_defaults);
 }
-  
+
 uint8_t IS2020::enterPairingModeFast(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_enter_pairing_mode_fast);
 }
-  
+
 uint8_t IS2020::powerOff(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_power_off);
 }
-  
+
 uint8_t IS2020::toggleBuzzer(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_toggle_buzzer);
 }
-  
+
 uint8_t IS2020::disableBuzzer(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_disable_buzzer);
 }
-  
+
 uint8_t IS2020::toggleBuzzer2(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_toggle_buzzer2);
 }
-  
+
 uint8_t IS2020::changeTone(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_change_tone);
 }
-  
+
 uint8_t IS2020::batteryStatus(uint8_t deviceID){
   //Serial3.println("Battery_status");
       return IS2020::mmiAction(deviceID,MMI_battery_status);
 }
-  
+
 uint8_t IS2020::exitPairingMode(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_exit_pairing_mode);
 }
-  
-uint8_t IS2020::linkPastDevice(uint8_t deviceID){
-      return IS2020::mmiAction(deviceID,MMI_link_past_device);
+
+uint8_t IS2020::linkLastDevice(uint8_t deviceID){
+      return IS2020::mmiAction(deviceID,MMI_link_last_device);
 }
-  
+
 uint8_t IS2020::disconnectAllLink(uint8_t deviceID){
       return IS2020::mmiAction(deviceID,MMI_disconnect_all_link);
 }
-  
-uint8_t IS2020::trigerToQueryCallListInfo(uint8_t deviceID){
-      return IS2020::mmiAction(deviceID,MMI_triger_to_query_call_list_info);
-}
-  

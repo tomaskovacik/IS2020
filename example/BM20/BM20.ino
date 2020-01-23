@@ -2,7 +2,7 @@
 
 #define DEBUG 0
 #define RESET PA1
-#define BTSerial Serial1 //Serial2 => TX = PA2, RX = PA3
+#define BTSerial Serial3 //Serial2 => TX = PA2, RX = PA3
 
 IS2020 BT(&BTSerial);
 
@@ -18,23 +18,25 @@ void module_info();
 void setup() {
   // Open serial communications and wait for port to open:
   Serial.begin(115200); //TX = PB10, RX=PB11
-  Serial.print(F("begin"));
+  //Serial.print(F("begin"));
   // delay(1000);
 
   //  while (!Serial3) {
   //    ; // wait for serial port to connect. Needed for native USB port only
   //  }
   BT.begin(RESET);
-  BT.btmStatusChanged = 1;
+  //BT.btmStatusChanged = 1;
+  
+  
   BT.readLocalDeviceName();
   BT.readLocalBtAddress();
   BT.readBtmVersion();
   BT.readLinkStatus();
+  BT.readPairedDeviceRecord();
 }
 
 void loop() { // run over and over
-  //  Serial.print(F("loop");
-  //  delay(1000);
+Serial.println(BT.btStatus());
   if (Serial.available() > 0)
   {
     // read the incoming byte:
@@ -56,6 +58,9 @@ void loop() { // run over and over
           Serial.println(BT.maxBatteryLevel[1]);
           Serial.println(BT.currentBatteryLevel[1]);
         }
+        break;
+      case 'c':
+        BT.linkLastDevice(Serial.read());
         break;
       case 'e':
         BT.eventMaskSetting();
@@ -127,6 +132,7 @@ void loop() { // run over and over
           BT.repRwd(0x00);
         } else {
           rw = 0;
+          
           BT.stopFfwRwd(0x00);
         }
         break;
@@ -134,7 +140,7 @@ void loop() { // run over and over
         // seek rewind
         BT.stop(0x00);
         break;
-      case 'c':
+      case 'C':
         {
           delay(1000);
           char pn[19];
@@ -162,25 +168,27 @@ void loop() { // run over and over
         }
         break;
       case 'h': //help
-        Serial.println(F("battery status          b"));
-        Serial.println(F("Enable defualt Events   e"));
-        Serial.println(F("Enable All Events       E"));
-        Serial.println(F("next track button       ="));
-        Serial.println(F("previous track button   -"));
-        Serial.println(F("play/pause               p"));
-        Serial.println(F("PLAY                     P"));
-        Serial.println(F("STOP               S"));
-        Serial.println(F("seek forward/repeat ff f/F"));
-        Serial.println(F("seek rewind/repeate rw r/R"));
-        Serial.println(F("reset module q"));
-        Serial.println(F("call c"));
-        Serial.println(F("                        l"));
-        Serial.println(F("help                    h"));
-        Serial.println(F("read dev info           d"));
-        Serial.println(F("Eeprom_to_defaults      D"));
-        Serial.println(F("read info about connected phone      n"));
-        Serial.println(F("link info I"));
-        Serial.println(F("Switch_primary_seconday_HF C"));
+        Serial.println("Query avrcp status                   a");   
+        Serial.println("Battery status                       b");
+        Serial.println("Link last device                     c");
+        Serial.println("Enable defualt Events                e");
+        Serial.println("Enable All Events                    E");
+        Serial.println("Next track button                    =");
+        Serial.println("Previous track button                -");
+        Serial.println("Play/Pause                           p");
+        Serial.println("PLAY                                 P");
+        Serial.println("STOP                                 S");
+        Serial.println("Seek forward/repeat ff               f/F");
+        Serial.println("Seek rewind/repeate rw               r/R");
+        Serial.println("Reset module                         q");
+        Serial.println("Call                                 C");
+        Serial.println("Read local device name               l");
+        Serial.println("Help                                 h");
+        Serial.println("Read dev info                        d");
+        Serial.println("Eeprom_to_defaults                   D");
+        Serial.println("Read info about connected phone      n");
+        Serial.println("Link info                            I");
+        Serial.println("Switch_primary_seconday_HF           s");
         break;
       case 'i': //info
         {
@@ -189,7 +197,7 @@ void loop() { // run over and over
           deviceInfo(1);
         }
         break;
-      case 'C':
+      case 's':
         {
           BT.switchPrimarySecondayHf(1);
         }
@@ -225,7 +233,7 @@ void moduleInfo() {
   }
   Serial.println();
   Serial.println(F("Paired devices: "));
-  for (uint8_t dev = 1; dev < 8; dev++) {
+  for (uint8_t dev = 1; dev < 4; dev++) {
     Serial.print(dev); Serial.print(". ");
     for (uint8_t _byte = 0; _byte < 7; _byte++) {
       Serial.print(BT.btAddress[dev][_byte], HEX);
@@ -307,6 +315,3 @@ void deviceInfo(uint8_t deviceId) {
 
 
 }
-
-
-

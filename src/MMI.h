@@ -13,17 +13,17 @@
 #define MMI_cancel_voice_dial 0x0Bl
 #define MMI_last_number_redial 0x0C
 #define MMI_toggle_active_hold_call 0x0D //Set the active call on hold and active the hold call
-#define MMI_voice_transfer 0x0E	
+#define MMI_voice_transfer 0x0E
 #define MMI_query_call_list_info 0x0F	//Query call list information(CLCC)
 #define MMI_three_way_call 0x10
 #define MMI_release_waiting_or_hold_call 0x11	//release the waiting call or on hold call
 #define MMI_end_active_call_accept_waiting_or_held_call 0x12	//accept the waiting call or active the on hold call and release the active call
 #define MMI_initiate_HF_connection 0x16
 #define MMI_disconnect_HF_link 0x17	//disconnect HF link
-#define MMI_increase_microphone_gain 0x24	
+#define MMI_increase_microphone_gain 0x24
 #define MMI_decrease_microphone_gain 0x25
-#define MMI_switch_primary_seconday_HF 0x26	//switch primary HF device and secondary HF device role
-#define MMI_increase_speaker_gain 0x30	
+#define MMI_switch_primary_secondary_HF 0x26	//switch primary HF device and secondary HF device role
+#define MMI_increase_speaker_gain 0x30
 #define MMI_decrease_speaker_gain 0x31
 #define MMI_next_song 0x34
 #define MMI_previous_song 0x35
@@ -42,9 +42,8 @@
 #define MMI_change_tone 0x63	//Change tone set (SPK module support two sets of tone)
 #define MMI_battery_status 0x6A	//Indicate battery status
 #define MMI_exit_pairing_mode 0x6B	//Exit pairing mode
-#define MMI_link_past_device 0x6C	//link last device
+#define MMI_link_last_device 0x6C	//link last device
 #define MMI_disconnect_all_link 0x6D	//disconnect all link
-#define MMI_triger_to_query_call_list_info 0x0f //trigger SPK Module to query call list information
 
 /*
 
@@ -52,7 +51,7 @@ Ex:
 [+CLCC:<id1>,<dir>,<stat>,<mode>,<mpty>[,<number>,<type>[,<alpha>]][<CR><LF>+CLCC:<id2>,<dir>,<stat>,<mode>,<mpty>[,<number>,<type>[,<alpha>]][...]]]
 
 idx : Call identification number
-dir : 
+dir :
 0:Mobile originated (MO) call
 1:Mobile originated (MT) call
 state: State of the call

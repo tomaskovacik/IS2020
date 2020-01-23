@@ -23,7 +23,7 @@ btmUtilityFunction	KEYWORD2
 eventAck	KEYWORD2
 additionalProfilesLinkSetup	KEYWORD2
 readLinkedDeviceInformation	KEYWORD2
-profilesLinkBack	KEYWORD2
+profileLinkBack	KEYWORD2
 disconnect	KEYWORD2
 mcuStatusIndication	KEYWORD2
 userConfirmSPPReqReply	KEYWORD2
@@ -80,7 +80,7 @@ toggleBuzzer2	KEYWORD2
 changeTone	KEYWORD2
 batteryStatus	KEYWORD2
 exitPairingMode	KEYWORD2
-linkPastDevice	KEYWORD2
+linkLastDevice	KEYWORD2
 disconnectAllLink	KEYWORD2
 trigerToQueryCallListInfo	KEYWORD2
 

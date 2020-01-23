@@ -13,6 +13,7 @@
 
 #define DUMMYBYTE 0x00
 #define DEBUG 1
+#define DEBUG_AVRCP 1
 
 #define DEVICENAME_LENGHT_SUPPORT 24
 
@@ -49,8 +50,9 @@ class IS2020
     uint8_t  eventAck(uint8_t cmd);
     uint8_t  additionalProfilesLinkSetup();
     uint8_t  readLinkedDeviceInformation(uint8_t deviceId, uint8_t query);
-    uint8_t  profilesLinkBack();
-    uint8_t  disconnect();
+    uint8_t  profileLinkBack(uint8_t type, uint8_t deviceId, uint8_t profile);
+    uint8_t  connectLastDevice(); //alias profileLinkBack
+    uint8_t  disconnect(uint8_t flag = 0x0F); //B0000 1111 = > 0x0F bit 3,2,1,0 set 
     uint8_t  mcuStatusIndication();
     uint8_t  userConfirmSppReqReply();
     uint8_t  setHfGainLevel();
@@ -95,11 +97,23 @@ class IS2020
     int     btmUartVersion = 0;
     int     btmFwVersion = 0;
     uint8_t linkStatus[7] = {0, 0, 0, 0, 0, 0, 0};
-    uint8_t btAddress[7][7]; //byte0 = link priority, 1-6 BT addr
+
+    uint8_t btAddress[8][6]={ //based on 
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0},
+{0, 0, 0, 0, 0, 0}}; //byte0 = link priority, 1-6 BT addr
+    uint8_t numOfPairedDevices();
+    String pairedDevicesRecords();
+
     uint8_t moduleBtAddress[6];
     void removeInfoAboutDevice(uint8_t deviceId);
     uint8_t musicState[2]={0,0};
-    uint8_t pairedDevice=0;
+    uint8_t pairingFailReason=0;
 
     //MMI specific functions
     uint8_t addRemoveScoLink(uint8_t deviceID);
@@ -143,7 +157,7 @@ class IS2020
     uint8_t changeTone(uint8_t deviceID);
     uint8_t batteryStatus(uint8_t deviceID);
     uint8_t exitPairingMode(uint8_t deviceID);
-    uint8_t linkPastDevice(uint8_t deviceID);
+    uint8_t linkLastDevice(uint8_t deviceID=0);
     uint8_t disconnectAllLink(uint8_t deviceID);
     uint8_t trigerToQueryCallListInfo(uint8_t deviceID);
 
@@ -157,7 +171,15 @@ class IS2020
     uint8_t pause(uint8_t deviceId);
     uint8_t togglePlayPause(uint8_t deviceId);
     uint8_t stop(uint8_t deviceId);
-
+    uint8_t stopFfwRwd();
+    uint8_t ffw();
+    uint8_t repFfw();
+    uint8_t rwd();
+    uint8_t repRwd();
+    uint8_t play();
+    uint8_t pause();
+    uint8_t togglePlayPause();
+    uint8_t stop();
 
     String moduleState();
     String btStatus();
@@ -209,8 +231,9 @@ class IS2020
     uint8_t queryInBandRingtoneStatus(uint8_t deviceId);
 
   private:
-    void     decodeEvent(uint8_t Event);
+    void decodeEvent(uint8_t Event);
     void decodeCommand(uint8_t cmd);
+    void decodeMMI(uint8_t mmiAction);
     uint8_t _reset;
     void resetLow();
     void resetHigh();
@@ -220,6 +243,7 @@ class IS2020
     void sendPacketArrayChar(uint16_t packetSize, uint8_t cmd, uint8_t deviceId, char data[]);
     uint8_t checkCkeckSum(int size, uint8_t data[]);
     void DBG(String text);
+    void DBG_AVRCP(String text);
     HardwareSerial *btSerial;
 };
 

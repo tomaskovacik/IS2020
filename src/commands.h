@@ -21,7 +21,7 @@
 #define CMD_Event_ACK 0x14
 #define CMD_Additional_Profiles_Link_Setup  0x15
 #define CMD_Read_Linked_Device_Information  0x16
-#define CMD_Profiles_Link_Back  0x17
+#define CMD_Profile_Link_Back  0x17
 #define CMD_Disconnect  0x18
 #define CMD_MCU_Status_Indication 0x19
 #define CMD_User_Confirm_SPP_Req_Reply  0x1A
@@ -41,3 +41,10 @@
 #define CRLDI_query_if_remote_device_support_AVRCP_v13 0x03
 #define CRLDI_query_HF_A2DP_gain 0x04
 #define CRLDI_query_Line_In_gain 0x05
+
+#define LAST_DEVICE 0x00	//connect to last device : if last device supports HF/HS, then initiate HF/HS connection, otherwise initiate A2DP connection
+#define INIT_HF_HS_CONNECTION 0x01	//initiate HF/HS connection to last HF/HS device
+#define INIT_A2DP_CONNECTION 0x02	//initiate A2DP connection to last A2DP device
+#define INIT_SPP_iAP_CONNECTION 0x03	//initiate SPP/iAP connection to last SPP/iAP device
+#define INIT_DEDICATED_CONNECTION 0x04	//initiate connection to dedicate device.
+

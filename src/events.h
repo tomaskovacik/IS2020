@@ -1,3 +1,22 @@
+#define BTM_STATE_power_OFF 0x00
+#define BTM_STATE_discoverable_mode 0x01
+#define BTM_STATE_power_ON_state 0x02
+#define BTM_STATE_pairing_successful 0x03
+#define BTM_STATE_pairing_fail 0x04
+#define BTM_STATE_HF_link_established 0x05
+#define BTM_STATE_A2DP_link_established 0x06
+#define BTM_STATE_HF_link_disconnected 0x07
+#define BTM_STATE_A2DP_link_disconnected 0x08
+#define BTM_STATE_SCO_link_connected 0x09
+#define BTM_STATE_SCO_link_disconnected 0x0A
+#define BTM_STATE_AVRCP_link_established 0x0B
+#define BTM_STATE_AVRCP_link_disconnected 0x0C
+#define BTM_STATE_SPP_connected 0x0D
+#define BTM_STATE_SPP_iAP_disconnected 0x0E
+#define BTM_STATE_standby 0x0F
+#define BTM_STATE_iAP_connected 0x10
+#define BTM_STATE_ACL_disconnected 0x11
+
 #define EVT_Command_ACK 0x00
 #define EVT_BTM_Status  0x01
 #define EVT_Call_Status 0x02
@@ -70,7 +89,7 @@
 #define EMB_Missed_call 0x20000000
 #define EMB_Max_cell_phone_battery_level 0x40000000
 #define EMB_current_cell_phone_battery_level 0x80000000
-  
+
 //Byte 1  Parameter Description
 #define EMB_cell_phone_roamming 0x00010000
 #define EMB_Max_cell_phone_signal_strength 0x00020000
@@ -80,7 +99,7 @@
 #define EMB_BTM_charging_status 0x00200000
 #define EMB_BMT_reset_to_default_setting_OK 0x00400000
 #define EMB_BTM_DAC_gain_level 0x00800000
-  
+
 //Byte 2  Parameter Description
 #define EMB_EQ_mode 0x00000100
 #define EMB_remote_device_friendly_name 0x00000200
