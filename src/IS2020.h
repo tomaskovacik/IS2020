@@ -1,3 +1,5 @@
+// thx to vincent for moving meta data support forward, check his RTOS version:
+// https://github.com/VincentGijsen/MelbusRtos
 #ifndef IS2020_h
 #define IS2020_h
 
@@ -12,8 +14,9 @@
 #define STARTBYTE 0xAA
 
 #define DUMMYBYTE 0x00
-#define DEBUG 1
+#define DEBUG 0
 #define DEBUG_AVRCP 1
+#define DEBUG_EVENTS 0
 
 #define DEVICENAME_LENGHT_SUPPORT 24
 
@@ -57,7 +60,7 @@ class IS2020
     uint8_t  userConfirmSppReqReply();
     uint8_t  setHfGainLevel();
     uint8_t  eqModeSetting();
-    uint8_t  dspNrCtrl();
+    uint8_t  dspNrCtrl(uint8_t type);
     uint8_t  gpioControl();
     uint8_t  mcuUartRxBufferSize();
     uint8_t  voicePromptCmd();
@@ -98,7 +101,7 @@ class IS2020
     int     btmFwVersion = 0;
     uint8_t linkStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 
-    uint8_t btAddress[8][6]={ //based on 
+    uint8_t btAddress[8][6]={ 
 {0, 0, 0, 0, 0, 0},
 {0, 0, 0, 0, 0, 0},
 {0, 0, 0, 0, 0, 0},
@@ -106,9 +109,8 @@ class IS2020
 {0, 0, 0, 0, 0, 0},
 {0, 0, 0, 0, 0, 0},
 {0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0}}; //byte0 = link priority, 1-6 BT addr
-    uint8_t numOfPairedDevices();
-    String pairedDevicesRecords();
+{0, 0, 0, 0, 0, 0}
+}; 
 
     uint8_t moduleBtAddress[6];
     void removeInfoAboutDevice(uint8_t deviceId);
@@ -220,7 +222,20 @@ class IS2020
     uint8_t  avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player);
     uint8_t  avrcpGetFolderItems(uint8_t deviceId, uint8_t scope,uint32_t start, uint8_t end);
     uint8_t  avrcpChangePath(uint8_t deviceId, uint8_t direction=0x01, uint64_t folderUID=5);
-
+	uint8_t avrcpRegNotifyPlaybackStatusChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyTrackChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyTrackReachedEnd(uint8_t deviceId);
+	uint8_t avrcpRegNotifyTrackReachedStart(uint8_t deviceId);
+	uint8_t avrcpRegNotifyTrackPositionChanged(uint8_t deviceId,uint8_t interval=30);//interval in seconds
+	uint8_t avrcpRegNotifyBattStatusChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifySystemStatusChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyPlayerAppSettingsChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyNowPlayingContentChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyAvailablePlayersChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyAddressedPlayerChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyUIDsChanged(uint8_t deviceId);
+	uint8_t avrcpRegNotifyVolumeChanged(uint8_t deviceId);
+	void decodeRejectReason(uint8_t event);
     //reset module
     void resetModule();
     uint8_t queryDeviceName(uint8_t deviceId);
@@ -233,6 +248,7 @@ class IS2020
   private:
     void decodeEvent(uint8_t Event);
     void decodeCommand(uint8_t cmd);
+    void decodeCommandInEvents(uint8_t cmd);
     void decodeMMI(uint8_t mmiAction);
     uint8_t _reset;
     void resetLow();
@@ -244,6 +260,7 @@ class IS2020
     uint8_t checkCkeckSum(int size, uint8_t data[]);
     void DBG(String text);
     void DBG_AVRCP(String text);
+    void DBG_EVENTS(String text);
     HardwareSerial *btSerial;
 };
 

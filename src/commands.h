@@ -13,7 +13,7 @@
 #define CMD_AVRCP_Group_Navigation  0x0C
 #define CMD_Read_Link_Status  0x0D
 #define CMD_Read_Paired_Device_Record 0x0E
-#define CMD_Read_Local_BD_Address 0x0F
+#define CMD_Read_Local_BT_Address 0x0F
 #define CMD_Read_Local_Device_Name  0x10
 #define CMD_Set_Access_PB_Method  0x11
 #define CMD_Send_SPP_iAP_Data 0x12

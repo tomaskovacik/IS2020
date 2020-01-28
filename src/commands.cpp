@@ -409,22 +409,9 @@ uint8_t  IS2020::readPairedDeviceRecord() {
 //    return checkResponce(EVT_Read_Paired_Device_Record_Reply);
 }
 
-uint8_t IS2020::numOfPairedDevices(){
-	for (uint8_t i=8;i>0;i++){
-		if (btAddress[i-1][0] > 0)
-			return i;
-	}
-	return 0;
-}
-
-String IS2020::pairedDevicesRecords(){
-	for (uint8_t i=0;i<IS2020::numOfPairedDevices();i++)
-		return (String)btAddress[i][0]+(String)btAddress[i][1]+(String)btAddress[i][2]+(String)btAddress[i][3]+(String)btAddress[i][4]+(String)btAddress[i][5];
-	return "";
-}
 /*
   Command Format:  Command Command ID  Command Parameters  Return Event
-  Read_Local_BD_Address 0x0F  dummy_byte  Read_Local_BD_Address_Reply
+  Read_Local_BT_Address 0x0F  dummy_byte  Read_Local_BT_Address_Reply
 
   Description:  It is used to read local BD Address
 
@@ -435,11 +422,11 @@ String IS2020::pairedDevicesRecords(){
 */
 uint8_t  IS2020::readLocalBtAddress() {
   IS2020::getNextEventFromBt();
-  IS2020::DBG(F("Read_Local_BD_Address\n"));
-  IS2020::sendPacketInt(CMD_Read_Local_BD_Address, DUMMYBYTE);
+  IS2020::DBG(F("Read_Local_BT_Address\n"));
+  IS2020::sendPacketInt(CMD_Read_Local_BT_Address, DUMMYBYTE);
   return checkResponce(EVT_Command_ACK);
 //  if (checkResponce(EVT_Command_ACK))
-//    return checkResponce(EVT_Read_Local_BD_Address_Reply);
+//    return checkResponce(EVT_Read_Local_BT_Address_Reply);
 }
 /*
   Command Format:  Command Command ID  Command Parameters  Return Event
@@ -864,8 +851,14 @@ uint8_t  IS2020::eqModeSetting() {
   others  reserved
 
 */
-uint8_t  IS2020::dspNrCtrl() {
+#define ENABLE_MIC_NR 0x18
+#define DISABLE_MIC_NR 0x19
+#define ENABLE_SPK_NR 0x1b
+#define DISABLE_SPK_NR 0x1c
+
+uint8_t  IS2020::dspNrCtrl(uint8_t type) {
   IS2020::getNextEventFromBt();
+  IS2020::sendPacketInt(CMD_DSP_NR_CTRL,type);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1173,8 +1166,8 @@ void IS2020::decodeCommand(uint8_t cmd){
       case CMD_Read_Paired_Device_Record:
         DBG(F("Read Paired Device Record"));
       break;
-      case CMD_Read_Local_BD_Address:
-        DBG(F("Read Local BD Address"));
+      case CMD_Read_Local_BT_Address:
+        DBG(F("Read Local BT Address"));
       break;
       case CMD_Read_Local_Device_Name:
         DBG(F("Read Local Device Name"));

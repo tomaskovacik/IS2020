@@ -33,6 +33,11 @@ void IS2020::DBG_AVRCP(String text) {
   if (DEBUG_AVRCP) /*return "DBG: ");*/ Serial.print(text);
 }
 
+void IS2020::DBG_EVENTS(String text) {
+  if (DEBUG_EVENTS) /*return "DBG: ");*/ Serial.print(text);
+}
+
+
 void IS2020::resetLow() {
   digitalWrite(_reset, LOW);
 }
