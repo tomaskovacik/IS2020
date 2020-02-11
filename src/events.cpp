@@ -969,6 +969,7 @@ uint8_t IS2020::getNextEventFromBt() {
                               { //re-active event
                                 IS2020::avrcpRegNotifyTrackChanged(deviceID);
                                 IS2020::avrcpRegNotifyTrackPositionChanged(deviceID);
+                                //IS2020::avrcpGetElementAttributesAll(event[1]);
                                 IS2020::avrcpGetElementAttributes(event[1]);
                               }
                               break;
@@ -986,7 +987,7 @@ uint8_t IS2020::getNextEventFromBt() {
                             case AVRCP_EVENT_RESPONSE_CHANGED:
                               { //re-active event
                                 IS2020::avrcpRegNotifyTrackReachedEnd(deviceID);
-                                //IS2020::avrcpGetElementAttributes(event[1]);
+                                //IS2020::avrcpGetElementAttributesAll(event[1]);
                               }
                               break;
                           }
@@ -1004,7 +1005,7 @@ uint8_t IS2020::getNextEventFromBt() {
                               { //re-active event
                                 IS2020::avrcpRegNotifyTrackReachedStart(deviceID);
                                 //IS2020::avrcpRegNotifyTrackPositionChanged(deviceID);
-                                //IS2020::avrcpGetElementAttributes(event[1]);
+                                //IS2020::avrcpGetElementAttributesAll(event[1]);
                               }
                               break;
                           }
@@ -1149,7 +1150,7 @@ uint8_t IS2020::getNextEventFromBt() {
                             case AVRCP_EVENT_RESPONSE_INTERIM://currently playing playerid:
                               IS2020::avrcpListPlayerAttributes(deviceID);
                               IS2020::avrcpStorePlayerID(playerID);
-                              IS2020::avrcpSetBrowsedPlayer(deviceID, event[13] << 8 | event[14]);
+                              //IS2020::avrcpSetBrowsedPlayer(deviceID, playerID);
                               break;
                             case AVRCP_EVENT_RESPONSE_CHANGED:
                               { //re-active event
@@ -1157,7 +1158,7 @@ uint8_t IS2020::getNextEventFromBt() {
                                 IS2020::avrcpRegNotifyAddressedPlayerChanged(deviceID);
                                 IS2020::avrcpListPlayerAttributes(deviceID);
                                 IS2020::avrcpStorePlayerID(playerID);
-                                IS2020::avrcpSetBrowsedPlayer(deviceID, playerID);
+                                //IS2020::avrcpSetBrowsedPlayer(deviceID, playerID);
                                 IS2020::avrcpListPlayerAttributes(deviceID);
                               }
                               break;

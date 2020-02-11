@@ -13,6 +13,8 @@
 
 #define STARTBYTE 0xAA
 
+//#define AVRCP161
+
 #define DUMMYBYTE 0x00
 #define DEBUG 0
 #define DEBUG_AVRCP 1
@@ -201,7 +203,6 @@ class IS2020
     void decodeAvrcpEvent(uint8_t Event);
     void decodeAvrcpPlayerAtributes(uint8_t attribute, uint8_t attrValue);
     void registerAllEvents(uint8_t deviceId);
-    uint8_t avrcpGetElementAttributesCommand(uint8_t deviceId);
     uint8_t avrcpRegistrationForNotificationOfEvent(uint8_t deviceId, uint8_t event, uint8_t param1 = 0x00, uint8_t param2 = 0x00, uint8_t param3 = 0x00, uint8_t param4 = 0x00);
     uint8_t avrcpGetCapabilities(uint8_t deviceId, uint8_t capId = CAP_EVENTS_SUPPORTED);
     uint8_t avrcpListPlayerAttributes(uint8_t deviceId);
