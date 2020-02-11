@@ -964,8 +964,11 @@ uint8_t  IS2020::gpioControl() {
   "
 
 */
-uint8_t  IS2020::mcuUartRxBufferSize() {
+uint8_t  IS2020::mcuUartRxBufferSize(uint8_t buffer) {
   IS2020::getNextEventFromBt();
+  //arduino use SERIAL_RX_BUFFER_SIZE define, so lets try use it! hope arduino.h is compiled 1st before this file
+  IS2020::sendPacketInt(CMD_MCU_UART_Rx_Buffer_Size,buffer);
+  Serial.println("Setting buffer of MCU to "+String(buffer,DEC));
   return checkResponce(EVT_Command_ACK);
 }
 /*

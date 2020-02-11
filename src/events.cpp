@@ -17,25 +17,25 @@ uint8_t IS2020::getNextEventFromBt() {
       uint16_t packetSize = (btSerial -> read() << 8) | (btSerial -> read() & 0xff);
 
       uint8_t event[packetSize + 1]; //data+cksum
-/*
-      for (uint8_t i = 0; i < packetSize + 1; i++) {
-        event[i] = btSerial -> read();
-      }
-*/
+      /*
+            for (uint8_t i = 0; i < packetSize + 1; i++) {
+              event[i] = btSerial -> read();
+            }
+      */
       //DBG_EVENTS(F("Packet size: "));DBG_EVENTS(String(packetSize,DEC));DBG_EVENTS(F("\n"));
       uint16_t i = 0;
-      while (i < packetSize + 1 ){
-          //read only if buffer has some data
-          if (btSerial -> available()) {
-            event[i++] = btSerial -> read();
-          }
+      while (i < packetSize + 1 ) {
+        //read only if buffer has some data
+        if (btSerial -> available()) {
+          event[i++] = btSerial -> read();
+        }
 
       }
       if (checkCkeckSum(packetSize, event)) {
         DBG_EVENTS(F("\nEvent from module: "));
         decodeEvent(event[0]); DBG_EVENTS(F(" ["));
-        for (uint16_t i = 0; i<packetSize; i++){
-          DBG_EVENTS(String(event[i],HEX)+F(","));
+        for (uint16_t i = 0; i < packetSize; i++) {
+          DBG_EVENTS(String(event[i], HEX) + F(","));
         }
         DBG_EVENTS(F("]\n"));
         switch (event[0]) {
@@ -156,99 +156,99 @@ uint8_t IS2020::getNextEventFromBt() {
               //IS2020::btmStatusChanged = 1;
               IS2020::btmState = event[1];
               IS2020::btmLinkInfo = event[2];
-              switch (btmState){
+              switch (btmState) {
                 case BTM_STATE_power_OFF:
-                {
-                  DBG_EVENTS(F("Power OFF."));
-                }
+                  {
+                    DBG_EVENTS(F("Power OFF."));
+                  }
                   break;
                 case BTM_STATE_discoverable_mode:
-                {
-                  DBG_EVENTS(F("Discoverable mode."));
-                }
+                  {
+                    DBG_EVENTS(F("Discoverable mode."));
+                  }
                   break;
                 case BTM_STATE_power_ON_state:
-                {
-                  DBG_EVENTS(F("Power ON."));
-                }
+                  {
+                    DBG_EVENTS(F("Power ON."));
+                  }
                   break;
                 case BTM_STATE_pairing_successful:
-                {
-                  DBG_EVENTS(F("Pairing successful."));
-                }
+                  {
+                    DBG_EVENTS(F("Pairing successful."));
+                  }
                   break;
                 case BTM_STATE_pairing_fail:
-                {
+                  {
                     DBG_EVENTS(F("Pairing failed."));
-//                    Serial.println("Pairing failed, reason: " + event[2]?"timeout":"fail");
-                    if(pairingFailReason != event[2]) pairingFailReason = event[2];
-                }
+                    //                    Serial.println("Pairing failed, reason: " + event[2]?"timeout":"fail");
+                    if (pairingFailReason != event[2]) pairingFailReason = event[2];
+                  }
                   break;
                 case BTM_STATE_HF_link_established:
-                {
-                  DBG_EVENTS(F("HF link established."));
-                }
+                  {
+                    DBG_EVENTS(F("HF link established."));
+                  }
                   break;
                 case BTM_STATE_A2DP_link_established:
-                {
-                  DBG_EVENTS(F("A2DP link established."));
-			
-                }
+                  {
+                    DBG_EVENTS(F("A2DP link established."));
+
+                  }
                   break;
                 case BTM_STATE_HF_link_disconnected:
-                {
-                  DBG_EVENTS(F("HF link disconnected."));
-                }
+                  {
+                    DBG_EVENTS(F("HF link disconnected."));
+                  }
                   break;
                 case BTM_STATE_A2DP_link_disconnected:
-                {
-                  DBG_EVENTS(F("AD2P link disconnected."));
-                }
+                  {
+                    DBG_EVENTS(F("AD2P link disconnected."));
+                  }
                   break;
                 case BTM_STATE_SCO_link_connected:
-                {
-                  DBG_EVENTS(F("SCO link connected."));
-                }
+                  {
+                    DBG_EVENTS(F("SCO link connected."));
+                  }
                   break;
                 case BTM_STATE_SCO_link_disconnected:
-                {
-                  DBG_EVENTS(F("SCO link disconnected."));
-                }
+                  {
+                    DBG_EVENTS(F("SCO link disconnected."));
+                  }
                   break;
                 case BTM_STATE_AVRCP_link_established:
-                {
-                  DBG_EVENTS(F("AVRCP link established."));
-                }
+                  {
+                    DBG_EVENTS(F("AVRCP link established."));
+                  }
                   break;
                 case BTM_STATE_AVRCP_link_disconnected:
-                {
-                  DBG_EVENTS(F("AVRCP link disconnected."));
-                }
+                  {
+                    DBG_EVENTS(F("AVRCP link disconnected."));
+                  }
                   break;
                 case BTM_STATE_SPP_connected:
-                {
-                  DBG_EVENTS(F("SSP link connected."));
-                }
+                  {
+                    DBG_EVENTS(F("SSP link connected."));
+                  }
                   break;
                 case BTM_STATE_SPP_iAP_disconnected:
-                {
-                  DBG_EVENTS(F("SCO iAP link connected."));
-                }
+                  {
+                    DBG_EVENTS(F("SCO iAP link connected."));
+                  }
                   break;
                 case BTM_STATE_standby:
-                {
-                  DBG_EVENTS(F("BTM standby."));
-                }
+                  {
+                    DBG_EVENTS(F("BTM standby."));
+                  }
                   break;
                 case BTM_STATE_iAP_connected:
-                {
-                  DBG_EVENTS(F("iAP connected."));
-                }
+                  {
+                    DBG_EVENTS(F("iAP connected."));
+                  }
                   break;
                 case BTM_STATE_ACL_disconnected:
-                {
-                  DBG_EVENTS(F("ACL disconnected."));
-                }
+                  {
+                    DBG_EVENTS(F("ACL disconnected."));
+                  }
                   break;
               }
               DBG_EVENTS(F("\n"));
@@ -637,16 +637,16 @@ uint8_t IS2020::getNextEventFromBt() {
             {
             }
             break;
-            /*
+          /*
             Event Format:	Event	Event Code	Event Parameters
-	           Get_PB_By_AT_Cmd_Reply	0x15	contact
+            Get_PB_By_AT_Cmd_Reply	0x15	contact
 
-             Description:
+            Description:
 
-             Event Parameters:	contact	SIZE: N BYTE
-	            Value	Parameter Description
-	             0x…	AT Command format phone book contacts
-               */
+            Event Parameters:	contact	SIZE: N BYTE
+            Value	Parameter Description
+             0x…	AT Command format phone book contacts
+          */
           case EVT_Get_PB_By_AT_Cmd_Reply:
             {
             }
@@ -818,8 +818,8 @@ uint8_t IS2020::getNextEventFromBt() {
           */
           case EVT_Read_BTM_Version_Reply:
             {
-             if (event[1] == 0x00) IS2020::btmUartVersion = (event[2] << 8) | (event[3] & 0xff);
-             if (event[1] == 0x01) IS2020::btmFwVersion = (event[2] << 8) | (event[3] & 0xff);
+              if (event[1] == 0x00) IS2020::btmUartVersion = (event[2] << 8) | (event[3] & 0xff);
+              if (event[1] == 0x01) IS2020::btmFwVersion = (event[2] << 8) | (event[3] & 0xff);
             }
             break;
           case EVT_Call_List_Report:
@@ -828,52 +828,57 @@ uint8_t IS2020::getNextEventFromBt() {
             break;
           case EVT_AVRCP_Specific_Rsp:
             {
-		uint8_t deviceID=event[1];
-              //              Serial3.print("packet type: ");
-              //              switch (event[9])
-              //              {
-              //                case AVRCP_PACKET_TYPE_SINGLE:
-              //                  Serial3.println("single packet");
-              //                  break;
-              //                case AVRCP_PACKET_TYPE_START:
-              //                  Serial3.println("start packet");
-              //                  break;
-              //                case AVRCP_PACKET_TYPE_CONTINUING:
-              //                  Serial3.println("continue packet");
-              //                  break;
-              //                case AVRCP_PACKET_TYPE_END:
-              //                  Serial3.println("end packet");
-              //                  break;
-              //                default:
-              //                  Serial3.println(event[3], HEX);
-              //                  break;
-              //              }
-              
-		uint16_t parameter_length =   (event[10] << 8) | (event[11] & 0xff);
+              uint8_t deviceID = event[1];
+              //event[2] && 0x0F Ctype
+              //event[3] && B11111000 Subunit_type
+              //event[3] && B00000111 Subunit_ID
+              //event[4] Opcode
+              //event[5][6][7] Company ID
+              //event[8] PduID
+              //event[9] && B11111000 Reserved
+              //event[9] && B00000111 Packet Type
+              //evemt[10][11] packet Length
+              //event[12] event ID
+
+
+              uint16_t parameter_length =   (event[10] << 8) | (event[11] & 0xff);
               //DBG_EVENTS("parameter length: "+String(parameter_length,DEC));
 
-              if (event[2] == AVRCP_EVENT_RESPONSE_REJECTED/*parameter_length == 1*/) {
+              if (event[2] == AVRCP_EVENT_RESPONSE_REJECTED) {
                 DBG_AVRCP(F("\nError: "));
-			IS2020::decodeRejectReason(event[12]);
-			IS2020::decodeAvrcpPdu(event[8]);
-//		        DBG_AVRCP(F(" event: "));
-//			DBG_AVRCP(String(event[8],HEX));
-//			DBG_AVRCP(F(" ["));
-//		        for (uint16_t i = 0; i<packetSize; i++){
-//				DBG_AVRCP(String(event[i],HEX)+F(","));
-//			}
-//			DBG_AVRCP(F("]\n"));
+                IS2020::decodeRejectReason(event[12]);
+                IS2020::decodeAvrcpPdu(event[8]);
+                DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
                 return false;
               }
               String tmp; //play/pause etc....
-	      switch (event[8]) //event[9] is always 0x00 10+11=size of sending responce
+              switch (event[8]) //event[9] is always 0x00 10+11=size of sending responce
               {
                 case AVRCP_REGISTER_NOTIFICATION:
                   {
+                    DBG_AVRCP(F("Response: "));
+                    switch (event[2])
+                    { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                      case AVRCP_EVENT_RESPONSE_STABLE:
+                        DBG_AVRCP(F("STABLE: "));
+                        break;
+                      case AVRCP_EVENT_RESPONSE_REJECTED:
+                        DBG_AVRCP(F("REJECTED: "));
+                        break;
+                      case AVRCP_EVENT_RESPONSE_NOTIFY:
+                        DBG_AVRCP(F("NOTIFY: "));
+                        break;
+                      case AVRCP_EVENT_RESPONSE_INTERIM:
+                        DBG_AVRCP(F("INTERIM: "));
+                        break;
+                      case AVRCP_EVENT_RESPONSE_CHANGED:
+                        DBG_AVRCP(F("CHANGED: "));
+                        break;
+                    }
                     IS2020::decodeAvrcpEvent(event[12]);
-                    switch (event[12])
+                    switch (event[12]) //eventID
                     {
-                      case AVRCP_EVENT_PLAYBACK_STATUS_CHANGED://AVRCP_EVENT_PLAYBACK_STATUS_CHANGED:
+                      case AVRCP_EVENT_PLAYBACK_STATUS_CHANGED:
                         {
                           /*
                             Description:
@@ -888,31 +893,42 @@ uint8_t IS2020::getNextEventFromBt() {
                             0x04: REV_SEEK
                             0xFF: ERROR
                           */
-			     IS2020::musicState[deviceID]=event[13];
-                             IS2020::btmStatusChanged=1;
-                            if (DEBUG_AVRCP){
-			                      switch (event[13]) {
-                            case 0x00:
-                              DBG_AVRCP(F("STOPPED\n"));
+                          switch (event[2])
+                          { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
                               break;
-                            case 0x01:
-                              DBG_AVRCP(F("PLAYING\n"));
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
                               break;
-                            case 0x02:
-                              DBG_AVRCP(F("PAUSED\n"));
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              {
+                                IS2020::musicState[deviceID] = event[13];
+                                IS2020::btmStatusChanged = 1;
+                                if (DEBUG_AVRCP) {
+                                  switch (event[13]) {
+                                    case 0x00:
+                                      DBG_AVRCP(F("STOPPED\n"));
+                                      break;
+                                    case 0x01:
+                                      DBG_AVRCP(F("PLAYING\n"));
+                                      break;
+                                    case 0x02:
+                                      DBG_AVRCP(F("PAUSED\n"));
+                                      break;
+                                    case 0x03:
+                                      DBG_AVRCP(F("FWD_SEEK\n"));
+                                      break;
+                                    case 0x04:
+                                      DBG_AVRCP(F("REV_SEEK\n"));
+                                      break;
+                                    case 0xFF:
+                                      DBG_AVRCP(F("ERROR\n"));
+                                      break;
+                                  }
+                                }
+                                IS2020::avrcpRegNotifyPlaybackStatusChanged(deviceID);
+                              }
                               break;
-                            case 0x03:
-                              DBG_AVRCP(F("FWD_SEEK\n"));
-                              break;
-                            case 0x04:
-                              DBG_AVRCP(F("REV_SEEK\n"));
-                              break;
-                            case 0xFF:
-                              DBG_AVRCP(F("ERROR\n"));
-                              break;
-                            }
-                            }
-		//		if (event[13] == 0x01) IS2020::avrcpGetElementAttributes(event[1]);
+                          }
                         }
                         break;
                       case AVRCP_EVENT_TRACK_CHANGED:
@@ -943,53 +959,90 @@ uint8_t IS2020::getNextEventFromBt() {
                             media element as listed in the
                             NowPlaying folder.
                           */
-//				uint8_t currentDevID=0;//should take this from read link status or something?
-				switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
-					case AVRCP_EVENT_RESPONSE_NOTIFY:
-						{
-						break;
-						}
-					case AVRCP_EVENT_RESPONSE_INTERIM:
-						{
-						break;
-						}
-					case AVRCP_EVENT_RESPONSE_CHANGED:
-						{			//re-active event
-						IS2020::avrcpRegNotifyTrackChanged(0/*currentDevID*/);
-						IS2020::avrcpGetElementAttributes(event[1]);
-						break;
-						}
-				}
+                          switch (event[2])
+                          { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              { //re-active event
+                                IS2020::avrcpRegNotifyTrackChanged(deviceID);
+                                IS2020::avrcpRegNotifyTrackPositionChanged(deviceID);
+                                IS2020::avrcpGetElementAttributes(event[1]);
+                              }
+                              break;
+                          }
                         }
                         break;
                       case AVRCP_EVENT_TRACK_REACHED_END:
                         {
+                          switch (event[2])
+                          { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              { //re-active event
+                                IS2020::avrcpRegNotifyTrackReachedEnd(deviceID);
+                                //IS2020::avrcpGetElementAttributes(event[1]);
+                              }
+                              break;
+                          }
                         }
                         break;
                       case AVRCP_EVENT_TRACK_REACHED_START:
                         {
-	
+                          switch (event[2])
+                          { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              { //re-active event
+                                IS2020::avrcpRegNotifyTrackReachedStart(deviceID);
+                                //IS2020::avrcpRegNotifyTrackPositionChanged(deviceID);
+                                //IS2020::avrcpGetElementAttributes(event[1]);
+                              }
+                              break;
+                          }
                         }
                         break;
                       case AVRCP_EVENT_PLAYBACK_POS_CHANGED:
                         {
-/*                          DBG_AVRCP(F("PLAYBACK_POS_CHANGED current playback position: "));
-                          DBG_AVRCP(String(event[13] << 24 | event[14] << 16 | event[15] << 8 | event[16], DEC));
-                          DBG_AVRCP(F("s\n"));*/
-			
-				switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
-					case AVRCP_EVENT_RESPONSE_NOTIFY:
-						break;
-					case AVRCP_EVENT_RESPONSE_INTERIM:
-						break;
-					case AVRCP_EVENT_RESPONSE_CHANGED:
-						//re-active event
-						avrcpRegNotifyTrackPositionChanged(0/*currentDevID*/);
-						uint32_t time = event[13] << 24 | event[14] << 16 | event[15] << 8 | event[16];
-						float f_time=time/1000;
-						Serial.println((String)(f_time)+"s");
-						
-				}
+                          //DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+
+                          switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              {
+                                //re-active event
+                                IS2020::avrcpRegNotifyTrackPositionChanged(deviceID);
+                                uint32_t time = event[13] << 24 | event[14] << 16 | event[15] << 8 | event[16];
+                                if (time != 0xFFFFFFFF) {
+                                  /*
+                                     this ^^^^^^^^^^^^^ should be in INTERIM responce only but guess what:
+                                     Response: CHANGED: Decoded AVRCP event: AVRCP_EVENT_PLAYBACK_POS_CHANGED
+                                     [1a,0,d,48,0,0,19,58,31,0,0,5,5,ff,ff,ff,ff,]
+                                     4294967.00s
+
+                                     from specs:
+
+                                     If no track currently selected, then
+                                     return 0xFFFFFFFF in the
+                                     INTERIM response.
+
+                                  */
+                                  /*float f_*/uint16_t time_S = time / 1000;
+                                  Serial.println(String(time_S / 60) + ":" + String(time_S % 60));
+                                }
+                              }
+                          }
                         }
                         break;
                       case AVRCP_EVENT_BATT_STATUS_CHANGED:
@@ -1009,40 +1062,155 @@ uint8_t IS2020::getNextEventFromBt() {
                               */
                               DBG_AVRCP(F("Battery status: "));
                             case 0x00:
-                              {
-                                DBG_AVRCP(F("NORMAL\n"));
-                              }
+                              DBG_AVRCP(F("NORMAL\n"));
                               break;
                             case 0x01:
-                              {
-                                DBG_AVRCP(F("WARNING\n"));
-                              }
+                              DBG_AVRCP(F("WARNING\n"));
                               break;
                             case 0x02:
-                              {
-                                DBG_AVRCP(F("CRITICAL\n"));
-                              }
+                              DBG_AVRCP(F("CRITICAL\n"));
                               break;
                             case 0x03:
-                              {
-                                DBG_AVRCP(F("EXTERNAL\n"));
-                              }
+                              DBG_AVRCP(F("EXTERNAL\n"));
                               break;
                             case 0x04:
-                              {
-                                DBG_AVRCP(F("FULL_CHARGE\n"));
-                              }
+                              DBG_AVRCP(F("FULL_CHARGE\n"));
                               break;
                           }
 
                         }
                         break;
+                      case AVRCP_EVENT_SYSTEM_STATUS_CHANGED:
+                        {
+                          switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+
+                              break;
+                          }
+                        }
+                        break;
+                      case AVRCP_EVENT_PLAYER_APPLICATION_SETTING_CHANGED:
+                        {
+                          switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              uint8_t i = 14;
+                              while (i < 14 + 2 * event[13]) {
+                                IS2020::decodeAvrcpPlayerAtributes(event[i++], event[i++]);
+                              }
+                              DBG_AVRCP(F("\n"));
+                              IS2020::avrcpRegNotifyPlayerAppSettingsChanged(deviceID);
+                              break;
+                          }
+                        }
+                        break;
+                      case AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED:
+                        /*6.9.5
+                          Notify Now Playing Content Changed
+                          The Now Playing Content Changed notification allows a CT to be informed when the content of the
+                          NowPlaying folder for the Addressed Player is changed. The notification should not be completed if only
+                          the track has changed or the order of the tracks on the now playing list has changed.
+                          This is an event which may be used for the Register Notification command described in Section 6.7.2,
+                          which is a vendor dependent AV/C Notify. The interim and final responses to the notify shall contain no
+                          parameters.
+                          An example PDU for this command is given in Section 25.14.
+                          Note that to retrieve the content of the NowPlaying folder, the NowPlaying folder can be browsed (see
+                          Section 6.10.4.2). If the NowPlaying folder is browsed as reaction to the
+                          EVENT_NOW_PLAYING_CONTENT_CHANGED, the CT should register the
+                          EVENT_NOW_PLAYING_CONTENT_CHANGED again before browsing the NowPlaying folder in order
+                          to get informed about intermediate changes in that folder.
+                        */
+                        {
+                          switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                              IS2020::avrcpRegNotifyNowPlayingContentChanged(deviceID);
+                              break;
+                          }
+                        }
+                        break;
                       case AVRCP_EVENT_ADDRESSED_PLAYER_CHANGED:
                         {
-				tmp = F("PlayerId:");
-				DBG_AVRCP(tmp + String(event[13], HEX) + String(event[14], HEX) + F("\n"));
-				tmp = F("UID");
-				DBG_AVRCP(tmp + String(event[15], HEX) + String(event[16], HEX) + F("\n"));
+                          uint16_t playerID = event[13] << 8 | event[14];
+                          switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM://currently playing playerid:
+                              IS2020::avrcpListPlayerAttributes(deviceID);
+                              IS2020::avrcpStorePlayerID(playerID);
+                              IS2020::avrcpSetBrowsedPlayer(deviceID, event[13] << 8 | event[14]);
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              { //re-active event
+                                //DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                                IS2020::avrcpRegNotifyAddressedPlayerChanged(deviceID);
+                                IS2020::avrcpListPlayerAttributes(deviceID);
+                                IS2020::avrcpStorePlayerID(playerID);
+                                IS2020::avrcpSetBrowsedPlayer(deviceID, playerID);
+                                IS2020::avrcpListPlayerAttributes(deviceID);
+                              }
+                              break;
+                          }
+                          DBG_AVRCP(F("Current PlayerId:"));
+                          DBG_AVRCP(String(avrcpPlayerID[avrcpCurrentPlayerID], HEX));
+                          //DBG_AVRCP(F(" UID"));
+                          //DBG_AVRCP(String(event[15], HEX) + String(event[16], HEX));
+                          DBG_AVRCP(F("\n"));
+                        }
+                        break;
+                      case AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED:
+                        {
+                          switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                            case AVRCP_EVENT_RESPONSE_NOTIFY:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_INTERIM:
+                              break;
+                            case AVRCP_EVENT_RESPONSE_CHANGED:
+                              { //re-active event
+                                DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                                IS2020::avrcpRegNotifyAvailablePlayersChanged(deviceID);
+                              }
+                              break;
+                          }
+                        }
+                        break;
+                      case AVRCP_EVENT_UIDS_CHANGED:
+                        switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                          case AVRCP_EVENT_RESPONSE_NOTIFY:
+                            break;
+                          case AVRCP_EVENT_RESPONSE_INTERIM:
+                            break;
+                          case AVRCP_EVENT_RESPONSE_CHANGED:
+                            { //re-active event
+                              DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                              IS2020::avrcpRegNotifyUIDsChanged(deviceID);
+                            }
+                            break;
+                        }
+                        break;
+                      case AVRCP_EVENT_VOLUME_CHANGED:
+                        DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                        switch (event[2]) { //thx to vincent https://github.com/VincentGijsen/MelbusRtos
+                          case AVRCP_EVENT_RESPONSE_NOTIFY:
+                            break;
+                          case AVRCP_EVENT_RESPONSE_INTERIM:
+                            break;
+                          case AVRCP_EVENT_RESPONSE_CHANGED:
+                            { //re-active event
+                              //IS2020::avrcpRegNotifyVolumeChanged(deviceID);
+                            }
+                            break;
                         }
                         break;
                     }
@@ -1051,19 +1219,17 @@ uint8_t IS2020::getNextEventFromBt() {
                 case AVRCP_GET_CAPABILITIES: //event[12] determinate what capabilities we are receiving, 0x02 = company ID, 0x03=player caps.
                   {
                     if (event[12] == CAP_COMPANY_ID) {//company ID:
-/*                      DBG_AVRCP(F("Company IDs: "));
-                      DBG_AVRCP((String)event[13]);
-                      DBG_AVRCP(F(" "));
-                      for (uint8_t numCompID = 0; numCompID < event[13]; numCompID++) { //event[13] = CapabilityCount
-                        for (uint8_t i = 0; i < 3; i++) {
-                          DBG_AVRCP(String(event[14 + (numCompID * 3) + i], HEX));
-                        }
-                        DBG_AVRCP(F("\n"));
-                      }*/
+                      /*                      DBG_AVRCP(F("Company IDs: "));
+                                            DBG_AVRCP((String)event[13]);
+                                            DBG_AVRCP(F(" "));
+                                            for (uint8_t numCompID = 0; numCompID < event[13]; numCompID++) { //event[13] = CapabilityCount
+                                              for (uint8_t i = 0; i < 3; i++) {
+                                                DBG_AVRCP(String(event[14 + (numCompID * 3) + i], HEX));
+                                              }
+                                              DBG_AVRCP(F("\n"));
+                                            }*/
                     } else if (event[12] == CAP_EVENTS_SUPPORTED) {
-			DBG_AVRCP(F("supported events by phone:"));
                       for (uint16_t parameter_byte = 14; parameter_byte < (14 + event[13]); parameter_byte++) { //event[13] = CapabilityCount
-//                        IS2020::decodeAvrcpEvent(event[parameter_byte]);
                         if (event[parameter_byte] == AVRCP_EVENT_PLAYBACK_POS_CHANGED) {
                           IS2020::avrcpRegistrationForNotificationOfEvent(event[1], event[parameter_byte], 0x00, 0x00, 0x13, 0x88);
                         } else {
@@ -1071,311 +1237,341 @@ uint8_t IS2020::getNextEventFromBt() {
                         }
                       }
                     } else {
-			tmp = F("Unknown capabilities ID! ");
-			DBG_EVENTS(tmp + String(event[12], HEX) + "\n");
+                      tmp = F("Unknown capabilities ID! ");
+                      DBG_EVENTS(tmp + String(event[12], HEX) + "\n");
                     }
                   }
                   break;
                 case AVRCP_LIST_PLAYER_ATTRIBUTES:
                   {
-//                    for (uint16_t parameter_byte = 13; parameter_byte < (13 + event[12]); parameter_byte++) {
-                      //switch (event[parameter_byte]) {
-                      switch (event[12]) {
+                    for (uint8_t i = 0; i < event[12]; i++) {
+                      /*switch (event[12] + i) {
                         case AVRCP_ATTRIBUTE_EQUALIZER:
-                          DBG_AVRCP(F("Equalizer\n"));
+                         // DBG_AVRCP(F("Equalizer\n"));
                           break;
                         case AVRCP_ATTRIBUTE_REPEAT_MODE:
-                          DBG_AVRCP(F("Repeat\n"));
+                         // DBG_AVRCP(F("Repeat\n"));
                           break;
                         case AVRCP_ATTRIBUTE_SHUFFLE:
-                          DBG_AVRCP(F("Shuffle\n"));
+                         // DBG_AVRCP(F("Shuffle\n"));
                           break;
                         case AVRCP_ATTRIBUTE_SCAN:
-                          DBG_AVRCP(F("Scan\n"));
+                         // DBG_AVRCP(F("Scan\n"));
                           break;
-                      }
-  //                  }
-                    for (uint16_t parameter_byte = 13; parameter_byte < (13 + event[12]); parameter_byte++) {
-                      IS2020::avrcpGetPlayerAttributeText(event[1], event[parameter_byte]);
-                      //IS2020::avrcpListPlayerValues(event[1], event[parameter_byte]); //this cose module to reset
+                        default: //unknown feature id?
+                          IS2020::avrcpGetPlayerAttributeText(deviceID, event[12] + i);
+                          break;
+                        }*/
+                      if ((event[12] + i) > 0x04) //non standard attribute
+                        IS2020::avrcpGetPlayerAttributeText(deviceID, event[12] + i);
+                      else
+                        IS2020::avrcpGetCurrentPlayerValue(deviceID, event[12] + i);
                     }
                   }
                   break;
                 case AVRCP_LIST_PLAYER_VALUES:
                   {
+                    DBG_AVRCP(F("Supported settings of this player:\n"));
                     for (uint16_t parameter_byte = 13; parameter_byte < packetSize; parameter_byte++) {
-                      switch (event[12]) { //ID
-                        case AVRCP_ATTRIBUTE_ILEGAL:
-                          {
-                            DBG_AVRCP(F("AVRCP_ATTRIBUTE_ILEGAL"));
-                          }
-                          break;
-                        case AVRCP_ATTRIBUTE_EQUALIZER:
-                          {
-                            DBG_AVRCP(F("AVRCP_ATTRIBUTE_EQUALIZER:\n"));
-                            switch (event[parameter_byte])
-                            {
-                              case AVRCP_EQUALIZER_OFF:
-                                {
-                                  DBG_AVRCP(F("AVRCP_EQUALIZER_OFF\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_EQUALIZER, AVRCP_EQUALIZER_OFF);
-                                }
-                                break;
-                              case AVRCP_EQUALIZER_ON:
-                                {
-                                  DBG_AVRCP(F("AVRCP_EQUALIZER_ON\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_EQUALIZER, AVRCP_EQUALIZER_ON);
-                                }
-                                break;
-                            }
-                          }
-                          break;
-                        case AVRCP_ATTRIBUTE_REPEAT_MODE:
-                          {
-                            DBG_AVRCP(F("AVRCP_ATTRIBUTE_REPEAT_MODE:\n"));
-                            switch (event[parameter_byte])
-                            {
-                              case AVRCP_REPEAT_MODE_OFF:
-                                {
-                                  DBG_AVRCP(F("AVRCP_REPEAT_MODE_OFF\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_OFF);
-                                }
-                                break;
-                              case AVRCP_REPEAT_MODE_SINGLE:
-                                {
-                                  DBG_AVRCP(F("AVRCP_REPEAT_MODE_SINGLE\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_SINGLE);
-                                }
-                                break;
-                              case AVRCP_REPEAT_MODE_ALL:
-                                {
-                                  DBG_AVRCP(F("AVRCP_REPEAT_MODE_ALL\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_ALL);
-                                }
-                                break;
-                              case AVRCP_REPEAT_MODE_GROUP:
-                                {
-                                  DBG_AVRCP(F("AVRCP_REPEAT_MODE_GROUP\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_REPEAT_MODE, AVRCP_REPEAT_MODE_GROUP);
-                                }
-                                break;
-                            }
-                          }
-                          break;
-                        case AVRCP_ATTRIBUTE_SHUFFLE:
-                          {
-                            DBG_AVRCP(F("AVRCP_ATTRIBUTE_SHUFFLE:\n"));
-                            switch (event[parameter_byte])
-                            {
-                              case AVRCP_SHUFFLE_OFF:
-                                {
-                                  DBG_AVRCP(F("AVRCP_SHUFFLE_OFF\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_OFF);
-                                }
-                                break;
-                              case AVRCP_SHUFFLE_ALL:
-                                {
-                                  DBG_AVRCP(F("AVRCP_SHUFFLE_ALL\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_ALL);
-                                }
-                                break;
-                              case AVRCP_SHUFFLE_GROUP:
-                                {
-                                  DBG_AVRCP(F("AVRCP_SHUFFLE_GROUP\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SHUFFLE, AVRCP_SHUFFLE_GROUP);
-                                }
-                                break;
-                            }
-                          }
-                          break;
-                        case AVRCP_ATTRIBUTE_SCAN:
-                          {
-                            DBG_EVENTS(F("AVRCP_ATTRIBUTE_SCAN:\n"));
-                            switch (event[parameter_byte])
-                            {
-                              case AVRCP_SCAN_OFF:
-                                {
-                                  DBG_AVRCP(F("AVRCP_SCAN_OFF\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_OFF);
-                                }
-                                break;
-                              case AVRCP_SCAN_ALL:
-                                {
-                                  DBG_AVRCP(F("AVRCP_SCAN_ALL\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_ALL);
-                                }
-                                break;
-                              case AVRCP_SCAN_GROUP:
-                                {
-                                  DBG_AVRCP(F("AVRCP_SCAN_GROUP\n"));
-                                  IS2020::avrcpGetPlayerValueText(event[1], AVRCP_ATTRIBUTE_SCAN, AVRCP_SCAN_GROUP);
-                                }
-                                break;
-                            }
-                          }
-                          break;
+                      IS2020::decodeAvrcpPlayerAtributes(event[12], event[parameter_byte]);
+                      // for unknown attributes:
+                      if (event[12] > 0x04) IS2020::avrcpGetPlayerValueText(deviceID, event[12], event[parameter_byte]);
+                    }
+                  }
+                  break;
+                case AVRCP_GET_CURRENT_PLAYER_VALUE:
+                  for (uint16_t parameter_byte = 13; parameter_byte < packetSize; parameter_byte++) {
+                    IS2020::decodeAvrcpPlayerAtributes(event[12], event[parameter_byte]);
+                    // for unknown attributes:
+                    if (event[12] > 0x04) IS2020::avrcpGetPlayerValueText(deviceID, event[12], event[parameter_byte]);
+                  }
+                  break;
+                case AVRCP_SET_PLAYER_VALUE:
+                  {
+                    DBG_AVRCP(F("arvrcp_set_player_value"));
+                    DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                  }
+                  break;
+                case AVRCP_GET_PLAYER_ATTRIBUTE_TEXT:
+                  {
+                    //DBG_AVRCP(F("Text of player attribute:\n"));
+                    //DBG_AVRCP(F(" [")); for (uint16_t i = 0; i<packetSize; i++)   DBG_AVRCP(String(event[i],HEX)+F(",")); DBG_AVRCP(F("]\n"));
+                    //event[12] - pocet atributov
+                    //event[13] - attrID
+                    //event[14][15] = character code
+                    //event[16] - string length
+                    //event[17]- [x] string
+                    uint8_t attribOffset = 13;
+                    for (int x = 0; x < event[12]/*numberOfAttribs*/; x++) {
+                      uint8_t attributeID = event[attribOffset];
+                      //uint16_t codingOfString = event[attribOffset + 1] << 8 | event[attribOffset + 2]; //0x6a == UTF8
+                      uint8_t attribValLength = event[attribOffset + 3];
+                      for (uint16_t i = 0; i < attribValLength; i++) {
+                        //Serial.write(event[attribOffset + 4 + i]);
+                        //here we should store this text, cose this is non standard player feature
                       }
+                      //Serial.println();
+                      attribOffset += 4 + attribValLength;
+
+                    }
+                  }
+                  break;
+                case AVRCP_GET_PLAYER_VALUE_TEXT:
+                  {
+                    //DBG_AVRCP(F("Text of player attribute value:\n"));
+                    //DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                    //event[12] - pocet atributov
+                    //event[13] - attrID
+                    //event[14][15] = character code
+                    //event[16] - string length
+                    //event[17]- [x] string
+                    uint8_t attribOffset = 13;
+                    for (int x = 0; x < event[12]/*numberOfAttribs*/; x++) {
+                      uint8_t valueID = event[attribOffset];
+                      //uint16_t codingOfString = event[attribOffset + 1] << 8 | event[attribOffset + 2]; //0x6a == UTF8
+                      uint8_t atribValLength = event[attribOffset + 3];
+                      for (uint16_t i = 0; i < atribValLength; i++) {
+                        //Serial.write(event[attribOffset + 4 + i]);
+                        //here we should store this text, cose this is non standard player feature
+                      }
+                      //Serial.println();
+                      attribOffset += 4 + atribValLength;
+
                     }
                   }
                   break;
                 case AVRCP_GET_ELEMENT_ATTRIBUTES:
                   {
-/*                    DBG_AVRCP(F("Number of events:")); DBG_AVRCP(String(event[12], HEX));DBG_AVRCP(F("\n"));
-			for (uint16_t y = 12; y<parameter_length;y++)
-				DBG_AVRCP(String(event[y],HEX)+" ");
-			for (uint16_t y = 12; y<parameter_length;y++)
-				Serial.write(event[y]);Serial.print(" ");
-			Serial.println();*/
-				uint8_t numberOfAttribs = event[12];
-				uint8_t attribOffset = 16;
-				for (int x = 0; x < numberOfAttribs; x++) {
+                    //uint8_t numberOfAttribs = event[12];
+                    uint8_t attribOffset = 16;
+                    for (int x = 0; x < event[12]/*numberOfAttribs*/; x++) {
 
-					uint8_t attribTypeOfField = /*events 13 ->16*/ event[attribOffset + 0];
-					uint16_t codingOfString = event[attribOffset + 1] << 8 | event[attribOffset + 2]; //will default to only 18... 0x6a == UTF8
-					uint16_t atribValLength = event[attribOffset + 3] << 8 | event[attribOffset + 4];
-					switch (attribTypeOfField) {
-						case AVRCP_MEDIA_ATTRIBUTE_ILLEGAL:
-							Serial.print("Ilegal");
-							break;
-						case AVRCP_MEDIA_ATTRIBUTE_TITLE:
-							Serial.print("Title: ");
-							break;
-						case AVRCP_MEDIA_ATTRIBUTE_ARTIST:
-							Serial.print("Artist: ");
-							break;
-						case AVRCP_MEDIA_ATTRIBUTE_ALBUM:
-							Serial.print("Albun: ");
-							break;
-						case AVRCP_MEDIA_ATTRIBUTE_TRACK:
-							Serial.print("Track: ");
-							break;
-                                                case AVRCP_MEDIA_ATTRIBUTE_N_TRACKS:
-                                                        Serial.print("Number of tracks: ");
-                                                        break;
-                                                case AVRCP_MEDIA_ATTRIBUTE_GENRE:
-                                                        Serial.print("Genre: ");
-                                                        break;
-						case AVRCP_MEDIA_ATTRIBUTE_DURATION:
-							Serial.print(F("Duration: "));
-							break;
-						default:
-							Serial.print(F("\nNot-impl:"));
-					}
-					for (uint16_t i = 0; i<atribValLength;i++){
-						Serial.write(event[attribOffset + 5 + i]);
-					}
-Serial.println();
-					//update offset to point to next attribute (if any)
-#define THREE_NULL_CHARS_TRAILING 3
-					attribOffset += 5 + atribValLength + THREE_NULL_CHARS_TRAILING;
-				}
-//				DBG_AVRCP(F("\n"));
-//		  IS2020::avrcpRegistrationForNotificationOfEvent(/*deviceId*/0, AVRCP_EVENT_TRACK_CHANGED, 0x00, 0x00, 0x00, 0x00);
+                      uint8_t mediaAttributeID = event[attribOffset + 0]; //events 13-16, currently in avrcp1.5 only 7 ID's are defined
+                      //uint16_t codingOfString = event[attribOffset + 1] << 8 | event[attribOffset + 2]; //will default to only 18... 0x6a == UTF8
+                      uint16_t attribValLength = event[attribOffset + 3] << 8 | event[attribOffset + 4];
+                      switch (mediaAttributeID) {
+                        case AVRCP_MEDIA_ATTRIBUTE_ILLEGAL:
+                          Serial.print("Ilegal");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_TITLE:
+                          Serial.print("Title: ");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_ARTIST:
+                          Serial.print("Artist: ");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_ALBUM:
+                          Serial.print("Albun: ");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_TRACK:
+                          Serial.print("Track: ");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_N_TRACKS:
+                          Serial.print("Number of tracks: ");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_GENRE:
+                          Serial.print("Genre: ");
+                          break;
+                        case AVRCP_MEDIA_ATTRIBUTE_DURATION:
+                          Serial.print(F("Duration: "));
+                          break;
+                        case AVRCP_MEDIA_DEFAULT_COVER_ART: //BIP Image Handle
+                          Serial.print(F("Cover: "));
+                          break;
+                        default:
+                          Serial.print(F("\nNot-impl:"));
+                      }
+                      if (mediaAttributeID == AVRCP_MEDIA_ATTRIBUTE_DURATION)
+                      {
+                        uint16_t time_MS = 0; //uint32_t for miliseconds....
+
+                        for (uint16_t i = 0; i < attribValLength - 3; i++) { //duration in ms, ascii ,if we need only seconds, then we need only 1st 3 numbers
+                          time_MS *= 10;
+                          /*if (event[attribOffset + 5 + i] > 0 ) */time_MS += (event[attribOffset + 5 + i] - 0x30);
+                        }
+
+                        //uint16_t time_S = time_MS / 1000;
+                        //uint8_t time_M = time_S/60; //minutes
+                        //time_S = time_S%60;//seconds
+                        Serial.print(String(time_MS / 60) + ":" + String(time_MS % 60));
+                      } else
+                        for (uint16_t i = 0; i < attribValLength; i++) {
+                          Serial.write(event[attribOffset + 5 + i]);
+                        }
+                      Serial.println();
+                      //update offset to point to next attribute (if any)
+                      attribOffset += 8 + attribValLength;
+                    }
+                  }
+                  break;
+                case AVRCP_DISPLAYABLE_CHARSET:
+                  DBG_AVRCP(F("AVRCP_DISPLAYABLE_CHARSET"));
+                  DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                  break;
+                case AVRCP_CT_BATTERY_STATUS:
+                  DBG_AVRCP(F("Battery level: "));
+                  switch (event[12]) {
+                    case AVRCP_BATTERY_STATUS_NORMAL: DBG_AVRCP(F("Normal.\n")); break;
+                    case AVRCP_BATTERY_STATUS_WARNING: DBG_AVRCP(F("Warning, almost off!\n")); break;
+                    case AVRCP_BATTERY_STATUS_CRITICAL: DBG_AVRCP(F("Critical, going down!\n")); break;
+                    case AVRCP_BATTERY_STATUS_EXTERNAL: DBG_AVRCP(F("Charging.\n")); break;
+                    case AVRCP_BATTERY_STATUS_FULL_CHARGE: DBG_AVRCP(F("Fully charged battery.\n")); break;
                   }
                   break;
                 case AVRCP_GET_PLAY_STATUS:
                   {
-			tmp = F("Song length: ");
-			DBG_AVRCP(tmp + String((event[12]<<24||event[13]<<16||event[14]<<8||event[15])/1000, DEC));
-			tmp = F("Song position: ");
-			DBG_AVRCP(tmp + String((event[16]<<24||event[17]<<16||event[18]<<8||event[19])/1000, DEC));
-			DBG_AVRCP(F("Play status: "));
+                    DBG_AVRCP(F(" [")); for (uint16_t i = 0; i < packetSize; i++)   DBG_AVRCP(String(event[i], HEX) + F(",")); DBG_AVRCP(F("]\n"));
+                    DBG_AVRCP(F("Song length: "));
+                    uint32_t time_MS = 0; //uint32_t for miliseconds....
+                    //for (uint16_t i = 0; i < 4; i++) { //duration in ms, ascii ,if we need only seconds, then we need only 1st 3 numbers
+                    //time_MS *= 10;
+                    //time_MS += (event[12 + i]/* - 0x30*/);
+                    //}
+                    time_MS = (event[12] << 24 | event[13] << 16 | event[14] << 8 | event[15]) / 1000;
+                    //uint16_t time_S = time_MS / 1000;
+                    //uint8_t time_M = time_S/60; //minutes
+                    //time_S = time_S%60;//seconds
+                    DBG_AVRCP(String(time_MS / 60) + ":" + String(time_MS % 60));
 
-			switch (event[20]) {
-				case 0x00:
-					DBG_AVRCP(F("STOPPED\n"));
-				break;
-				case 0x01:
-					DBG_AVRCP(F("PLAYING\n"));
-Serial.println("play");
-					IS2020::avrcpRegistrationForNotificationOfEvent(/*deviceId*/0, AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED, 0x00, 0x00, 0x00, 0x00);
-					IS2020::avrcpRegistrationForNotificationOfEvent(/*deviceId*/0, AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED, 0x00, 0x00, 0x00, 0x00);
-				break;
-				case 0x02:
-					DBG_AVRCP(F("PAUSED\n"));
-				break;
-				case 0x03:
-					DBG_AVRCP(F("FWD_SEEK\n"));
-				break;
-				case 0x04:
-					DBG_AVRCP(F("REV_SEEK\n"));
-				break;
-				case 0xFF:
-					DBG_AVRCP(F("ERROR\n"));
-				break;
-			}
+                    //Serial.println(tmp + String((event[12] << 24 || event[13] << 16 || event[14] << 8 || event[15]) / 1000, DEC));
+                    //DBG_AVRCP(String(event[12], DEC)); DBG_AVRCP(String(event[13], DEC)); DBG_AVRCP(String(event[14], DEC)); DBG_AVRCP(String(event[15], DEC));
+                    DBG_AVRCP(F("\nSong position: "));
+                    /*uint32_t*/ time_MS = 0; //uint32_t for miliseconds....
+                    //for (uint16_t i = 0; i < 4; i++) { //duration in ms, ascii ,if we need only seconds, then we need only 1st 3 numbers
+                    //time_MS *= 10;
+                    //time_MS += (event[16 + i] - 0x30);
+                    //}
+                    time_MS = (event[16] << 24 | event[17] << 16 | event[18] << 8 | event[19]) / 1000;
+
+                    //uint16_t time_S = time_MS / 1000;
+                    //uint8_t time_M = time_S/60; //minutes
+                    //time_S = time_S%60;//seconds
+                    DBG_AVRCP(String(time_MS / 60) + ":" + String(time_MS % 60));
+
+                    //DBG_AVRCP(String(event[16], DEC)); DBG_AVRCP(String(event[17], DEC)); DBG_AVRCP(String(event[18], DEC)); DBG_AVRCP(String(event[19], DEC));
+                    DBG_AVRCP(F("\nPlay status: "));
+                    switch (event[20]) {
+                      case 0x00:
+                        DBG_AVRCP(F("STOPPED\n"));
+                        break;
+                      case 0x01:
+                        DBG_AVRCP(F("PLAYING\n"));
+                        //Serial.println("play");
+                        //IS2020::avrcpRegistrationForNotificationOfEvent(deviceID, AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED, 0x00, 0x00, 0x00, 0x00);
+                        //IS2020::avrcpRegistrationForNotificationOfEvent(deviceID, AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+                        break;
+                      case 0x02:
+                        DBG_AVRCP(F("PAUSED\n"));
+                        break;
+                      case 0x03:
+                        DBG_AVRCP(F("FWD_SEEK\n"));
+                        break;
+                      case 0x04:
+                        DBG_AVRCP(F("REV_SEEK\n"));
+                        break;
+                      case 0xFF:
+                        DBG_AVRCP(F("ERROR\n"));
+                        break;
+                    }
                   }
                   break;
+                case AVRCP_SET_BROWSED_PLAYER:
+                  DBG_AVRCP(String(event[16], DEC)); DBG_AVRCP(String(event[17], DEC)); DBG_AVRCP(String(event[18], DEC)); DBG_AVRCP(String(event[19], DEC));
+                  break;
+                case AVRCP_REQUEST_CONTINUING:
+                  DBG_AVRCP(F("AVRCP_REQUEST_CONTINUING"));
+                  break;
+              }
+
+              //Moved from start to end, so we ask for next data after processing already read data
+              //Serial3.print("packet type: ");
+              switch (event[9] && 0x07)
+              {
+                //                case AVRCP_PACKET_TYPE_SINGLE:
+                //                  Serial3.println("single packet");
+                //                  break;
+                //                case AVRCP_PACKET_TYPE_START:
+                //                  Serial3.println("start packet");
+                //                  break;
+                case AVRCP_PACKET_TYPE_CONTINUING:
+                  DBG_AVRCP("continue packet");
+                  IS2020::avrcpRequestContinuing(event[0], event[8]);// send after all data are processed
+                  break;
+                  //                case AVRCP_PACKET_TYPE_END:
+                  //                  Serial3.println("end packet");
+                  //                  break;
+                  //                default:
+                  //                  Serial3.println(event[3], HEX);
+                  //                  break;
               }
             }
             break;
-/*
-Event Format:	Command	Event Code	Event Parameters
-	BTM_Utility_Req	0x1B	action_type, parameter
+          /*
+            Event Format:	Command	Event Code	Event Parameters
+          	BTM_Utility_Req	0x1B	action_type, parameter
 
-Description:	This event is used to ask specific utility request for MCU.
+            Description:	This event is used to ask specific utility request for MCU.
 
-Event Parameters:	action_type	SIZE: 1 BYTE
-	Value	Parameter Description
-	0x00	BTM ask MCU to control the external amplifier
-	0x01	BTM report the Aux line-in status to Host MCU.
-	others	reserved
+            Event Parameters:	action_type	SIZE: 1 BYTE
+          	Value	Parameter Description
+          	0x00	BTM ask MCU to control the external amplifier
+          	0x01	BTM report the Aux line-in status to Host MCU.
+          	others	reserved
 
-	parameter	SIZE: 1 BYTE
-	action_type=0x00
-	Value	Parameter Description
-	0x00	Mute or switch off amplifier
-	0x01	Unmute or switch on amplifier
-	others	reserved
+          	parameter	SIZE: 1 BYTE
+          	action_type=0x00
+          	Value	Parameter Description
+          	0x00	Mute or switch off amplifier
+          	0x01	Unmute or switch on amplifier
+          	others	reserved
 
-	action_type=0x01
-	Value	Parameter Description
-	0x00	Aux line in is unplugged.
-	0x01	Aux line in is plugged.
-	0x02	Aux line in is plugged and with audio signal.
-	0x03	Aux line in is plugged and silence.
-	others	reserved
-*/
+          	action_type=0x01
+          	Value	Parameter Description
+          	0x00	Aux line in is unplugged.
+          	0x01	Aux line in is plugged.
+          	0x02	Aux line in is plugged and with audio signal.
+          	0x03	Aux line in is plugged and silence.
+          	others	reserved
+          */
           case EVT_BTM_Utility_Req:
             {
             }
             break;
-/*
-Event Format:	Event	Event Code	Event Parameters
-	Vendor_AT_Cmd_Rsp	0x01C	data_base_index, status
+          /*
+            Event Format:	Event	Event Code	Event Parameters
+          	Vendor_AT_Cmd_Rsp	0x01C	data_base_index, status
 
-Description:	This event is used to reply the Vendor_AT_Cmd command(0x0A).
+            Description:	This event is used to reply the Vendor_AT_Cmd command(0x0A).
 
-Event Parameters:	data_base_index	SIZE: 1 BYTE
-	Value	Parameter Description
-	0x00	database 0 for a dedicate link
-	0x01	database 1 for a dedicate link
+            Event Parameters:	data_base_index	SIZE: 1 BYTE
+          	Value	Parameter Description
+          	0x00	database 0 for a dedicate link
+          	0x01	database 1 for a dedicate link
 
 
-	status	SIZE: 1 BYTE
-	Value	Parameter Description
-	0	AG response OK
-	1	AG response ERROR
-	2	No response from AG
-	others	RFD
+          	status	SIZE: 1 BYTE
+          	Value	Parameter Description
+          	0	AG response OK
+          	1	AG response ERROR
+          	2	No response from AG
+          	others	RFD
 
-*/
+          */
           case EVT_Vendor_AT_Cmd_Reply:
             {
             }
             break;
-/*
-Value	Parameter Description
-0x00	database 0 for a dedicate link
-0x01	database 1 for a dedicate link
+          /*
+            Value	Parameter Description
+            0x00	database 0 for a dedicate link
+            0x01	database 1 for a dedicate link
 
 
-result_payload	SIZE: N BYTES
-Value	Parameter Description
-0xXX…	"result code.
-For example : AG send result code ""+test:1"" , the result code will be ""+test:1"" "
+            result_payload	SIZE: N BYTES
+            Value	Parameter Description
+            0xXX…	"result code.
+            For example : AG send result code ""+test:1"" , the result code will be ""+test:1"" "
 
-*/
+          */
           case EVT_Report_Vendor_AT_Event:
             {
             }
@@ -1393,7 +1589,7 @@ For example : AG send result code ""+test:1"" , the result code will be ""+test:
             Description:  This event is used to reply the Read_Link_Status command.
 
             Event Parameters:
-	    device_state  SIZE: 1 BYTE
+            device_state  SIZE: 1 BYTE
             Value Parameter Description
             0x00  Power OFF state
             0x01  pairing state (discoverable mode)
@@ -1448,8 +1644,8 @@ For example : AG send result code ""+test:1"" , the result code will be ""+test:
               for (uint8_t i = 0; i < 8; i++) {
                 if (linkStatus[i] != event[i + 1])
                 {
-                linkStatus[i] = event[i + 1]; //link status is array of 7 bytes, like response is 7bytes.
-                btmStatusChanged=1;
+                  linkStatus[i] = event[i + 1]; //link status is array of 7 bytes, like response is 7bytes.
+                  btmStatusChanged = 1;
                 }
               }
               if (linkStatus[1] > 0) {
@@ -1459,7 +1655,7 @@ For example : AG send result code ""+test:1"" , the result code will be ""+test:
                 //IS2020::queryIfRemoteDeviceSupportAavrcpV13(0x00);
                 //IS2020::queryHfA2DPGain(0x00);
                 //IS2020::queryLineInGain(0x00);
-                //IS2020::avrcpDisplayableCharset(0x00); 
+                //IS2020::avrcpDisplayableCharset(0x00);
                 //IS2020::avrcpGetCapabilities(0x00, 0x02); //Get Capability command for Company ID
                 IS2020::avrcpGetCapabilities(0x00, 0x03); //Get Capability command for Events
                 IS2020::avrcpListPlayerAttributes(0x00);
@@ -1484,49 +1680,49 @@ For example : AG send result code ""+test:1"" , the result code will be ""+test:
               }
             }
             break;
-/*
-              Event Format:   Event                             Event Code    Event Parameters
-                              Read_Paired_Device_Record_Reply   0x1F          paired_device_number, paired_record
+          /*
+                        Event Format:   Event                             Event Code    Event Parameters
+                                        Read_Paired_Device_Record_Reply   0x1F          paired_device_number, paired_record
 
-              Description:  This event is used to reply the  Read_Paired_Device_Information command.
+                        Description:  This event is used to reply the  Read_Paired_Device_Information command.
 
-              Event Parameters: paired_de3vice_number  SIZE: 1 BYTE
-              Parameter Description
-              byte0 the paired device number.
+                        Event Parameters: paired_de3vice_number  SIZE: 1 BYTE
+                        Parameter Description
+                        byte0 the paired device number.
 
-              paired_record : 7bytes per record SIZE: (7*total_record) BYTE
-              Parameter Description
-              byte0 link priority : 1 is the highest(newest device) and 4 is the lowest(oldest device)
-              byte1~byte6 linked device BD address (6 bytes with low byte first)
-              …
-               notes:
-               cmd event[0]
-               paired_device_id event[1]
-                   ink_priority event[2]
-                           bt_5 event[3]
-                           bt_4 event[4]
-                           bt_3 event[5]
-                           bt_2 event[6]
-                           bt-1 event[7]
-                           bt_0 event[8]
-*/
+                        paired_record : 7bytes per record SIZE: (7*total_record) BYTE
+                        Parameter Description
+                        byte0 link priority : 1 is the highest(newest device) and 4 is the lowest(oldest device)
+                        byte1~byte6 linked device BD address (6 bytes with low byte first)
+                        …
+                         notes:
+                         cmd event[0]
+                         paired_device_id event[1]
+                             ink_priority event[2]
+                                     bt_5 event[3]
+                                     bt_4 event[4]
+                                     bt_3 event[5]
+                                     bt_2 event[6]
+                                     bt-1 event[7]
+                                     bt_0 event[8]
+          */
           case EVT_Read_Paired_Device_Record_Reply:
-		{
-			for(uint8_t i=0;i<8;i++){
-				for (uint8_t y=0;y<6;y++)
-					btAddress[i][y]=0;				
-			}
-			for(uint8_t dev=event[1];dev>0;dev--)
-			{
-				uint8_t pos=dev-1; //0,1,2,...
-				uint8_t offset=pos*7;
-				btAddress[pos][0] = event[offset+8];
-				btAddress[pos][1] = event[offset+7];
-				btAddress[pos][2] = event[offset+6];
-				btAddress[pos][3] = event[offset+5];
-				btAddress[pos][4] = event[offset+4];
-				btAddress[pos][5] = event[offset+3];
-			}/*
+            {
+              for (uint8_t i = 0; i < 8; i++) {
+                for (uint8_t y = 0; y < 6; y++)
+                  btAddress[i][y] = 0;
+              }
+              for (uint8_t dev = event[1]; dev > 0; dev--)
+              {
+                uint8_t pos = dev - 1; //0,1,2,...
+                uint8_t offset = pos * 7;
+                btAddress[pos][0] = event[offset + 8];
+                btAddress[pos][1] = event[offset + 7];
+                btAddress[pos][2] = event[offset + 6];
+                btAddress[pos][3] = event[offset + 5];
+                btAddress[pos][4] = event[offset + 4];
+                btAddress[pos][5] = event[offset + 3];
+              }/*
 			for (uint8_t i=0;i<8;i++){
 				Serial.print("Device ");
 				Serial.print(i);
@@ -1543,20 +1739,20 @@ For example : AG send result code ""+test:1"" , the result code will be ""+test:
 				Serial.print(":");
                                 Serial.println(btAddress[i][5],HEX);
 			}*/
-		}
+            }
             break;
           case EVT_Read_Local_BD_Address_Reply:
             {
               DBG_EVENTS(F("Local BT adr: "));
               /*for (uint8_t _byte = 0; _byte < 6; _byte++) {
                 IS2020::moduleBtAddress[5 - _byte] = event[_byte + 1];
-              }*/
+                }*/
               for (uint8_t _byte = 0; _byte < 6; _byte++) {
-                IS2020::moduleBtAddress[_byte] = event[6-_byte];
+                IS2020::moduleBtAddress[_byte] = event[6 - _byte];
                 DBG_EVENTS(String(IS2020::moduleBtAddress[_byte], HEX));
                 if (_byte < 5) DBG_EVENTS(F(":"));
               }
-               DBG_EVENTS(F("\n"));
+              DBG_EVENTS(F("\n"));
             }
             break;
           case EVT_Read_Local_Device_Name_Reply:
@@ -1623,11 +1819,11 @@ For example : AG send result code ""+test:1"" , the result code will be ""+test:
           default:
             {
               /*Serial3.println();
-              Serial3.print("Unknown  BYTE: ");
-              for (uint8_t i = 0; i < packetSize; i++) {
+                Serial3.print("Unknown  BYTE: ");
+                for (uint8_t i = 0; i < packetSize; i++) {
                 Serial3.print(event[i], HEX);
-              }
-              Serial3.println();*/
+                }
+                Serial3.println();*/
             }
         }
         return event[0];
@@ -1780,146 +1976,190 @@ void IS2020::decodeEvent(uint8_t Event) {
   }
 }
 
-void IS2020::decodeCommandInEvents(uint8_t cmd){
-    switch(cmd){
-      case CMD_Make_Call:
-        DBG_EVENTS(F("Make Call"));
+void IS2020::decodeCommandInEvents(uint8_t cmd) {
+  switch (cmd) {
+    case CMD_Make_Call:
+      DBG_EVENTS(F("Make Call"));
       break;
-      case CMD_Make_Extension_Call:
-        DBG_EVENTS(F("Make Extension Call"));
+    case CMD_Make_Extension_Call:
+      DBG_EVENTS(F("Make Extension Call"));
       break;
-      case CMD_MMI_Action:
-        DBG_EVENTS(F("MMI Action"));
+    case CMD_MMI_Action:
+      DBG_EVENTS(F("MMI Action"));
       break;
-      case CMD_Event_Mask_Setting:
-        DBG_EVENTS(F("Event Mask Setting"));
+    case CMD_Event_Mask_Setting:
+      DBG_EVENTS(F("Event Mask Setting"));
       break;
-      case CMD_Music_Control:
-        DBG_EVENTS(F("Music Control"));
+    case CMD_Music_Control:
+      DBG_EVENTS(F("Music Control"));
       break;
-      case CMD_Change_Device_Name:
-        DBG_EVENTS(F("Change Device Name"));
+    case CMD_Change_Device_Name:
+      DBG_EVENTS(F("Change Device Name"));
       break;
-      case CMD_Change_PIN_Code:
-        DBG_EVENTS(F("Change PIN Code"));
+    case CMD_Change_PIN_Code:
+      DBG_EVENTS(F("Change PIN Code"));
       break;
-      case CMD_BTM_Parameter_Setting:
-        DBG_EVENTS(F("BTM_Parameter_Setting"));
+    case CMD_BTM_Parameter_Setting:
+      DBG_EVENTS(F("BTM_Parameter_Setting"));
       break;
-      case CMD_Read_BTM_Version:
-        DBG_EVENTS(F("Read_BTM_Version"));
+    case CMD_Read_BTM_Version:
+      DBG_EVENTS(F("Read_BTM_Version"));
       break;
-      case CMD_Get_PB_By_AT_Cmd:
-        DBG_EVENTS(F("Get PB By AT Cmd"));
+    case CMD_Get_PB_By_AT_Cmd:
+      DBG_EVENTS(F("Get PB By AT Cmd"));
       break;
-      case CMD_Vendor_AT_Command:
-        DBG_EVENTS(F("Vendor AT Command"));
+    case CMD_Vendor_AT_Command:
+      DBG_EVENTS(F("Vendor AT Command"));
       break;
-      case CMD_AVRCP_Specific_Cmd:
-        DBG_EVENTS(F("AVRCP Specific Cmd"));
+    case CMD_AVRCP_Specific_Cmd:
+      DBG_EVENTS(F("AVRCP Specific Cmd"));
       break;
-      case CMD_AVRCP_Group_Navigation:
-        DBG_EVENTS(F("AVRCP Group Navigation"));
+    case CMD_AVRCP_Group_Navigation:
+      DBG_EVENTS(F("AVRCP Group Navigation"));
       break;
-      case CMD_Read_Link_Status:
-        DBG_EVENTS(F("Read Link Status"));
+    case CMD_Read_Link_Status:
+      DBG_EVENTS(F("Read Link Status"));
       break;
-      case CMD_Read_Paired_Device_Record:
-        DBG_EVENTS(F("Read Paired Device Record"));
+    case CMD_Read_Paired_Device_Record:
+      DBG_EVENTS(F("Read Paired Device Record"));
       break;
-            case CMD_Read_Local_BT_Address:
-        DBG_EVENTS(F("Read Local BT Address"));
+    case CMD_Read_Local_BT_Address:
+      DBG_EVENTS(F("Read Local BT Address"));
       break;
-      case CMD_Read_Local_Device_Name:
-        DBG_EVENTS(F("Read Local Device Name"));
+    case CMD_Read_Local_Device_Name:
+      DBG_EVENTS(F("Read Local Device Name"));
       break;
-	case CMD_Set_Access_PB_Method:
-        DBG_EVENTS(F("Set Access PB Method"));
+    case CMD_Set_Access_PB_Method:
+      DBG_EVENTS(F("Set Access PB Method"));
       break;
-      case CMD_Send_SPP_iAP_Data:
-        DBG_EVENTS(F("Send SPP iAP Data"));
+    case CMD_Send_SPP_iAP_Data:
+      DBG_EVENTS(F("Send SPP iAP Data"));
       break;
-      case CMD_BTM_Utility_Function:
-        DBG_EVENTS(F("BTM Utility Function"));
+    case CMD_BTM_Utility_Function:
+      DBG_EVENTS(F("BTM Utility Function"));
       break;
-      case CMD_Event_ACK:
-        DBG_EVENTS(F("Event ACK"));
+    case CMD_Event_ACK:
+      DBG_EVENTS(F("Event ACK"));
       break;
-      case CMD_Additional_Profiles_Link_Setup:
-        DBG_EVENTS(F("Additional Profiles Link Setup"));
+    case CMD_Additional_Profiles_Link_Setup:
+      DBG_EVENTS(F("Additional Profiles Link Setup"));
       break;
-      case CMD_Read_Linked_Device_Information:
-        DBG_EVENTS(F("Read Linked Device Information"));
+    case CMD_Read_Linked_Device_Information:
+      DBG_EVENTS(F("Read Linked Device Information"));
       break;
-      case CMD_Profile_Link_Back:
-        DBG_EVENTS(F("Profile Link Back"));
+    case CMD_Profile_Link_Back:
+      DBG_EVENTS(F("Profile Link Back"));
       break;
-      case CMD_Disconnect:
-        DBG_EVENTS(F("Disconnect"));
+    case CMD_Disconnect:
+      DBG_EVENTS(F("Disconnect"));
       break;
-      case CMD_MCU_Status_Indication:
-        DBG_EVENTS(F("MCU Status Indication"));
+    case CMD_MCU_Status_Indication:
+      DBG_EVENTS(F("MCU Status Indication"));
       break;
-      case CMD_User_Confirm_SPP_Req_Reply:
-        DBG_EVENTS(F("User Confirm SPP Req Reply"));
+    case CMD_User_Confirm_SPP_Req_Reply:
+      DBG_EVENTS(F("User Confirm SPP Req Reply"));
       break;
-      case CMD_Set_HF_Gain_Level:
-        DBG_EVENTS(F("Set HF Gain Level"));
+    case CMD_Set_HF_Gain_Level:
+      DBG_EVENTS(F("Set HF Gain Level"));
       break;
-      case CMD_EQ_Mode_Setting:
-        DBG_EVENTS(F("EQ Mode Setting"));
+    case CMD_EQ_Mode_Setting:
+      DBG_EVENTS(F("EQ Mode Setting"));
       break;
-      case CMD_DSP_NR_CTRL:
-        DBG_EVENTS(F("DSP NR CTRL"));
+    case CMD_DSP_NR_CTRL:
+      DBG_EVENTS(F("DSP NR CTRL"));
       break;
-      case CMD_GPIO_Control:
-        DBG_EVENTS(F("GPIO Control"));
+    case CMD_GPIO_Control:
+      DBG_EVENTS(F("GPIO Control"));
       break;
-      case CMD_MCU_UART_Rx_Buffer_Size:
-        DBG_EVENTS(F("MCU UART Rx Buffer Size"));
+    case CMD_MCU_UART_Rx_Buffer_Size:
+      DBG_EVENTS(F("MCU UART Rx Buffer Size"));
       break;
-      case CMD_Voice_Prompt_Cmd:
-        DBG_EVENTS(F("Voice Prompt Cmd"));
+    case CMD_Voice_Prompt_Cmd:
+      DBG_EVENTS(F("Voice Prompt Cmd"));
       break;
-      case CMD_MAP_REQUEST:
-        DBG_EVENTS(F("MAP REQUEST"));
+    case CMD_MAP_REQUEST:
+      DBG_EVENTS(F("MAP REQUEST"));
       break;
-      case CMD_Security_Bonding_Req:
-        DBG_EVENTS(F("Security Bonding Req"));
+    case CMD_Security_Bonding_Req:
+      DBG_EVENTS(F("Security Bonding Req"));
       break;
-      case CMD_Set_Overall_Gain:
-        DBG_EVENTS(F("Set Overall Gain"));
+    case CMD_Set_Overall_Gain:
+      DBG_EVENTS(F("Set Overall Gain"));
       break;
-      default:
-        DBG_EVENTS("Unknown CMD command "+String(cmd,HEX));
+    default:
+      DBG_EVENTS("Unknown CMD command " + String(cmd, HEX));
       break;
-    }
+  }
 }
 
-void IS2020::decodeRejectReason(uint8_t event){
-	switch(event)
-                {
-                case AVRCP_STATUS_INVALID_COMMAND: { Serial.print(F("INVALID COMMAND: ")); } break;
-                case AVRCP_STATUS_INVALID_PARAM: { Serial.print(F("INVALID PARAM: ")); } break;
-                case AVRCP_STATUS_PARAM_NOT_FOUND: { Serial.print(F("PARAM NOT FOUND: ")); } break;
-		case AVRCP_STATUS_INTERNAL_ERROR: { Serial.print(F("INTERNAL ERROR: ")); } break;
-                case AVRCP_STATUS_SUCCESS: { Serial.print(F("SUCCESS")); } break;
-                case AVRCP_STATUS_UID_CHANGED: { Serial.print(F("UID CHANGED")); } break;
-                case AVRCP_STATUS_INVALID_DIRECTION: { Serial.print(F("INVALID DIRECTION")); } break;
-                case AVRCP_STATUS_NOT_DIRECTORY: { Serial.print(F("NOT DIRECTORY")); } break;
-                case AVRCP_STATUS_NOT_EXIST: { Serial.print(F("NOT EXIST")); } break;
-                case AVRCP_STATUS_INVALID_SCOPE: { Serial.print(F("INVALID SCOPE")); } break;
-                case AVRCP_STATUS_RANGE_OUT_OF_BOUNDS: { Serial.print(F("RANGE OUT OF BOUNDS")); } break;
-                case AVRCP_STATUS_FOLDER_NOT_PLAYABLE: { Serial.print(F("FOLDER NOT PLAYABLE")); } break;
-                case AVRCP_STATUS_MEDIA_IN_USE: { Serial.print(F("MEDIA IN USE")); } break;
-                case AVRCP_STATUS_NOW_PLAYING_LIST_FULL: { Serial.print(F("NOW PLAYING LIST FULL")); } break;
-                case AVRCP_STATUS_SEARCH_NOT_SUPPORTED: { Serial.print(F("SEARCH NOT SUPPORTED")); } break;
-                case AVRCP_STATUS_SEARCH_IN_PROGRESS: { Serial.print(F("SEARCH IN PROGRESS")); } break;
-                case AVRCP_STATUS_INVALID_PLAYER_ID: { Serial.print(F("INVALID PLAYER ID")); } break;
-                case AVRCP_STATUS_PLAYER_NOT_BROWSABLE: { Serial.print(F("PLAYER NOT BROWSABLE")); } break;
-                case AVRCP_STATUS_PLAYER_NOT_ADDRESSED: { Serial.print(F("PLAYER NOT ADDRESSED")); } break;
-                case AVRCP_STATUS_NO_VALID_SEARCH_RESULT: { Serial.print(F("NO VALID SEARCH RESULT")); } break;
-                case AVRCP_STATUS_NO_AVAILABLE_PLAYERS: { Serial.print(F("NO AVAILABLE PLAYERS")); } break;
-                case AVRCP_STATUS_ADDRESSED_PLAYER_CHANGED: { Serial.print(F("ADDRESSED PLAYER CHANGED")); } break;
-                }
+void IS2020::decodeRejectReason(uint8_t event) {
+  switch (event)
+  {
+    case AVRCP_STATUS_INVALID_COMMAND: {
+        Serial.print(F("INVALID COMMAND: "));
+      } break;
+    case AVRCP_STATUS_INVALID_PARAM: {
+        Serial.print(F("INVALID PARAM: "));
+      } break;
+    case AVRCP_STATUS_PARAM_NOT_FOUND: {
+        Serial.print(F("PARAM NOT FOUND: "));
+      } break;
+    case AVRCP_STATUS_INTERNAL_ERROR: {
+        Serial.print(F("INTERNAL ERROR: "));
+      } break;
+    case AVRCP_STATUS_SUCCESS: {
+        Serial.print(F("SUCCESS"));
+      } break;
+    case AVRCP_STATUS_UID_CHANGED: {
+        Serial.print(F("UID CHANGED"));
+      } break;
+    case AVRCP_STATUS_INVALID_DIRECTION: {
+        Serial.print(F("INVALID DIRECTION"));
+      } break;
+    case AVRCP_STATUS_NOT_DIRECTORY: {
+        Serial.print(F("NOT DIRECTORY"));
+      } break;
+    case AVRCP_STATUS_NOT_EXIST: {
+        Serial.print(F("NOT EXIST"));
+      } break;
+    case AVRCP_STATUS_INVALID_SCOPE: {
+        Serial.print(F("INVALID SCOPE"));
+      } break;
+    case AVRCP_STATUS_RANGE_OUT_OF_BOUNDS: {
+        Serial.print(F("RANGE OUT OF BOUNDS"));
+      } break;
+    case AVRCP_STATUS_FOLDER_NOT_PLAYABLE: {
+        Serial.print(F("FOLDER NOT PLAYABLE"));
+      } break;
+    case AVRCP_STATUS_MEDIA_IN_USE: {
+        Serial.print(F("MEDIA IN USE"));
+      } break;
+    case AVRCP_STATUS_NOW_PLAYING_LIST_FULL: {
+        Serial.print(F("NOW PLAYING LIST FULL"));
+      } break;
+    case AVRCP_STATUS_SEARCH_NOT_SUPPORTED: {
+        Serial.print(F("SEARCH NOT SUPPORTED"));
+      } break;
+    case AVRCP_STATUS_SEARCH_IN_PROGRESS: {
+        Serial.print(F("SEARCH IN PROGRESS"));
+      } break;
+    case AVRCP_STATUS_INVALID_PLAYER_ID: {
+        Serial.print(F("INVALID PLAYER ID"));
+      } break;
+    case AVRCP_STATUS_PLAYER_NOT_BROWSABLE: {
+        Serial.print(F("PLAYER NOT BROWSABLE"));
+      } break;
+    case AVRCP_STATUS_PLAYER_NOT_ADDRESSED: {
+        Serial.print(F("PLAYER NOT ADDRESSED"));
+      } break;
+    case AVRCP_STATUS_NO_VALID_SEARCH_RESULT: {
+        Serial.print(F("NO VALID SEARCH RESULT"));
+      } break;
+    case AVRCP_STATUS_NO_AVAILABLE_PLAYERS: {
+        Serial.print(F("NO AVAILABLE PLAYERS"));
+      } break;
+    case AVRCP_STATUS_ADDRESSED_PLAYER_CHANGED: {
+        Serial.print(F("ADDRESSED PLAYER CHANGED"));
+      } break;
+  }
 }

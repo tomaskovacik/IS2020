@@ -20,6 +20,8 @@ void IS2020::begin(uint8_t resetPin,uint32_t baudrate) {
   btSerial -> begin(baudrate);
   pinMode(_reset, OUTPUT);
   IS2020::resetHigh();
+  delay(100);
+  IS2020::mcuUartRxBufferSize();
 }
 
 /*

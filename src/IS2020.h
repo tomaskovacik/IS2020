@@ -26,7 +26,7 @@ class IS2020
 {
   public:
     IS2020(HardwareSerial *ser);
-    void begin(uint8_t _reset,uint32_t baudrate=115200);
+    void begin(uint8_t _reset, uint32_t baudrate = 115200);
     ~IS2020();
 
 
@@ -55,14 +55,14 @@ class IS2020
     uint8_t  readLinkedDeviceInformation(uint8_t deviceId, uint8_t query);
     uint8_t  profileLinkBack(uint8_t type, uint8_t deviceId, uint8_t profile);
     uint8_t  connectLastDevice(); //alias profileLinkBack
-    uint8_t  disconnect(uint8_t flag = 0x0F); //B0000 1111 = > 0x0F bit 3,2,1,0 set 
+    uint8_t  disconnect(uint8_t flag = 0x0F); //B0000 1111 = > 0x0F bit 3,2,1,0 set
     uint8_t  mcuStatusIndication();
     uint8_t  userConfirmSppReqReply();
     uint8_t  setHfGainLevel();
     uint8_t  eqModeSetting();
     uint8_t  dspNrCtrl(uint8_t type);
     uint8_t  gpioControl();
-    uint8_t  mcuUartRxBufferSize();
+    uint8_t  mcuUartRxBufferSize(uint8_t buffer = 64/*this did not work... SERIAL_RX_BUFFER_SIZE*/);
     uint8_t  voicePromptCmd();
     uint8_t  mapRequest();
     uint8_t  securityBondingReq();
@@ -101,21 +101,21 @@ class IS2020
     int     btmFwVersion = 0;
     uint8_t linkStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 
-    uint8_t btAddress[8][6]={ 
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0}
-}; 
+    uint8_t btAddress[8][6] = {
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0}
+    };
 
     uint8_t moduleBtAddress[6];
     void removeInfoAboutDevice(uint8_t deviceId);
-    uint8_t musicState[2]={0,0};
-    uint8_t pairingFailReason=0;
+    uint8_t musicState[2] = {0, 0};
+    uint8_t pairingFailReason = 0;
 
     //MMI specific functions
     uint8_t addRemoveScoLink(uint8_t deviceID);
@@ -159,7 +159,7 @@ class IS2020
     uint8_t changeTone(uint8_t deviceID);
     uint8_t batteryStatus(uint8_t deviceID);
     uint8_t exitPairingMode(uint8_t deviceID);
-    uint8_t linkLastDevice(uint8_t deviceID=0);
+    uint8_t linkLastDevice(uint8_t deviceID = 0);
     uint8_t disconnectAllLink(uint8_t deviceID);
     uint8_t trigerToQueryCallListInfo(uint8_t deviceID);
 
@@ -199,43 +199,45 @@ class IS2020
     //AVRCP
     void decodeAvrcpPdu(uint8_t pdu);
     void decodeAvrcpEvent(uint8_t Event);
-    void decodeAvrcpPlayerAtributes(uint8_t attribute);
+    void decodeAvrcpPlayerAtributes(uint8_t attribute, uint8_t attrValue);
     void registerAllEvents(uint8_t deviceId);
-    uint8_t  avrcpGetElementAttributesCommand(uint8_t deviceId);
-    uint8_t  avrcpRegistrationForNotificationOfEvent(uint8_t deviceId, uint8_t event, uint8_t param1=0x00, uint8_t param2=0x00, uint8_t param3=0x00, uint8_t param4=0x00);
-    uint8_t  avrcpListApplicationSettingsAttributesCommand(uint8_t deviceId);
-    uint8_t  avrcpGetCapabilities(uint8_t deviceId, uint8_t capId = CAP_EVENTS_SUPPORTED);
-    uint8_t  avrcpListPlayerAttributes(uint8_t deviceId);
-    uint8_t  avrcpListPlayerValues(uint8_t deviceId, uint8_t attribute);
-    uint8_t  avrcpGetCurrentPlayerValue(uint8_t deviceId, uint8_t attribute);
-    uint8_t  avrcpSetPlayerValue(uint8_t deviceId, uint8_t attribute, uint8_t value);
-    uint8_t  avrcpGetPlayerAttributeText(uint8_t deviceId,uint8_t attribute);
-    uint8_t  avrcpGetPlayerValueText(uint8_t deviceId, uint8_t attribute, uint8_t setting);
-    uint8_t  avrcpDisplayableCharset(uint8_t deviceId);
-    uint8_t  avrcpGetElementAttributes(uint8_t deviceId);
-    uint8_t  avrcpGetElementAttributesAll(uint8_t deviceId);
-    uint8_t  avrcpGetPlayStatus(uint8_t deviceId);
-    uint8_t  avrcpRequestContinuing(uint8_t deviceId, uint8_t pdu);
-    uint8_t  avrcpAbortContinuing(uint8_t deviceId, uint8_t pdu);
-    uint8_t  avrcpSetAbsoluteVolume(uint8_t deviceId, uint8_t volume);
-    uint8_t  avrcpSetAddressedPlayer(uint8_t deviceId, uint16_t player);
-    uint8_t  avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player);
-    uint8_t  avrcpGetFolderItems(uint8_t deviceId, uint8_t scope,uint32_t start, uint8_t end);
-    uint8_t  avrcpChangePath(uint8_t deviceId, uint8_t direction=0x01, uint64_t folderUID=5);
-	uint8_t avrcpRegNotifyPlaybackStatusChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyTrackChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyTrackReachedEnd(uint8_t deviceId);
-	uint8_t avrcpRegNotifyTrackReachedStart(uint8_t deviceId);
-	uint8_t avrcpRegNotifyTrackPositionChanged(uint8_t deviceId,uint8_t interval=30);//interval in seconds
-	uint8_t avrcpRegNotifyBattStatusChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifySystemStatusChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyPlayerAppSettingsChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyNowPlayingContentChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyAvailablePlayersChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyAddressedPlayerChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyUIDsChanged(uint8_t deviceId);
-	uint8_t avrcpRegNotifyVolumeChanged(uint8_t deviceId);
-	void decodeRejectReason(uint8_t event);
+    uint8_t avrcpGetElementAttributesCommand(uint8_t deviceId);
+    uint8_t avrcpRegistrationForNotificationOfEvent(uint8_t deviceId, uint8_t event, uint8_t param1 = 0x00, uint8_t param2 = 0x00, uint8_t param3 = 0x00, uint8_t param4 = 0x00);
+    uint8_t avrcpGetCapabilities(uint8_t deviceId, uint8_t capId = CAP_EVENTS_SUPPORTED);
+    uint8_t avrcpListPlayerAttributes(uint8_t deviceId);
+    uint8_t avrcpListPlayerValues(uint8_t deviceId, uint8_t attribute);
+    uint8_t avrcpGetCurrentPlayerValue(uint8_t deviceId, uint8_t attribute);
+    uint8_t avrcpSetPlayerValue(uint8_t deviceId, uint8_t attribute, uint8_t value);
+    uint8_t avrcpGetPlayerAttributeText(uint8_t deviceId, uint8_t attribute);
+    uint8_t avrcpGetPlayerValueText(uint8_t deviceId, uint8_t attributeID, uint8_t valueID);
+    uint8_t avrcpDisplayableCharset(uint8_t deviceId);
+    uint8_t avrcpGetElementAttributes(uint8_t deviceId);
+    uint8_t avrcpGetElementAttributesAll(uint8_t deviceId);
+    uint8_t avrcpGetPlayStatus(uint8_t deviceId);
+    uint8_t avrcpRequestContinuing(uint8_t deviceId, uint8_t pdu);
+    uint8_t avrcpAbortContinuing(uint8_t deviceId, uint8_t pdu);
+    uint8_t avrcpSetAbsoluteVolume(uint8_t deviceId, uint8_t volume);
+    uint8_t avrcpSetAddressedPlayer(uint8_t deviceId, uint16_t player);
+    uint8_t avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player);
+    uint8_t avrcpGetFolderItems(uint8_t deviceId, uint8_t scope, uint32_t start, uint8_t end);
+    uint8_t avrcpChangePath(uint8_t deviceId, uint8_t direction = 0x01, uint64_t folderUID = 5);
+    uint8_t avrcpRegNotifyPlaybackStatusChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyTrackChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyTrackReachedEnd(uint8_t deviceId);
+    uint8_t avrcpRegNotifyTrackReachedStart(uint8_t deviceId);
+    uint8_t avrcpRegNotifyTrackPositionChanged(uint8_t deviceId, uint8_t interval = 30); //interval in seconds
+    uint8_t avrcpRegNotifyBattStatusChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifySystemStatusChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyPlayerAppSettingsChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyNowPlayingContentChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyAvailablePlayersChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyAddressedPlayerChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyUIDsChanged(uint8_t deviceId);
+    uint8_t avrcpRegNotifyVolumeChanged(uint8_t deviceId);
+    void decodeRejectReason(uint8_t event);
+    uint16_t avrcpPlayerID[5];
+    uint8_t avrcpCurrentPlayerID;
+    void avrcpStorePlayerID(uint16_t playerID);
     //reset module
     void resetModule();
     uint8_t queryDeviceName(uint8_t deviceId);
