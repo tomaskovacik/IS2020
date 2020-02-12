@@ -233,7 +233,7 @@ uint8_t  IS2020::avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player) {
                      0x00, 0x02,
                      ((player >> 8) & 0xFF), (player & 0xFF)
                     };
-Serial.print("sending: "+String(data[0],HEX)+","+String(data[1],HEX)+","+String(data[2],HEX)+","+String(data[3],HEX)+","+String(data[4],HEX)+","+String(data[5],HEX));
+Serial.print("sending: "+String(data[0],HEX)+","+String(data[1],HEX)+","+String(data[2],HEX)+","+String(data[3],HEX)+","+String(data[4],HEX));
 delay(1000);
   IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
