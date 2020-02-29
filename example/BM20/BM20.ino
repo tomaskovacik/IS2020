@@ -16,27 +16,16 @@ void module_info();
 
 
 void setup() {
-  // Open serial communications and wait for port to open:
   Serial.begin(115200); //TX = PB10, RX=PB11
-  //Serial.print(F("begin"));
-  // delay(1000);
-
-  //  while (!Serial3) {
-  //    ; // wait for serial port to connect. Needed for native USB port only
-  //  }
-  BT.begin(RESET);
-  //BT.btmStatusChanged = 1;
-  
-  
+  BT.begin(RESET);  
   BT.readLocalDeviceName();
   BT.readLocalBtAddress();
-  BT.readBtmVersion();
+  //BT.readBtmVersion();
   BT.readLinkStatus();
   BT.readPairedDeviceRecord();
 }
 
-void loop() { // run over and over
-Serial.println(BT.btStatus());
+void loop() { 
   if (Serial.available() > 0)
   {
     // read the incoming byte:
