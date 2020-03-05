@@ -1,3 +1,9 @@
+#ifndef events_h
+#define events_h
+
+#include "IS2020.h"
+#include <Arduino.h>
+
 #define BTM_STATE_power_OFF 0x00
 #define BTM_STATE_discoverable_mode 0x01
 #define BTM_STATE_power_ON_state 0x02
@@ -110,3 +116,5 @@
 #define EMB_amp_indication 0x00004000
 #define EMB_line_in_status 0x00008000
 //Byte3 is always 0x00 - reserved
+
+#endif

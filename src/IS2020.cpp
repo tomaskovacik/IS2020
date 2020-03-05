@@ -15,7 +15,7 @@ IS2020::IS2020(HardwareSerial *ser) {
 IS2020::~IS2020() {
 }
 
-void IS2020::begin(uint8_t resetPin,uint32_t baudrate) {
+void IS2020::begin(uint8_t resetPin, uint32_t baudrate) {
   _reset = resetPin;
   btSerial -> begin(baudrate);
   pinMode(_reset, OUTPUT);
@@ -62,17 +62,17 @@ uint8_t IS2020::checkResponce(uint8_t eventId) {
   //uint8_t responceId = IS2020::getNextEventFromBt();
   //DBG(F("Get responce: "));decodeEvent(responceId); DBG(F("\n"));
 
-//  if (responceId == eventId) {
-//    DBG("OK\n\n");
-//    return true;
-//  } else {
-//    DBG("FAIL: ");
-//    decodeEvent(responceId);
-//    DBG(" != : ");
-//    decodeEvent(eventId);
-//    DBG("\n");
-//    return false;
-//  }
+  //  if (responceId == eventId) {
+  //    DBG("OK\n\n");
+  //    return true;
+  //  } else {
+  //    DBG("FAIL: ");
+  //    decodeEvent(responceId);
+  //    DBG(" != : ");
+  //    decodeEvent(eventId);
+  //    DBG("\n");
+  //    return false;
+  //  }
 }
 
 
@@ -109,7 +109,7 @@ void  IS2020::sendPacketString(uint8_t cmd, String str) {
   btSerial -> write(cmd); DBG(F(" ")); //DBG(String(cmd, HEX));
   checkSum += (cmd);
   for (uint16_t dataPos = 0; dataPos < packetSize - 1; dataPos++) {
-    btSerial -> write(str[dataPos]); //DBG(F(" ")); DBG(String(str[dataPos], HEX));
+    btSerial -> write(str[dataPos]); DBG(F("|")); DBG(String(str[dataPos],HEX));
     checkSum += str[dataPos];
   }
   btSerial -> write(0x100 - checkSum);// DBG(F(" ")); DBG(String(0x100 - checkSum, HEX));
@@ -120,11 +120,11 @@ void  IS2020::sendPacketString(uint8_t cmd, String str) {
 void  IS2020::sendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t data[]) {
   //DBG("sending array int: ");
   decodeCommand(cmd); DBG(F(": "));
-  if(cmd == CMD_MMI_Action) IS2020::decodeMMI(data[3]);
+  if (cmd == CMD_MMI_Action) IS2020::decodeMMI(data[3]);
   btSerial -> write(STARTBYTE); DBG(String(STARTBYTE, HEX));
   btSerial -> write(packetSize >> 8); DBG(F(" ")); DBG(String((packetSize >> 8), HEX));
   uint8_t checkSum = packetSize >> 8;
-  btSerial -> write(packetSize & 0xFF); DBG(F(" "));DBG(String((packetSize & 0xFF), HEX));
+  btSerial -> write(packetSize & 0xFF); DBG(F(" ")); DBG(String((packetSize & 0xFF), HEX));
   checkSum += (packetSize & 0xFF);
   btSerial -> write(cmd); DBG(F(" ")); DBG(String(cmd, HEX));
   checkSum += (cmd);
@@ -134,27 +134,46 @@ void  IS2020::sendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t devi
     btSerial -> write(data[dataPos]); DBG(F(" ")); DBG(String(data[dataPos], HEX));
     checkSum += data[dataPos];
   }
-  btSerial -> write(0x100 - checkSum); DBG(F(" ")); DBG(String(0x100 - checkSum, HEX)+"\n");
+  btSerial -> write(0x100 - checkSum); DBG(F(" ")); DBG(String(0x100 - checkSum, HEX) + "\n");
 }
 
-void  IS2020::sendPacketArrayChar (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, char data[]) {
-  // DBG("sending array char: ");
-  decodeCommand(cmd);// DBG("\n");
+//void  IS2020::sendPacketArrayInt_P(uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t * data) {
+//  //DBG("sending array int: ");
+// // decodeCommand(cmd); DBG(F(": "));
+// // if (cmd == CMD_MMI_Action) IS2020::decodeMMI(*data + 4);
+//  btSerial -> write(STARTBYTE); //DBG(String(STARTBYTE, HEX));
+//  btSerial -> write(packetSize >> 8); //DBG(F(" ")); DBG(String((packetSize >> 8), HEX));
+//  uint8_t checkSum = packetSize >> 8;
+//  btSerial -> write(packetSize & 0xFF);// DBG(F(" ")); DBG(String((packetSize & 0xFF), HEX));
+//  checkSum += (packetSize & 0xFF);
+//  btSerial -> write(cmd);// DBG(F(" ")); DBG(String(cmd, HEX));
+//  checkSum += (cmd);
+//  btSerial -> write(deviceId);// DBG(F(" ")); DBG(String(deviceId, HEX));
+//  checkSum += (deviceId);
+//  for (uint16_t dataPos = 0; dataPos < packetSize - 2; dataPos++) {
+//    btSerial -> write(data); /*DBG(F(" "));*/ Serial.write(*data);//DBG(String(*data+dataPos));
+//    checkSum += *data++;
+//  }
+//  btSerial -> write(0x100 - checkSum); //DBG(F(" ")); DBG(String(0x100 - checkSum, HEX) + "\n");
+//}
 
+void  IS2020::sendPacketArrayChar (uint16_t packetSize, uint8_t cmd, uint8_t deviceId, char data[]) {
+  DBG("sending array char: ");
+  decodeCommand(cmd);DBG("\n");
   btSerial -> write(STARTBYTE);//DBG(String(STARTBYTE, HEX));
   btSerial -> write(packetSize >> 8);// DBG(F(" ")); DBG(String((packetSize >> 8), HEX));
   uint8_t checkSum = packetSize >> 8;
   btSerial -> write(packetSize & 0xFF);// DBG(F(" ")); DBG(String((packetSize & 0xFF), HEX));
   checkSum += (packetSize & 0xFF);
-  btSerial -> write(cmd); DBG(F(" ")); //DBG(String(cmd, HEX));
+  btSerial -> write(cmd); //DBG(F(" ")); //DBG(String(cmd, HEX));
   checkSum += (cmd);
-  btSerial -> write(deviceId); //DBG(F(" ")); DBG(String(deviceId, HEX));
+  btSerial -> write(deviceId);DBG(String(deviceId, HEX));DBG(F("|"));
   checkSum += (deviceId);
   for (uint16_t dataPos = 0; dataPos < packetSize - 2; dataPos++) {
-    btSerial -> write(data[dataPos]);//DBG(F(" ")); DBG(String(data[dataPos], HEX));
+    btSerial -> write(data[dataPos]);DBG(String(data[dataPos]));DBG(F("|"));
     checkSum += data[dataPos];
   }
-  btSerial -> write(0x100 - checkSum);//DBG(F(" ")); DBG(String((0x100 - checkSum), HEX));
+  btSerial -> write(0x100 - checkSum);DBG(String((0x100 - checkSum), HEX));
 }
 
 int IS2020::serialAvailable () {
@@ -166,19 +185,16 @@ int IS2020::serialRead() {
 }
 
 uint8_t IS2020::checkCkeckSum(int size, uint8_t data[]) {
-  //DBG(F(" "));
-  //DBG(F("dumping event data:"));
-  //DBG(F("packet size: ")); DBG(String(size, DEC)); DBG(F(" (")); DBG(String(size, HEX)); DBG(F(")"));
-  //DBG(F("Event:   "));
-  //decodeEvent(data[0]);
-  //DBG(F("data: "));
+  DBG_EVENTS(F("\nEvent from module: "));
+  decodeEvent(data[0]); DBG_EVENTS(F(" ["));
+
   uint8_t csum = (size >> 8);
   csum += (size & 0xFF);
   //csum += data[0];
   for (uint8_t i = 0; i < size; i++) { //
-    csum += data[i]; //DBG(String(data[i], HEX)); DBG(F((" "));
+    csum += data[i]; DBG_EVENTS(String(data[i], HEX) + F(","));
   }
-  //DBG(F(("\n"));
+  DBG_EVENTS(F("]\n"));
 
   if (data[size] == (0x100 - csum) ) {
     //DBG(F("Checksum OK\n"));
@@ -223,7 +239,7 @@ String IS2020::musicStatus(uint8_t deviceId) {
             0x07:WAIT_TO_PLAY
             0x08:WAIT_TO_PAUSE"
   */
-//  switch (linkStatus[3 + deviceId]) {
+  //  switch (linkStatus[3 + deviceId]) {
   switch (musicState[deviceId]) {
     case 0x00:
       return (F("STOP"));
@@ -268,7 +284,7 @@ String IS2020::streamStatus(uint8_t deviceId) {
 }
 
 uint8_t IS2020::batteryLevel(uint8_t deviceId) {
-  return (currentBatteryLevel[deviceId]*100)/maxBatteryLevel[deviceId];
+  return (currentBatteryLevel[deviceId] * 100) / maxBatteryLevel[deviceId];
 }
 
 String IS2020::moduleState() {
@@ -367,7 +383,7 @@ String IS2020::btStatus() {
       return (F("ACL disconnected"));
       break;
     default:
-     String tmp=F("Unknown stat");
+      String tmp = F("Unknown stat");
       //return ("unknown state" + (char)btmState);
       return (tmp + (char)btmState);
       break;
@@ -386,30 +402,30 @@ void IS2020::enableAllSettingEvent() {
   EventMask = 0x00000000;
   //bit0 reserved
   /*setEventMask(EMB_SPK_Module_state);
-  setEventMask(EMB_call_status);
-  setEventMask(EMB_incoming_call_number_or_caller_id);
-  setEventMask(EMB_SMS_received);
-  setEventMask(EMB_Missed_call);
-  setEventMask(EMB_Max_cell_phone_battery_level);
-  setEventMask(EMB_current_cell_phone_battery_level);
+    setEventMask(EMB_call_status);
+    setEventMask(EMB_incoming_call_number_or_caller_id);
+    setEventMask(EMB_SMS_received);
+    setEventMask(EMB_Missed_call);
+    setEventMask(EMB_Max_cell_phone_battery_level);
+    setEventMask(EMB_current_cell_phone_battery_level);
 
-  setEventMask(EMB_cell_phone_roamming);
-  setEventMask(EMB_Max_cell_phone_signal_strength);
-  setEventMask(EMB_current_cell_phone_signal_strength);
-  setEventMask(EMB_cell_phone_service_status);*/
-      setEventMask(EMB_BTM_battery_level);
-      setEventMask(EMB_BTM_charging_status);
-      setEventMask(EMB_BMT_reset_to_default_setting_OK);
-      setEventMask(EMB_BTM_DAC_gain_level);
+    setEventMask(EMB_cell_phone_roamming);
+    setEventMask(EMB_Max_cell_phone_signal_strength);
+    setEventMask(EMB_current_cell_phone_signal_strength);
+    setEventMask(EMB_cell_phone_service_status);*/
+  setEventMask(EMB_BTM_battery_level);
+  setEventMask(EMB_BTM_charging_status);
+  setEventMask(EMB_BMT_reset_to_default_setting_OK);
+  setEventMask(EMB_BTM_DAC_gain_level);
 
- /* setEventMask(EMB_EQ_mode);
-  setEventMask(EMB_remote_device_friendly_name);
-  setEventMask(EMB_AVC_specific_response);
-  setEventMask(EMB_unknown_AT_command_result_code);
-  setEventMask(EMB_Page_status);
-  setEventMask(EMB_Ringtone_status);
-  setEventMask(EMB_amp_indication);
-  setEventMask(EMB_line_in_status);*/
+  /* setEventMask(EMB_EQ_mode);
+    setEventMask(EMB_remote_device_friendly_name);
+    setEventMask(EMB_AVC_specific_response);
+    setEventMask(EMB_unknown_AT_command_result_code);
+    setEventMask(EMB_Page_status);
+    setEventMask(EMB_Ringtone_status);
+    setEventMask(EMB_amp_indication);
+    setEventMask(EMB_line_in_status);*/
 }
 
 

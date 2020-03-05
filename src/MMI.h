@@ -1,3 +1,6 @@
+#ifndef MMI_h
+#define MMI_h
+
 #include "IS2020.h"
 #include <Arduino.h>
 
@@ -76,3 +79,5 @@ empty:
 0:Call is not one of multiparty (conference) call parties
 1:Call is one of multiparty (conference) call parties
 */
+
+#endif

@@ -1,5 +1,6 @@
 #include "IS2020.h"
 #include <Arduino.h>
+#include "IS2020.h"
 
 uint8_t IS2020::stopFfwRwd(uint8_t deviceId){ // Stop fast forward or rewind
   return IS2020::musicControl(deviceId,Music_Control_STOP_FFW_RWD);

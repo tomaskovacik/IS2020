@@ -1,3 +1,9 @@
+#ifndef Music_h
+#define Music_h
+
+#include "IS2020.h"
+#include <Arduino.h>
+
 #define Music_Control_STOP_FFW_RWD 0x00 // Stop fast forward or rewind   
 #define Music_Control_FFW  0x01  //fast forward    
 #define Music_Control_REPFFW 0x02  //fast forward with repeat send fast forward command every 800ms    
@@ -8,4 +14,4 @@
 #define Music_Control_TOGLE_PLAY_PAUSE 0x07  //PLAY PAUSE toggle   
 #define Music_Control_STOP 0x08  //STOP command 
 
-
+#endif

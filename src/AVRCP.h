@@ -1,3 +1,6 @@
+#ifndef AVRCP_h
+#define AVRCP_h
+
 #include "IS2020.h"
 #include <Arduino.h>
 
@@ -142,3 +145,5 @@
 #define AVRCP_EVENT_RESPONSE_CHANGED 0x0D
 #define AVRCP_EVENT_RESPONSE_INTERIM 0x0F
 #define AVRCP_META_IS_CODING_UTF8 0x6a
+
+#endif

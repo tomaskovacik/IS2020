@@ -1,3 +1,9 @@
+#ifndef commands_h
+#define commands_h
+
+#include "IS2020.h"
+#include <Arduino.h>
+
 #define CMD_Make_Call 0x00
 #define CMD_Make_Extension_Call 0x01
 #define CMD_MMI_Action 0x02
@@ -11,6 +17,8 @@
 #define CMD_Vendor_AT_Command 0x0A
 #define CMD_AVRCP_Specific_Cmd  0x0B
 #define CMD_AVRCP_Group_Navigation  0x0C
+#define CMD_AVRCP_Group_NavigationNext 0x00
+#define CMD_AVRCP_Group_NavigationPrevious 0x01
 #define CMD_Read_Link_Status  0x0D
 #define CMD_Read_Paired_Device_Record 0x0E
 #define CMD_Read_Local_BT_Address 0x0F
@@ -48,3 +56,4 @@
 #define INIT_SPP_iAP_CONNECTION 0x03	//initiate SPP/iAP connection to last SPP/iAP device
 #define INIT_DEDICATED_CONNECTION 0x04	//initiate connection to dedicate device.
 
+#endif

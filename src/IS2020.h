@@ -8,17 +8,17 @@
 #include "Music.h"
 #include "commands.h"
 #include "events.h"
-#include  "AVRCP.h"
-
+#include "AVRCP.h"
+#include "AT.h"
 
 #define STARTBYTE 0xAA
 
 //#define AVRCP161
 
 #define DUMMYBYTE 0x00
-#define DEBUG 0
-#define DEBUG_AVRCP 1
-#define DEBUG_EVENTS 0
+#define DEBUG 1
+#define DEBUG_AVRCP 0
+#define DEBUG_EVENTS 1
 
 #define DEVICENAME_LENGHT_SUPPORT 24
 
@@ -42,9 +42,10 @@ class IS2020
     uint8_t  btmParameterSetting();
     uint8_t  readBtmVersion();
     uint8_t  getPbByAtCmd(uint8_t deviceId);
-    uint8_t  vendorAtCommand();
-    uint8_t  avrcpSpecificCmd();
-    uint8_t  avrcpGroupNavigation();
+    uint8_t  vendorAtCommand(uint8_t deviceId, char * data);
+    uint8_t  avrcpGroupNavigation(uint8_t deviceId, uint8_t direction);
+    uint8_t  avrcpNextGroup(uint8_t deviceId);
+    uint8_t  avrcpPreviousGroup(uint8_t deviceId);
     uint8_t  readLinkStatus();
     uint8_t  readPairedDeviceRecord();
     uint8_t  readLocalBtAddress();
@@ -53,7 +54,10 @@ class IS2020
     uint8_t  sendSppIapData();
     uint8_t  btmUtilityFunction();
     uint8_t  eventAck(uint8_t cmd);
-    uint8_t  additionalProfilesLinkSetup();
+    uint8_t  additionalProfilesLinkSetup(uint8_t deviceId, uint8_t profile);
+    uint8_t  additionalProfilesLinkSetupHfHs(uint8_t deviceId);
+    uint8_t  additionalProfilesLinkSetupA2DP(uint8_t deviceId);
+    uint8_t  additionalProfilesLinkSetupiAPSpp(uint8_t deviceId);
     uint8_t  readLinkedDeviceInformation(uint8_t deviceId, uint8_t query);
     uint8_t  profileLinkBack(uint8_t type, uint8_t deviceId, uint8_t profile);
     uint8_t  connectLastDevice(); //alias profileLinkBack
@@ -247,6 +251,30 @@ class IS2020
     uint8_t queryIfRemoteDeviceSupportAvrcpV13(uint8_t deviceId);
     uint8_t queryIfRemoteDeviceIsIapDevice(uint8_t deviceId);
     uint8_t queryInBandRingtoneStatus(uint8_t deviceId);
+//AT COMMANDS:
+    uint8_t nextItemInPhonebook(uint8_t deviceId, char mode='?');
+    uint8_t selectEmergencyPB(uint8_t deviceId);
+    uint8_t selectfixedDiallPB(uint8_t deviceId);
+    uint8_t selectlastDialledList(uint8_t deviceId);
+    uint8_t selectlastDialledCombinedList(uint8_t deviceId);
+    uint8_t selectmissedCallesList(uint8_t deviceId);
+    uint8_t selectphoneBook(uint8_t deviceId);
+    uint8_t selectcombinedBook(uint8_t deviceId);
+    uint8_t selectownnNumber(uint8_t deviceId);
+    uint8_t selectreceivedCallsList(uint8_t deviceId);
+    uint8_t selectsimBook(uint8_t deviceId);
+    uint8_t selectserviceDialBook(uint8_t deviceId);
+    uint8_t setPhonebook(uint8_t deviceId, char pb[2]);
+    uint8_t getAvailablePhonebooks(uint8_t deviceId);
+    uint8_t getSelectedPhonebook(uint8_t deviceId);
+    uint16_t supportedPBs; //bit encoded
+    uint8_t selectedPB;
+    const char * decodePB(PhoneBook pb);
+    void printSupportedPB();
+    uint8_t findItemInPhonebook(uint8_t deviceId, char * text);
+    void printSelectedPB();
+    uint8_t sendATCPB(uint8_t deviceId, char *  data);
+    uint8_t readPhonebook(uint8_t deviceId, char * text);
 
   private:
     void decodeEvent(uint8_t Event);
@@ -257,6 +285,7 @@ class IS2020
     void resetLow();
     void resetHigh();
     void sendPacketArrayInt(uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t data[]);
+    void sendPacketArrayInt_P(uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t * data[]);
     void sendPacketInt(uint8_t cmd, uint8_t data);
     void sendPacketString(uint8_t cmd, String str);
     void sendPacketArrayChar(uint16_t packetSize, uint8_t cmd, uint8_t deviceId, char data[]);
@@ -265,7 +294,7 @@ class IS2020
     void DBG_AVRCP(String text);
     void DBG_EVENTS(String text);
     HardwareSerial *btSerial;
+    uint8_t allowedSendATcommands=1;
 };
-
 
 #endif

@@ -1,6 +1,6 @@
 #include "IS2020.h"
-#include "AVRCP.h"
 #include <Arduino.h>
+#include "AVRCP.h"
 
 uint8_t  IS2020::avrcpGetCapabilities(uint8_t deviceId, uint8_t capId) {
   IS2020::getNextEventFromBt();
@@ -143,7 +143,7 @@ uint8_t  IS2020::avrcpGetElementAttributesAll(uint8_t deviceId) {
   IS2020::getNextEventFromBt();
   uint8_t data[14] = {
     AVRCP_GET_ELEMENT_ATTRIBUTES, //PDU
-    0,// reserver
+    0,// reserved
     0, 9, // size
     0, 0, 0, 0, 0, 0, 0, 0, //10,11,12,13,14,15,16,17  PLAYING (0x0): This should return attribute information for the element which is current track in the TG device. All other values other than 0x0 are currently reserved.
     0
@@ -228,14 +228,14 @@ uint8_t  IS2020::avrcpSetAddressedPlayer(uint8_t deviceId, uint16_t player) {
 uint8_t  IS2020::avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player) {
   IS2020::getNextEventFromBt();
   IS2020::DBG_AVRCP(F("AVRCP_SET_BROWSED_PLAYER\n"));
-  uint8_t data[5] = {AVRCP_SET_BROWSED_PLAYER, //1
-                     //0x00, //2
+  uint8_t data[6] = {AVRCP_SET_BROWSED_PLAYER, //1
+                     0x00, //2
                      0x00, 0x02,
                      ((player >> 8) & 0xFF), (player & 0xFF)
                     };
-Serial.print("sending: "+String(data[0],HEX)+","+String(data[1],HEX)+","+String(data[2],HEX)+","+String(data[3],HEX)+","+String(data[4],HEX));
+//Serial.print("sending: "+String(data[0],HEX)+","+String(data[1],HEX)+","+String(data[2],HEX)+","+String(data[3],HEX)+","+String(data[4],HEX));
 delay(1000);
-  IS2020::sendPacketArrayInt(7, CMD_AVRCP_Specific_Cmd, deviceId, data);
+  IS2020::sendPacketArrayInt(8, CMD_AVRCP_Specific_Cmd, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 
