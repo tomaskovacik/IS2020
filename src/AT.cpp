@@ -239,7 +239,7 @@ uint8_t IS2020::nextItemInPhonebook(uint8_t deviceId, char mode) {
   strcpy(tmp,ATCommandPB);
   strcat(tmp,ATMoveActionInPB);
   strcat(tmp,"=");
-  strcat(tmp,mode);
+  tmp[8]=mode;
   IS2020::vendorAtCommand(deviceId, tmp);
 }
 
