@@ -92,7 +92,8 @@ uint8_t IS2020::selectserviceDialBook(uint8_t deviceId) {
   IS2020::setPhonebook(deviceId, ATserviceDialBook);
 }
 
-uint8_t IS2020::setPhonebook(uint8_t deviceId, char pb[2]) {
+//uint8_t IS2020::setPhonebook(uint8_t deviceId, char pb[2]) {
+uint8_t IS2020::setPhonebook(uint8_t deviceId, String pb) {
   /*
    * #define ATSelectPhonebookMemoryStorage "+CPBS"
    * AT+CPBS=”SM”

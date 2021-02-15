@@ -281,7 +281,7 @@ class IS2020
     uint8_t selectreceivedCallsList(uint8_t deviceId);
     uint8_t selectsimBook(uint8_t deviceId);
     uint8_t selectserviceDialBook(uint8_t deviceId);
-    uint8_t setPhonebook(uint8_t deviceId, char pb[2]);
+    uint8_t setPhonebook(uint8_t deviceId, String pb);//char pb[4]);
     uint8_t getAvailablePhonebooks(uint8_t deviceId);
     uint8_t getSelectedPhonebook(uint8_t deviceId);
     uint16_t supportedPBs; //bit encoded
