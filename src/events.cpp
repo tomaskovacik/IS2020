@@ -1694,7 +1694,7 @@ uint8_t IS2020::getNextEventFromBt() {
           case EVT_Read_Link_Status_Reply:
             {
 
-              for (uint8_t i = 0; i < 8; i++) {
+              for (uint8_t i = 0; i < 7; i++) {
                 if (linkStatus[i] != event[i + 1])
                 {
                   linkStatus[i] = event[i + 1]; //link status is array of 7 bytes, like response is 7bytes.
