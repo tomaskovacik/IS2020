@@ -5,7 +5,20 @@
 #include "commands.h"
 #include "events.h"
 
+#if defined(USE_SW_SERIAL)
+#include <SoftwareSerial.h>
+#endif
+
+#if defined(USE_SW_SERIAL)
+#if ARDUINO >= 100
+IS2020::IS2020(SoftwareSerial *ser) {
+#else
+IS2020::IS2020(NewSoftSerial *ser) {
+#endif
+#else
 IS2020::IS2020(HardwareSerial *ser) {
+#endif
+
   btSerial = ser;
 }
 

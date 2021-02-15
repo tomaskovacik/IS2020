@@ -11,6 +11,9 @@
 #include "AVRCP.h"
 #include "AT.h"
 
+
+//#define USE_SW_SERIAL
+
 #define STARTBYTE 0xAA
 
 //#define AVRCP161
@@ -22,12 +25,26 @@
 
 #define DEVICENAME_LENGHT_SUPPORT 24
 
-//class SoftwareSerial;
+#if defined(USE_SW_SERIAL)
+#if ARDUINO >= 100
+#include <SoftwareSerial.h>
+#else
+#include <NewSoftSerial.h>
+#endif
+#endif
 
 class IS2020
 {
   public:
+#if defined(USE_SW_SERIAL)
+#if ARDUINO >= 100
+    IS2020(SoftwareSerial *ser);
+#else
+    IS2020(NewSoftSerial *ser);
+#endif
+#else
     IS2020(HardwareSerial *ser);
+#endif
     void begin(uint8_t _reset, uint32_t baudrate = 115200);
     ~IS2020();
 
@@ -293,8 +310,17 @@ class IS2020
     void DBG(String text);
     void DBG_AVRCP(String text);
     void DBG_EVENTS(String text);
+#if  defined(USE_SW_SERIAL)
+#if ARDUINO >= 100
+    SoftwareSerial *btSerial;
+#else
+    NewSoftSerial  *btSerial;
+#endif
+#else
     HardwareSerial *btSerial;
+#endif
     uint8_t allowedSendATcommands=1;
+
 };
 
 #endif
