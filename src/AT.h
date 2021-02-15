@@ -70,7 +70,7 @@ typedef enum {
 #define ATClockManagement "+CCLK"
 #define ATAlarmManagement "+CALA"
 #define ATDialCommand "D"
-#define ATHang-Up command "H"
+#define ATHangUp command "H"
 #define ATAnswer a Call "A"
 #define ATExtendedErrorReport "+CEER"
 #define ATRedialLastTelephoneNumber "DL"
