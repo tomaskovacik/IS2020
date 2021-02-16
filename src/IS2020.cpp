@@ -62,7 +62,7 @@ void IS2020::resetHigh() {
 }
 
 void IS2020::resetModule() {
-  DBG(F("reseting module\n"));
+  if (DEBUG) DBG(F("reseting module\n"));
   resetLow();
   delayMicroseconds(1000);
   resetHigh();
@@ -198,16 +198,16 @@ int IS2020::serialRead() {
 }
 
 uint8_t IS2020::checkCkeckSum(int size, uint8_t data[]) {
-  DBG_EVENTS(F("\nEvent from module: "));
-  decodeEvent(data[0]); DBG_EVENTS(F(" ["));
+  if (DEBUG_EVENTS) DBG_EVENTS(F("\nEvent from module: "));
+  decodeEvent(data[0]); if (DEBUG_EVENTS) DBG_EVENTS(F(" ["));
 
   uint8_t csum = (size >> 8);
   csum += (size & 0xFF);
   //csum += data[0];
   for (uint8_t i = 0; i < size; i++) { //
-    csum += data[i]; DBG_EVENTS(String(data[i], HEX) + F(","));
+    csum += data[i]; if (DEBUG_EVENTS) DBG_EVENTS(String(data[i], HEX) + F(","));
   }
-  DBG_EVENTS(F("]\n"));
+  if (DEBUG_EVENTS) DBG_EVENTS(F("]\n"));
 
   if (data[size] == (0x100 - csum) ) {
     //DBG(F("Checksum OK\n"));
@@ -222,12 +222,12 @@ String IS2020::connectionStatus(uint8_t deviceId) {
   String ConnectionStatus = "";
   /*
             Value Parameter Description
-            0xXX  "1 indicate connected
-            0x01 Bit0 : A2DP profile signaling channel connected
-            0x02 Bit1 : A2DP profile stream channel connected
-            0x04 Bit2 : AVRCP profile connected
-            0x08 Bit3 : HF profile connected
-            0x10 Bit4 : SPP connected"
+            0xXX 1 indicate connected
+            0x01 Bit0 : A2DP profile signaling channel connected = b0000 0001
+            0x02 Bit1 : A2DP profile stream channel connected = b0000 0010
+            0x04 Bit2 : AVRCP profile connected = b0000 0100
+            0x08 Bit3 : HF profile connected = b0000 1000
+            0x10 Bit4 : SPP connected = b0001 0000
   */
   if (linkStatus[1 + deviceId] & (1 << A2DP_profile_signaling_channel_connected)) ConnectionStatus += F("A2DP profile signaling channel connected\n");
   if (linkStatus[1 + deviceId] & (1 << A2DP_profile_stream_channel_connected)) ConnectionStatus += F("A2DP profile stream channel connected\n");

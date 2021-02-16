@@ -70,11 +70,11 @@
 #define EVT_Security_Bonding_Res  0x2C
 #define EVT_Report_Type_Codec 0x2D
 
-#define A2DP_profile_signaling_channel_connected 0x01 //00000001b
-#define A2DP_profile_stream_channel_connected 0x02 //00000010b
-#define AVRCP_profile_connected 0x04 //b00000100
-#define HF_profile_connected 0x08 //b000001000
-#define SPP_connected 0x10 //b00010000
+#define A2DP_profile_signaling_channel_connected 0 //0x01 //00000001b
+#define A2DP_profile_stream_channel_connected 1 //0x02 //00000010b
+#define AVRCP_profile_connected 2 //0x04 //b00000100
+#define HF_profile_connected 3 //0x08 //b000001000
+#define SPP_connected 4 //0x10 //b00010000
 
 
 

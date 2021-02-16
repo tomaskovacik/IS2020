@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include "AT.h"
 
+#ifdef PHONEBOOKSUPPORT
+
 /*
    send using this function:
    vendorAtCommand(uint8_t deviceId, uint16_t dataSize, char* data)
@@ -92,8 +94,8 @@ uint8_t IS2020::selectserviceDialBook(uint8_t deviceId) {
   IS2020::setPhonebook(deviceId, ATserviceDialBook);
 }
 
-//uint8_t IS2020::setPhonebook(uint8_t deviceId, char pb[2]) {
-uint8_t IS2020::setPhonebook(uint8_t deviceId, String pb) {
+uint8_t IS2020::setPhonebook(uint8_t deviceId, const char pb[2]) {
+//uint8_t IS2020::setPhonebook(uint8_t deviceId, String pb) {
   /*
    * #define ATSelectPhonebookMemoryStorage "+CPBS"
    * AT+CPBS=”SM”
@@ -131,21 +133,21 @@ uint8_t IS2020::getSelectedPhonebook(uint8_t deviceId) {
   IS2020::vendorAtCommand(deviceId, data);
 }
 
-const char * IS2020::decodePB(PhoneBook pb) {
+String IS2020::decodePB(PhoneBook pb) {
   switch (pb) {
-    case EN: return "EN - SIM emergency number";
-    case FD: return "FD - SIM Fix Dialing, restricted phonebook, ??emergency numbers??";
-    case DC: return "DC - Last dialled list";
-    case LD: return "LD - combined ME and SIM last dialing phonebook";
-    case MC: return "MC - Missed calls list";
-    case ME: return "ME - Phone phonebook";
-    case MT: return "MT - combined ME and SIM phonebook";
-    case ON: return "ON - SIM own numbers";
-    case RC: return "RC - received calls list";
-    case SM: return "SM - SIM phonebook";
-    case SN: return "SN - Services dialing phonebook";
+    case EN: return F("EN - SIM emergency number");
+    case FD: return F("FD - SIM Fix Dialing, restricted phonebook, ??emergency numbers??");
+    case DC: return F("DC - Last dialled list");
+    case LD: return F("LD - combined ME and SIM last dialing phonebook");
+    case MC: return F("MC - Missed calls list");
+    case ME: return F("ME - Phone phonebook");
+    case MT: return F("MT - combined ME and SIM phonebook");
+    case ON: return F("ON - SIM own numbers");
+    case RC: return F("RC - received calls list");
+    case SM: return F("SM - SIM phonebook");
+    case SN: return F("SN - Services dialing phonebook");
   }
-  return false;
+  return F("unknown PB");
 }
 
 void IS2020::printSupportedPB(){
@@ -289,3 +291,5 @@ uint8_t IS2020::nextItemInPhonebook(uint8_t deviceId, char mode) {
 // ATDeleteMessage "+CMGD"
 // ATReadOperatorName "+WOPN"
 // ATPINRemainingAttemptNumber "+CPINC"
+
+#endif

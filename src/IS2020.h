@@ -3,6 +3,11 @@
 #ifndef IS2020_h
 #define IS2020_h
 
+#define DEBUG 0
+#define DEBUG_AVRCP 0
+#define DEBUG_EVENTS 0
+#define PHONEBOOKSUPPORT
+
 #include <Arduino.h>
 #include "MMI.h"
 #include "Music.h"
@@ -12,16 +17,13 @@
 #include "AT.h"
 
 
-//#define USE_SW_SERIAL
+#define USE_SW_SERIAL
 
 #define STARTBYTE 0xAA
 
 //#define AVRCP161
 
 #define DUMMYBYTE 0x00
-#define DEBUG 1
-#define DEBUG_AVRCP 0
-#define DEBUG_EVENTS 1
 
 #define DEVICENAME_LENGHT_SUPPORT 24
 
@@ -241,7 +243,7 @@ class IS2020
     uint8_t avrcpSetAbsoluteVolume(uint8_t deviceId, uint8_t volume);
     uint8_t avrcpSetAddressedPlayer(uint8_t deviceId, uint16_t player);
     uint8_t avrcpSetBrowsedPlayer(uint8_t deviceId, uint16_t player);
-    uint8_t avrcpGetFolderItems(uint8_t deviceId, uint8_t scope, uint32_t start, uint8_t end);
+    uint8_t avrcpGetFolderItems(uint8_t deviceId, uint8_t scope, uint32_t start, uint32_t end);
     uint8_t avrcpChangePath(uint8_t deviceId, uint8_t direction = 0x01, uint64_t folderUID = 5);
     uint8_t avrcpRegNotifyPlaybackStatusChanged(uint8_t deviceId);
     uint8_t avrcpRegNotifyTrackChanged(uint8_t deviceId);
@@ -269,6 +271,7 @@ class IS2020
     uint8_t queryIfRemoteDeviceIsIapDevice(uint8_t deviceId);
     uint8_t queryInBandRingtoneStatus(uint8_t deviceId);
 //AT COMMANDS:
+#ifdef PHONEBOOKSUPPORT
     uint8_t nextItemInPhonebook(uint8_t deviceId, char mode='?');
     uint8_t selectEmergencyPB(uint8_t deviceId);
     uint8_t selectfixedDiallPB(uint8_t deviceId);
@@ -281,18 +284,18 @@ class IS2020
     uint8_t selectreceivedCallsList(uint8_t deviceId);
     uint8_t selectsimBook(uint8_t deviceId);
     uint8_t selectserviceDialBook(uint8_t deviceId);
-    uint8_t setPhonebook(uint8_t deviceId, String pb);//char pb[4]);
+    uint8_t setPhonebook(uint8_t deviceId,const char pb[2]);
     uint8_t getAvailablePhonebooks(uint8_t deviceId);
     uint8_t getSelectedPhonebook(uint8_t deviceId);
     uint16_t supportedPBs; //bit encoded
     uint8_t selectedPB;
-    const char * decodePB(PhoneBook pb);
+    String decodePB(PhoneBook pb);
     void printSupportedPB();
     uint8_t findItemInPhonebook(uint8_t deviceId, char * text);
     void printSelectedPB();
     uint8_t sendATCPB(uint8_t deviceId, char *  data);
     uint8_t readPhonebook(uint8_t deviceId, char * text);
-
+#endif
   private:
     void decodeEvent(uint8_t Event);
     void decodeCommand(uint8_t cmd);

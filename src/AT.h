@@ -4,6 +4,8 @@
 #include "IS2020.h"
 #include <Arduino.h>
 
+#ifdef PHONEBOOKSUPPORT
+
 typedef enum {
   EN = 1,
   FD = 2,
@@ -92,4 +94,5 @@ typedef enum {
 #define ATReadOperatorName "+WOPN"
 #define ATPINRemainingAttemptNumber "+CPINC"
 
+#endif
 #endif
