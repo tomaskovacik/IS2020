@@ -1,8 +1,12 @@
-#include "IS2020.h"
+#include <IS2020.h>
+//#include <SoftwareSerial.h>
 
-#define DEBUG 0
-#define RESET PA1
-#define BTSerial Serial3 //Serial2 => TX = PA2, RX = PA3
+#define RESET 3// PA1//stm32
+//#define BTSerial Serial3 //stm32, Serial2 => TX = PA2, RX = PA3
+//do not forget to uncoment USE_SW_SERIAL in IS2020.h
+SoftwareSerial BTSerial(7, 6); //rxPin, txPin, inverse_logic
+
+
 
 IS2020 BT(&BTSerial);
 
@@ -36,17 +40,17 @@ void loop() {
         BT.avrcpGetPlayStatus(0);
         break;
       case 'b':
-        if (BT.linkStatus[1] > 0) {
-          BT.batteryStatus(0x00);
-          BT.getNextEventFromBt();
-          Serial.println(BT.maxBatteryLevel[0]);
-          Serial.println(BT.currentBatteryLevel[0]);
-        }
-        if (BT.linkStatus[2] > 0) {
-          BT.batteryStatus(0x00);
-          Serial.println(BT.maxBatteryLevel[1]);
-          Serial.println(BT.currentBatteryLevel[1]);
-        }
+//        if (BT.linkStatus[1] > 0) {
+//          BT.batteryStatus(0x00);
+//          BT.getNextEventFromBt();
+//          Serial.println(BT.maxBatteryLevel[0]);
+//          Serial.println(BT.currentBatteryLevel[0]);
+//        }
+//        if (BT.linkStatus[2] > 0) {
+//          BT.batteryStatus(0x00);
+//          Serial.println(BT.maxBatteryLevel[1]);
+//          Serial.println(BT.currentBatteryLevel[1]);
+//        }
         break;
       case 'c':
         BT.linkLastDevice(Serial.read());
@@ -224,7 +228,7 @@ void moduleInfo() {
   Serial.println(F("Paired devices: "));
   for (uint8_t dev = 1; dev < 4; dev++) {
     Serial.print(dev); Serial.print(". ");
-    for (uint8_t _byte = 0; _byte < 7; _byte++) {
+    for (uint8_t _byte = 0; _byte < 6; _byte++) {
       Serial.print(BT.btAddress[dev][_byte], HEX);
       if (_byte < 5) Serial.print(":");
     }
@@ -267,7 +271,6 @@ void moduleInfo() {
   Serial.print(F("          rom version: ")); Serial.println((uint8_t)((BT.btmFwVersion >> 8) & 0x1F), HEX);
   Serial.print(F("    flash sub version: ")); Serial.println(((uint8_t)(BT.btmFwVersion >> 4) & 0x0F), HEX);
   Serial.print(F("flash control version: ")); Serial.println((uint8_t)(BT.btmFwVersion & 0x0F), HEX);
-
 }
 
 void deviceInfo(uint8_t deviceId) {
@@ -301,6 +304,4 @@ void deviceInfo(uint8_t deviceId) {
   //      Serial.println(BT.deviceLineInGain[deviceId]);
   //    }
   //  }
-
-
 }
