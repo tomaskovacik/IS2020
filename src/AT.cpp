@@ -100,7 +100,7 @@ uint8_t IS2020::setPhonebook(uint8_t deviceId, const char pb[2]) {
    * Note: Select ADN phonebook
    * sendATCPB prepends "+CPB", so data = "S=\"SM\""
    */
-  char tmp[7]; // "S" + "=" + "\"" + 2 chars + "\"" + null
+  char tmp[8]; // "S" + "=" + "\"" + 2 chars + "\"" + null
   strcpy(tmp, ATSelectPhonebookMemoryStorage);
   strcat(tmp, "=\"");
   strncat(tmp, pb, 2);
