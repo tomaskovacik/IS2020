@@ -270,58 +270,73 @@ uint8_t  IS2020::avrcpChangePath(uint8_t deviceId, uint8_t direction, uint64_t f
   return checkResponce(EVT_Command_ACK);
 }
 
-void IS2020::registerAllEvents(uint8_t deviceId) {}
+void IS2020::registerAllEvents(uint8_t deviceId) {
+  IS2020::avrcpRegNotifyPlaybackStatusChanged(deviceId);
+  IS2020::avrcpRegNotifyTrackChanged(deviceId);
+  IS2020::avrcpRegNotifyTrackReachedEnd(deviceId);
+  IS2020::avrcpRegNotifyTrackReachedStart(deviceId);
+  IS2020::avrcpRegNotifyTrackPositionChanged(deviceId);
+  IS2020::avrcpRegNotifyBattStatusChanged(deviceId);
+  IS2020::avrcpRegNotifySystemStatusChanged(deviceId);
+  IS2020::avrcpRegNotifyPlayerAppSettingsChanged(deviceId);
+  IS2020::avrcpRegNotifyNowPlayingContentChanged(deviceId);
+  IS2020::avrcpRegNotifyAvailablePlayersChanged(deviceId);
+  IS2020::avrcpRegNotifyAddressedPlayerChanged(deviceId);
+  IS2020::avrcpRegNotifyUIDsChanged(deviceId);
+  IS2020::avrcpRegNotifyVolumeChanged(deviceId);
+}
 
 uint8_t IS2020::avrcpRegNotifyPlaybackStatusChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYBACK_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYBACK_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyTrackChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyTrackReachedEnd(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_REACHED_END, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_REACHED_END, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyTrackReachedStart(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_REACHED_START, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_TRACK_REACHED_START, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyTrackPositionChanged(uint8_t deviceId, uint8_t interval) { //interval in seconds
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYBACK_POS_CHANGED, 0x00, 0x00, 0x13, 0x88);
+  uint16_t intervalMs = (uint16_t)interval * 1000;
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYBACK_POS_CHANGED, 0x00, 0x00, (uint8_t)(intervalMs >> 8), (uint8_t)(intervalMs & 0xFF));
 }
 
 uint8_t IS2020::avrcpRegNotifyBattStatusChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_BATT_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_BATT_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifySystemStatusChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_SYSTEM_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_SYSTEM_STATUS_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyPlayerAppSettingsChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYER_APPLICATION_SETTING_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_PLAYER_APPLICATION_SETTING_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyNowPlayingContentChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_NOW_PLAYING_CONTENT_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyAvailablePlayersChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_AVAILABLE_PLAYERS_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyAddressedPlayerChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_ADDRESSED_PLAYER_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_ADDRESSED_PLAYER_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyUIDsChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_UIDS_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_UIDS_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 uint8_t IS2020::avrcpRegNotifyVolumeChanged(uint8_t deviceId) {
-  IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_VOLUME_CHANGED, 0x00, 0x00, 0x00, 0x00);
+  return IS2020::avrcpRegistrationForNotificationOfEvent(deviceId, AVRCP_EVENT_VOLUME_CHANGED, 0x00, 0x00, 0x00, 0x00);
 }
 
 void IS2020::avrcpStorePlayerID(uint16_t playerID) {

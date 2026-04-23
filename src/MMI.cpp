@@ -440,3 +440,7 @@ uint8_t IS2020::linkLastDevice(uint8_t deviceID) {
 uint8_t IS2020::disconnectAllLink(uint8_t deviceID) {
   return IS2020::mmiAction(deviceID, MMI_disconnect_all_link);
 }
+
+uint8_t IS2020::trigerToQueryCallListInfo(uint8_t deviceID) {
+  return IS2020::mmiAction(deviceID, MMI_query_call_list_info);
+}
