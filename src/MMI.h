@@ -13,7 +13,7 @@
 #define MMI_mute_mic 0x08	//Mute microphone
 #define MMI_unmute_mic 0x09	//Active microphone
 #define MMI_voice_dial 0x0A
-#define MMI_cancel_voice_dial 0x0Bl
+#define MMI_cancel_voice_dial 0x0B
 #define MMI_last_number_redial 0x0C
 #define MMI_toggle_active_hold_call 0x0D //Set the active call on hold and active the hold call
 #define MMI_voice_transfer 0x0E

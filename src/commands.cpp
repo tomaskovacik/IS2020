@@ -281,9 +281,10 @@ uint8_t  IS2020::changeDeviceName(String name) {
   0xXXXX  4 digits number by ASCII format.
 
 */
-uint8_t  IS2020::changePinCode() {
+uint8_t  IS2020::changePinCode(char pin[4]) {
   IS2020::getNextEventFromBt();
   if (DEBUG) DBG(F("Change PIN Code\n"));
+  IS2020::sendPacketArrayChar(5, CMD_Change_PIN_Code, (uint8_t)pin[0], pin + 1);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -304,9 +305,11 @@ uint8_t  IS2020::changePinCode() {
   time out value in unit of 30.08s"
 
 */
-uint8_t  IS2020::btmParameterSetting() {
+uint8_t  IS2020::btmParameterSetting(uint8_t parameter, uint8_t value) {
   IS2020::getNextEventFromBt();
   if (DEBUG) DBG(F("BTM Parameter Setting\n"));
+  uint8_t data[1] = {value};
+  IS2020::sendPacketArrayInt(0x03, CMD_BTM_Parameter_Setting, parameter, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -381,7 +384,7 @@ uint8_t IS2020::sendATCPB(uint8_t deviceId, char *  data) {
   char tmp[4+strlen(data)];
   strcpy(tmp,ATCommandPB);
   strcat(tmp,data);
-  IS2020::vendorAtCommand(deviceId, tmp);
+  return IS2020::vendorAtCommand(deviceId, tmp);
 }
 
 #endif
@@ -408,15 +411,15 @@ uint8_t  IS2020::avrcpGroupNavigation(uint8_t deviceId, uint8_t direction) {
   //if (DEBUG) DBG(F("AVRCP_Group_Navigation\n"));
   uint8_t data[1] = {direction};
   IS2020::sendPacketArrayInt(0x03, CMD_AVRCP_Group_Navigation, deviceId, data);
-  //return checkResponce(EVT_Command_ACK);
+  return checkResponce(EVT_Command_ACK);
 }
 
 uint8_t IS2020::avrcpNextGroup(uint8_t deviceId) {
-  IS2020::avrcpGroupNavigation(deviceId, CMD_AVRCP_Group_NavigationNext);
+  return IS2020::avrcpGroupNavigation(deviceId, CMD_AVRCP_Group_NavigationNext);
 }
 
 uint8_t IS2020::avrcpPreviousGroup(uint8_t deviceId) {
-  IS2020::avrcpGroupNavigation(deviceId, CMD_AVRCP_Group_NavigationPrevious);
+  return IS2020::avrcpGroupNavigation(deviceId, CMD_AVRCP_Group_NavigationPrevious);
 }
 
 /*
@@ -572,9 +575,34 @@ uint8_t  IS2020::setAccessPbMethod() {
   0xXXXX  the payload in this packet
 
 */
-uint8_t  IS2020::sendSppIapData() {
+uint8_t  IS2020::sendSppIapData(uint8_t deviceId, uint8_t type, uint16_t totalLength, uint16_t payloadLength, uint8_t* payload, uint16_t dataLen) {
   IS2020::getNextEventFromBt();
   if (DEBUG) DBG(F("Send_SPP_iAP_Data\n"));
+  uint16_t packetSize = 7 + dataLen; // cmd(1) + deviceId(1) + type(1) + totalLen(2) + payloadLen(2) + payload
+  uint8_t checkSum = (uint8_t)(packetSize >> 8);
+  checkSum += (uint8_t)(packetSize & 0xFF);
+  btSerial->write(STARTBYTE);
+  btSerial->write((uint8_t)(packetSize >> 8));
+  btSerial->write((uint8_t)(packetSize & 0xFF));
+  btSerial->write(CMD_Send_SPP_iAP_Data);
+  checkSum += CMD_Send_SPP_iAP_Data;
+  btSerial->write(deviceId);
+  checkSum += deviceId;
+  btSerial->write(type);
+  checkSum += type;
+  btSerial->write((uint8_t)(totalLength >> 8));
+  checkSum += (uint8_t)(totalLength >> 8);
+  btSerial->write((uint8_t)(totalLength & 0xFF));
+  checkSum += (uint8_t)(totalLength & 0xFF);
+  btSerial->write((uint8_t)(payloadLength >> 8));
+  checkSum += (uint8_t)(payloadLength >> 8);
+  btSerial->write((uint8_t)(payloadLength & 0xFF));
+  checkSum += (uint8_t)(payloadLength & 0xFF);
+  for (uint16_t i = 0; i < dataLen; i++) {
+    btSerial->write(payload[i]);
+    checkSum += payload[i];
+  }
+  btSerial->write((uint8_t)(0x100 - checkSum));
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -670,9 +698,11 @@ uint8_t  IS2020::sendSppIapData() {
   0x26
 
 */
-uint8_t  IS2020::btmUtilityFunction() {
+uint8_t  IS2020::btmUtilityFunction(uint8_t utilityFunctionType, uint8_t parameter) {
   IS2020::getNextEventFromBt();
   if (DEBUG) DBG(F("BTM_Utility_Function\n"));
+  uint8_t data[1] = {parameter};
+  IS2020::sendPacketArrayInt(0x03, CMD_BTM_Utility_Function, utilityFunctionType, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -720,15 +750,15 @@ uint8_t  IS2020::additionalProfilesLinkSetup(uint8_t deviceId, uint8_t profile) 
 }
 
 uint8_t  IS2020::additionalProfilesLinkSetupHfHs(uint8_t deviceId) {
-  IS2020::additionalProfilesLinkSetup(deviceId, 0x00);
+  return IS2020::additionalProfilesLinkSetup(deviceId, 0x00);
 }
 
 uint8_t  IS2020::additionalProfilesLinkSetupA2DP(uint8_t deviceId) {
-  IS2020::additionalProfilesLinkSetup(deviceId, 0x01);
+  return IS2020::additionalProfilesLinkSetup(deviceId, 0x01);
 }
 
 uint8_t  IS2020::additionalProfilesLinkSetupiAPSpp(uint8_t deviceId) {
-  IS2020::additionalProfilesLinkSetup(deviceId, 0x02);
+  return IS2020::additionalProfilesLinkSetup(deviceId, 0x02);
 }
 /*
   Command Format:  Command Command ID  Command Parameters  Return Event
@@ -806,7 +836,7 @@ uint8_t  IS2020::profileLinkBack(uint8_t type, uint8_t deviceId, uint8_t profile
 }
 
 uint8_t IS2020::connectLastDevice() {
-  IS2020::profileLinkBack(0, 0, 7);
+  return IS2020::profileLinkBack(0, 0, 7);
 }
 
 /*
@@ -847,8 +877,10 @@ uint8_t  IS2020::disconnect(uint8_t flag) {
   others  reserved
 
 */
-uint8_t  IS2020::mcuStatusIndication() {
+uint8_t  IS2020::mcuStatusIndication(uint8_t statusType, uint8_t status) {
   IS2020::getNextEventFromBt();
+  uint8_t data[1] = {status};
+  IS2020::sendPacketArrayInt(0x03, CMD_MCU_Status_Indication, statusType, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -869,8 +901,10 @@ uint8_t  IS2020::mcuStatusIndication() {
   0x01  User selected "no"
 
 */
-uint8_t  IS2020::userConfirmSppReqReply() {
+uint8_t  IS2020::userConfirmSppReqReply(uint8_t deviceId, uint8_t response) {
   IS2020::getNextEventFromBt();
+  uint8_t data[1] = {response};
+  IS2020::sendPacketArrayInt(0x03, CMD_User_Confirm_SPP_Req_Reply, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -891,8 +925,10 @@ uint8_t  IS2020::userConfirmSppReqReply() {
   0x00 - 0x0F Set HF speaker gain level.
 
 */
-uint8_t  IS2020::setHfGainLevel() {
+uint8_t  IS2020::setHfGainLevel(uint8_t deviceId, uint8_t gainLevel) {
   IS2020::getNextEventFromBt();
+  uint8_t data[1] = {gainLevel};
+  IS2020::sendPacketArrayInt(0x03, CMD_Set_HF_Gain_Level, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -918,8 +954,10 @@ uint8_t  IS2020::setHfGainLevel() {
   others  reserved
 
 */
-uint8_t  IS2020::eqModeSetting() {
+uint8_t  IS2020::eqModeSetting(uint8_t eqMode) {
   IS2020::getNextEventFromBt();
+  uint8_t data[1] = {0x00}; // dummy byte
+  IS2020::sendPacketArrayInt(0x03, CMD_EQ_Mode_Setting, eqMode, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1034,8 +1072,14 @@ uint8_t  IS2020::dspNrCtrl(uint8_t type) {
   0bXXXXXXXX  Output level of P3.x GPIOs setting. It is used for IO_Setting_P3.x as output only.
 
 */
-uint8_t  IS2020::gpioControl() {
+uint8_t  IS2020::gpioControl(uint8_t maskP0, uint8_t maskP1, uint8_t maskP2, uint8_t maskP3,
+                              uint8_t settingP0, uint8_t settingP1, uint8_t settingP2, uint8_t settingP3,
+                              uint8_t outputP0, uint8_t outputP1, uint8_t outputP2, uint8_t outputP3) {
   IS2020::getNextEventFromBt();
+  uint8_t data[11] = {maskP1, maskP2, maskP3,
+                      settingP0, settingP1, settingP2, settingP3,
+                      outputP0, outputP1, outputP2, outputP3};
+  IS2020::sendPacketArrayInt(13, CMD_GPIO_Control, maskP0, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1097,8 +1141,10 @@ uint8_t  IS2020::mcuUartRxBufferSize(uint8_t buffer) {
   0xXXXX  the data just for voice prompt
 
 */
-uint8_t  IS2020::voicePromptCmd() {
+uint8_t  IS2020::voicePromptCmd(uint8_t cmdType, uint8_t parameter) {
   IS2020::getNextEventFromBt();
+  uint8_t data[1] = {parameter};
+  IS2020::sendPacketArrayInt(0x03, CMD_Voice_Prompt_Cmd, cmdType, data);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1130,13 +1176,14 @@ uint8_t  IS2020::voicePromptCmd() {
   SetNotification_Request SetNotification_Request structure
 
 */
-uint8_t  IS2020::mapRequest() {
+uint8_t  IS2020::mapRequest(uint8_t type) {
   IS2020::getNextEventFromBt();
+  IS2020::sendPacketInt(CMD_MAP_REQUEST, type);
   return checkResponce(EVT_Command_ACK);
 }
 /*
-  Command Format:  Command Command ID   Command Parameters        Return Event
-  MAP_REQUEST      0x21                 type,payload structure
+  Command Format:   Command Command ID  Command Parameters                                        Return Event
+  Security_Bonding_Req  0x22            database_index
 
   Description:  This command is used to send the MAP Requeset to remote BT devices.
 
@@ -1162,8 +1209,9 @@ uint8_t  IS2020::mapRequest() {
   SetNotification_Request SetNotification_Request structure
 
 */
-uint8_t  IS2020::securityBondingReq() {
+uint8_t  IS2020::securityBondingReq(uint8_t deviceId) {
   IS2020::getNextEventFromBt();
+  IS2020::sendPacketInt(CMD_Security_Bonding_Req, deviceId);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -1204,8 +1252,10 @@ uint8_t  IS2020::securityBondingReq() {
   0xXX  0x00~0x0F
 
 */
-uint8_t  IS2020::setOverallGain() {
+uint8_t  IS2020::setOverallGain(uint8_t deviceId, uint8_t mask, uint8_t type, uint8_t a2dpGain, uint8_t hfGain, uint8_t lineInGain) {
   IS2020::getNextEventFromBt();
+  uint8_t data[5] = {mask, type, a2dpGain, hfGain, lineInGain};
+  IS2020::sendPacketArrayInt(7, CMD_Set_Overall_Gain, deviceId, data);
   return checkResponce(EVT_Command_ACK);
 }
 

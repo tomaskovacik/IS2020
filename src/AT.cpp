@@ -51,86 +51,86 @@ Note: Status
 // ATSelectPhonebookMemoryStorage "+CPBS"
 
 uint8_t IS2020::selectEmergencyPB(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATemergencyPB);
+  return IS2020::setPhonebook(deviceId, ATemergencyPB);
 }
 
 uint8_t IS2020::selectfixedDiallPB(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATfixedDiallPB);
+  return IS2020::setPhonebook(deviceId, ATfixedDiallPB);
 }
 
 uint8_t IS2020::selectlastDialledList(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATlastDialledList);
+  return IS2020::setPhonebook(deviceId, ATlastDialledList);
 }
 
 uint8_t IS2020::selectlastDialledCombinedList(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATlastDialledCombinedList);
+  return IS2020::setPhonebook(deviceId, ATlastDialledCombinedList);
 }
 
 uint8_t IS2020::selectmissedCallesList(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATmissedCallesList);
+  return IS2020::setPhonebook(deviceId, ATmissedCallesList);
 }
 
 uint8_t IS2020::selectphoneBook(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATphoneBook);
+  return IS2020::setPhonebook(deviceId, ATphoneBook);
 }
 
 uint8_t IS2020::selectcombinedBook(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATcombinedBook);
+  return IS2020::setPhonebook(deviceId, ATcombinedBook);
 }
 
 uint8_t IS2020::selectownnNumber(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATownnNumber);
+  return IS2020::setPhonebook(deviceId, ATownnNumber);
 }
 
 uint8_t IS2020::selectreceivedCallsList(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATreceivedCallsList);
+  return IS2020::setPhonebook(deviceId, ATreceivedCallsList);
 }
 
 uint8_t IS2020::selectsimBook(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATsimBook);
+  return IS2020::setPhonebook(deviceId, ATsimBook);
 }
 
 uint8_t IS2020::selectserviceDialBook(uint8_t deviceId) {
-  IS2020::setPhonebook(deviceId, ATserviceDialBook);
+  return IS2020::setPhonebook(deviceId, ATserviceDialBook);
 }
 
 uint8_t IS2020::setPhonebook(uint8_t deviceId, const char pb[2]) {
-//uint8_t IS2020::setPhonebook(uint8_t deviceId, String pb) {
   /*
-   * #define ATSelectPhonebookMemoryStorage "+CPBS"
-   * AT+CPBS=”SM”
-   * Note: Select ADN phonebooks
+   * AT+CPBS="SM"
+   * Note: Select ADN phonebook
+   * sendATCPB prepends "+CPB", so data = "S=\"SM\""
    */
-  char tmp[4];
-  strcpy(tmp,ATSelectPhonebookMemoryStorage);
-  strcpy(tmp,"=");
-  strcpy(tmp,pb);
-  IS2020::sendATCPB(deviceId,tmp);
+  char tmp[8]; // "S" + "=" + "\"" + 2 chars + "\"" + null
+  strcpy(tmp, ATSelectPhonebookMemoryStorage);
+  strcat(tmp, "=\"");
+  strncat(tmp, pb, 2);
+  strcat(tmp, "\"");
+  return IS2020::sendATCPB(deviceId, tmp);
 }
 
 uint8_t IS2020::getAvailablePhonebooks(uint8_t deviceId) {
   /*
-   * #define ATSelectPhonebookMemoryStorage "+CPBS"
    * AT+CPBS=?
    * Note: Possible values
+   * sendATCPB prepends "+CPB", so data = "S=?"
    */
-  char tmp[3];
-  strcpy(tmp,ATSelectPhonebookMemoryStorage);
-  strcat(tmp,"=?");
-  IS2020::sendATCPB(deviceId,tmp);
+  char tmp[4]; // "S" + "=" + "?" + null
+  strcpy(tmp, ATSelectPhonebookMemoryStorage);
+  strcat(tmp, "=?");
+  return IS2020::sendATCPB(deviceId, tmp);
 }
 
 uint8_t IS2020::getSelectedPhonebook(uint8_t deviceId) {
   /*
-   * #define ATSelectPhonebookMemoryStorage "+CPBS"
    * AT+CPBS?
    * Note: Status
+   * vendorAtCommand sends the full AT command string directly
    */
-  char data[6] = ATCommandPB;
-  strcat(data,ATSelectPhonebookMemoryStorage);
-  data[5] = '?';
-  Serial.println(data);
-  IS2020::vendorAtCommand(deviceId, data);
+  char data[7]; // "+CPB" + "S" + "?" + null
+  strcpy(data, ATCommandPB);
+  strcat(data, ATSelectPhonebookMemoryStorage);
+  strcat(data, "?");
+  return IS2020::vendorAtCommand(deviceId, data);
 }
 
 String IS2020::decodePB(PhoneBook pb) {
@@ -172,15 +172,15 @@ uint8_t IS2020::findItemInPhonebook(uint8_t deviceId, char * text) {
   strcat(tmp,"=\"");
   strcat(tmp,text);
   strcat(tmp,"\"");
-  IS2020::vendorAtCommand(deviceId, tmp);
+  return IS2020::vendorAtCommand(deviceId, tmp);
 }
 
 uint8_t IS2020::readPhonebook(uint8_t deviceId, char * text) {
 /*
- * ATReadPhonebookEntries "+CPBR" 
+ * ATReadPhonebookEntries "+CPBR"
  * should be followed with number of entry or range divided by comma
  * returns +CPBR: PhoneBookEntry:
- * 
+ *
  * phoneNumber
  * NumberType(see next four defines)
  * ATnationalNumberType1 129 //return
@@ -191,11 +191,10 @@ uint8_t IS2020::readPhonebook(uint8_t deviceId, char * text) {
  */
   char tmp[8+strlen(text)];
   strcpy(tmp,ATCommandPB);
-  strcat(tmp,ATFindPhonebookEntries);
-  strcat(tmp,"=\"");
+  strcat(tmp,ATReadPhonebookEntries);
+  strcat(tmp,"=");
   strcat(tmp,text);
-  strcat(tmp,"\"");
-  IS2020::vendorAtCommand(deviceId, tmp);
+  return IS2020::vendorAtCommand(deviceId, tmp);
 }
 
 
@@ -238,12 +237,14 @@ uint8_t IS2020::readPhonebook(uint8_t deviceId, char * text) {
 // ATMoveActionInPB "+CPBN"
 
 uint8_t IS2020::nextItemInPhonebook(uint8_t deviceId, char mode) {
+  // ATCommandPB("+CPB") + ATMoveActionInPB("N=") + mode digit + null = 8 bytes
   char tmp[8];
-  strcpy(tmp,ATCommandPB);
-  strcat(tmp,ATMoveActionInPB);
-  strcat(tmp,"=");
-  tmp[8]=mode;
-  IS2020::vendorAtCommand(deviceId, tmp);
+  strcpy(tmp, ATCommandPB);
+  strcat(tmp, ATMoveActionInPB);
+  uint8_t len = strlen(tmp);
+  tmp[len] = mode;
+  tmp[len + 1] = '\0';
+  return IS2020::vendorAtCommand(deviceId, tmp);
 }
 
 // ATManufacturerIdentification "+CGMI"

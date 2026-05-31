@@ -57,8 +57,8 @@ class IS2020
     uint8_t  eventMaskSetting();
     uint8_t  musicControl(uint8_t deviceId, uint8_t action);
     uint8_t  changeDeviceName(String name);
-    uint8_t  changePinCode();
-    uint8_t  btmParameterSetting();
+    uint8_t  changePinCode(char pin[4]);
+    uint8_t  btmParameterSetting(uint8_t parameter, uint8_t value);
     uint8_t  readBtmVersion();
     uint8_t  getPbByAtCmd(uint8_t deviceId);
     uint8_t  vendorAtCommand(uint8_t deviceId, char * data);
@@ -70,8 +70,8 @@ class IS2020
     uint8_t  readLocalBtAddress();
     uint8_t  readLocalDeviceName();
     uint8_t  setAccessPbMethod();
-    uint8_t  sendSppIapData();
-    uint8_t  btmUtilityFunction();
+    uint8_t  sendSppIapData(uint8_t deviceId, uint8_t type, uint16_t totalLength, uint16_t payloadLength, uint8_t* payload, uint16_t dataLen);
+    uint8_t  btmUtilityFunction(uint8_t utilityFunctionType, uint8_t parameter);
     uint8_t  eventAck(uint8_t cmd);
     uint8_t  additionalProfilesLinkSetup(uint8_t deviceId, uint8_t profile);
     uint8_t  additionalProfilesLinkSetupHfHs(uint8_t deviceId);
@@ -81,17 +81,19 @@ class IS2020
     uint8_t  profileLinkBack(uint8_t type, uint8_t deviceId, uint8_t profile);
     uint8_t  connectLastDevice(); //alias profileLinkBack
     uint8_t  disconnect(uint8_t flag = 0x0F); //B0000 1111 = > 0x0F bit 3,2,1,0 set
-    uint8_t  mcuStatusIndication();
-    uint8_t  userConfirmSppReqReply();
-    uint8_t  setHfGainLevel();
-    uint8_t  eqModeSetting();
+    uint8_t  mcuStatusIndication(uint8_t statusType, uint8_t status);
+    uint8_t  userConfirmSppReqReply(uint8_t deviceId, uint8_t response);
+    uint8_t  setHfGainLevel(uint8_t deviceId, uint8_t gainLevel);
+    uint8_t  eqModeSetting(uint8_t eqMode);
     uint8_t  dspNrCtrl(uint8_t type);
-    uint8_t  gpioControl();
+    uint8_t  gpioControl(uint8_t maskP0, uint8_t maskP1, uint8_t maskP2, uint8_t maskP3,
+                         uint8_t settingP0, uint8_t settingP1, uint8_t settingP2, uint8_t settingP3,
+                         uint8_t outputP0, uint8_t outputP1, uint8_t outputP2, uint8_t outputP3);
     uint8_t  mcuUartRxBufferSize(uint8_t buffer = 64/*this did not work... SERIAL_RX_BUFFER_SIZE*/);
-    uint8_t  voicePromptCmd();
-    uint8_t  mapRequest();
-    uint8_t  securityBondingReq();
-    uint8_t  setOverallGain();
+    uint8_t  voicePromptCmd(uint8_t cmdType, uint8_t parameter);
+    uint8_t  mapRequest(uint8_t type);
+    uint8_t  securityBondingReq(uint8_t deviceId);
+    uint8_t  setOverallGain(uint8_t deviceId, uint8_t mask, uint8_t type, uint8_t a2dpGain, uint8_t hfGain, uint8_t lineInGain);
     int      serialAvailable();
     int      serialRead();
 
