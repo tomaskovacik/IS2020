@@ -284,7 +284,7 @@ uint8_t  IS2020::changeDeviceName(String name) {
 uint8_t  IS2020::changePinCode(char pin[4]) {
   IS2020::getNextEventFromBt();
   if (DEBUG) DBG(F("Change PIN Code\n"));
-  IS2020::sendPacketArrayChar(5, CMD_Change_PIN_Code, (uint8_t)pin[0], pin + 1);
+  IS2020::sendPacketArrayChar(5, CMD_Change_PIN_Code, 0x00, pin);
   return checkResponce(EVT_Command_ACK);
 }
 /*
@@ -381,7 +381,7 @@ uint8_t IS2020::vendorAtCommand(uint8_t deviceId, char *  data) {
 #ifdef PHONEBOOKSUPPORT
 
 uint8_t IS2020::sendATCPB(uint8_t deviceId, char *  data) {
-  char tmp[4+strlen(data)];
+  char tmp[5+strlen(data)];
   strcpy(tmp,ATCommandPB);
   strcat(tmp,data);
   return IS2020::vendorAtCommand(deviceId, tmp);
@@ -602,7 +602,7 @@ uint8_t  IS2020::sendSppIapData(uint8_t deviceId, uint8_t type, uint16_t totalLe
     btSerial->write(payload[i]);
     checkSum += payload[i];
   }
-  btSerial->write((uint8_t)(0x100 - checkSum));
+  btSerial->write((uint8_t)(0x100 - (checkSum % 0x100)));
   return checkResponce(EVT_Command_ACK);
 }
 /*

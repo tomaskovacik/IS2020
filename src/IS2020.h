@@ -26,6 +26,7 @@
 #define DUMMYBYTE 0x00
 
 #define DEVICENAME_LENGHT_SUPPORT 24
+#define MAX_EVENT_SIZE 512  // Maximum event packet size to prevent stack overflow
 
 #if defined(USE_SW_SERIAL)
 #if ARDUINO >= 100

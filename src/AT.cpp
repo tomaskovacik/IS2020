@@ -158,7 +158,7 @@ void IS2020::printSupportedPB(){
 }
 
 void IS2020::printSelectedPB(){
-  if (!selectedPB)
+  if (selectedPB)
       Serial.println(decodePB((PhoneBook)selectedPB));
   else
       Serial.println("No selected PB!");
@@ -166,7 +166,7 @@ void IS2020::printSelectedPB(){
 
 // ATFindPhonebookEntries "+CPBF"
 uint8_t IS2020::findItemInPhonebook(uint8_t deviceId, char * text) {
-  char tmp[8+strlen(text)];
+  char tmp[9+strlen(text)];
   strcpy(tmp,ATCommandPB);
   strcat(tmp,ATFindPhonebookEntries);
   strcat(tmp,"=\"");

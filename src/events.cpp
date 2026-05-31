@@ -13,7 +13,17 @@ uint8_t IS2020::getNextEventFromBt() {
 
       uint16_t packetSize = (btSerial -> read() << 8) | (btSerial -> read() & 0xff);
 
-      uint8_t event[packetSize + 1]; //data+cksum
+      // Protect against stack overflow from malicious/corrupted packet size
+      if (packetSize > MAX_EVENT_SIZE) {
+        if (DEBUG_EVENTS) DBG_EVENTS(F("Packet size too large, draining buffer\n"));
+        // Drain the invalid packet from buffer
+        for (uint16_t i = 0; i < packetSize + 1 && btSerial -> available(); i++) {
+          btSerial -> read();
+        }
+        return 0;
+      }
+
+      uint8_t event[MAX_EVENT_SIZE + 1]; //data+cksum, use fixed size to prevent VLA stack overflow
       /*
             for (uint8_t i = 0; i < packetSize + 1; i++) {
               event[i] = btSerial -> read();
@@ -296,8 +306,8 @@ uint8_t IS2020::getNextEventFromBt() {
           case EVT_Caller_ID:
             {
               IS2020::btmStatusChanged = 1;
-              for (uint8_t i = 0; i < packetSize; i++) {
-                IS2020::callerId[event[1]][packetSize] = event[i + 2]; //no need to any sort of flag bit, cose we have callstatus change flag and in case of incoming call we just read this array
+              for (uint8_t i = 0; i < packetSize && i < 32; i++) {
+                IS2020::callerId[event[1]][i] = event[i + 2]; //no need to any sort of flag bit, cose we have callstatus change flag and in case of incoming call we just read this array
               }
             }
             break;
@@ -728,11 +738,11 @@ uint8_t IS2020::getNextEventFromBt() {
               switch (event[2]) { //event[1] is device id
                 case 0x00://reply device name
                   {
-                    IS2020::deviceName[event[1]] = ""; //clear stored named
+                    IS2020::deviceName[event[1]] = ""; //clear stored name
                     //if (DEBUG_EVENTS) DBG_EVENTS(F("Reply device name\n"));
                     //N bytes bluetooth name with NULL terminated. (N <= 249 with NULL terminated)
 
-                    for (uint8_t i = 3; i < /*DEVICENAME_LENGHT_SUPPORT + 2*/packetSize - 1; i++) { //event[2] is information type definition, last is checksum
+                    for (uint8_t i = 3; i < packetSize - 1 && (i - 3) < DEVICENAME_LENGHT_SUPPORT; i++) { //event[2] is information type definition, last is checksum, limit to max name length
                       //check if data are not NULL
                       if (event[i] == 0x00) break;
                       //deviceName[event[1]][i - 3] = event[i];

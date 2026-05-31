@@ -102,7 +102,7 @@ void  IS2020::sendPacketInt(uint8_t cmd, uint8_t data) {
   checkSum += (cmd);
   btSerial -> write(data); //DBG(F(" ")); DBG(String(data, HEX));
   checkSum += data;
-  btSerial -> write(0x100 - checkSum); //DBG(F(" ")); DBG(String((0x100 - checkSum), HEX));
+  btSerial -> write((uint8_t)(0x100 - (checkSum % 0x100))); //DBG(F(" ")); DBG(String((0x100 - checkSum), HEX));
 }
 
 /*
@@ -125,7 +125,7 @@ void  IS2020::sendPacketString(uint8_t cmd, String str) {
     btSerial -> write(str[dataPos]); DBG(F("|")); DBG(String(str[dataPos],HEX));
     checkSum += str[dataPos];
   }
-  btSerial -> write(0x100 - checkSum);// DBG(F(" ")); DBG(String(0x100 - checkSum, HEX));
+  btSerial -> write((uint8_t)(0x100 - (checkSum % 0x100)));// DBG(F(" ")); DBG(String(0x100 - checkSum, HEX));
 }
 /*
 
@@ -147,7 +147,7 @@ void  IS2020::sendPacketArrayInt (uint16_t packetSize, uint8_t cmd, uint8_t devi
     btSerial -> write(data[dataPos]); DBG(F(" ")); DBG(String(data[dataPos], HEX));
     checkSum += data[dataPos];
   }
-  btSerial -> write(0x100 - checkSum); DBG(F(" ")); DBG(String(0x100 - checkSum, HEX) + "\n");
+  btSerial -> write((uint8_t)(0x100 - (checkSum % 0x100))); DBG(F(" ")); DBG(String((uint8_t)(0x100 - (checkSum % 0x100)), HEX) + "\n");
 }
 
 //void  IS2020::sendPacketArrayInt_P(uint16_t packetSize, uint8_t cmd, uint8_t deviceId, uint8_t * data) {
@@ -182,11 +182,12 @@ void  IS2020::sendPacketArrayChar (uint16_t packetSize, uint8_t cmd, uint8_t dev
   checkSum += (cmd);
   btSerial -> write(deviceId);DBG(String(deviceId, HEX));DBG(F("|"));
   checkSum += (deviceId);
-  for (uint16_t dataPos = 0; dataPos < packetSize - 2; dataPos++) {
+  uint16_t dataLen = packetSize - 2;
+  for (uint16_t dataPos = 0; dataPos < dataLen; dataPos++) {
     btSerial -> write(data[dataPos]);DBG(String(data[dataPos]));DBG(F("|"));
     checkSum += data[dataPos];
   }
-  btSerial -> write(0x100 - checkSum);DBG(String((0x100 - checkSum), HEX));
+  btSerial -> write((uint8_t)(0x100 - (checkSum % 0x100)));DBG(String((uint8_t)(0x100 - (checkSum % 0x100)), HEX));
 }
 
 int IS2020::serialAvailable () {
@@ -297,6 +298,7 @@ String IS2020::streamStatus(uint8_t deviceId) {
 }
 
 uint8_t IS2020::batteryLevel(uint8_t deviceId) {
+  if (maxBatteryLevel[deviceId] == 0) return 0;
   return (currentBatteryLevel[deviceId] * 100) / maxBatteryLevel[deviceId];
 }
 
